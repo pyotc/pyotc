@@ -1,0 +1,147 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "build",
+    "wheel",
+    "toml"
+    ]
+
+build-backend = "setuptools.build_meta"
+
+author="Jay Hineman",
+    author_email='jay.hineman@gmail.com',
+    python_requires='>=3.6',
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
+    description="Perform optimal transition coupling in python.",
+    install_requires=requirements,
+    license="MIT license",
+    long_description=readme + '\n\n' + history,
+    include_package_data=True,
+    keywords='pyotc',
+    name='pyotc',
+    packages=find_packages(include=['pyotc', 'pyotc.*']),
+    test_suite='tests',
+    tests_require=test_requirements,
+    url='https://github.com/jhineman/pyotc',
+    version='0.1.0',
+    zip_safe=False,
+)
+
+[project]
+name = "p"
+version = "0.1.0"
+authors = [{name="Jay Hineman", email="jay.hineman@gmail.com"}]
+description = "Perform optimal transition coupling (OTC) in python."
+readme = "README.rst"
+history = "HISTORY.rst"
+license = {text = "MIT license"}
+url='https://github.com/jhineman/pyotc'
+python_requires='>=3.6'
+classifiers=[
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    ]
+include_package_data=True,
+keywords='pyotc'
+name='pyotc'
+
+dependencies = [
+    "numpy",
+    "ot",
+    "networkx", 
+    "matplotlib", 
+]
+
+[project.optional-dependencies]
+
+# black code hygeine checks
+black = [ "black[jupyter]" ]
+
+# flake8 code hygeine checks
+flake8 = [
+    "flake8-docstrings",
+    "Flake8-pyproject"
+]
+
+# notebooks is for things that would help a user or developer do example experiments,
+# but are not needed for direct use.
+notebooks = [
+    "matplotlib",
+    "jupyter"
+]
+
+# testing is for things that are required only to run the test suite
+testing = [
+    "pytest",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-pytorch",
+    "pytest-timeout",
+    "pytest-xdist",
+]
+
+# docs is for things that are required only for building the online documentation
+docs = [
+    "jupyter",
+    "nbsphinx",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "toml"
+]
+
+[tool.flake8]
+exclude = [
+    "*_test.py",
+    "docs",
+    "sandbox"
+]
+extend-ignore = [
+    "D200",  # 1-line docstrings will be tolerated
+    "D401",  # First line need not be in imperative mood.
+    "E203",  # not compatible with black https://github.com/psf/black/issues/315
+    "E501",  # can't check line-length and have long hyperlinks in the docs
+    "W391",  # sometimes templating gives extra blank lines
+    "W503"   # we have to choose between W503 and W504. See https://www.flake8rules.com/rules/W503.html
+]
+
+show-source = true
+count = true
+
+[tool.black]
+# See https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
+line-length = 88
+target-version = ["py311"]
+include = '\.pyi?$|notebooks\/.*\.ipynb?$'
+
+[tool.kedro]
+package_name = "ssh2kinematics"
+project_name = "ssh2kinematics"
+kedro_init_version = "0.18.7"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/ssh2kinematics -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
