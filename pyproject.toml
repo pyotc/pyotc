@@ -8,38 +8,14 @@ requires = [
 
 build-backend = "setuptools.build_meta"
 
-author="Jay Hineman",
-    author_email='jay.hineman@gmail.com',
-    python_requires='>=3.6',
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-    ],
-    description="Perform optimal transition coupling in python.",
-    install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
-    include_package_data=True,
-    keywords='pyotc',
-    name='pyotc',
-    packages=find_packages(include=['pyotc', 'pyotc.*']),
-    test_suite='tests',
-    tests_require=test_requirements,
-    url='https://github.com/jhineman/pyotc',
-    version='0.1.0',
-    zip_safe=False,
-)
-
 [project]
-name = "p"
+name = "pyotc"
 version = "0.1.0"
-authors = [{name="Jay Hineman", email="jay.hineman@gmail.com"}]
+authors = [
+    {name="Jay Hineman", email="jay.hineman@gmail.com"},
+    {name="Yuning Pan", email=""},
+    {name="Bongsoo Yi", email=""}
+]
 description = "Perform optimal transition coupling (OTC) in python."
 readme = "README.rst"
 history = "HISTORY.rst"
