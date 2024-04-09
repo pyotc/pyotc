@@ -9,7 +9,7 @@ conda development
 -----------------
 .. code-block:: bash
     conda create -n pyotc python=3.10
-    conda activate pyotic
+    conda activate pyotc
     make install-dev
 
 

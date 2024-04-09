@@ -12,33 +12,17 @@ build-backend = "setuptools.build_meta"
 name = "pyotc"
 version = "0.1.0"
 authors = [
-    {name="Jay Hineman", email="jay.hineman@gmail.com"},
-    {name="Yuning Pan", email=""},
-    {name="Bongsoo Yi", email=""}
+    {name="Jay Hineman"},
+    {name="Yuning Pan"},
+    {name="Bongsoo Yi"}
 ]
 description = "Perform optimal transition coupling (OTC) in python."
 readme = "README.rst"
-history = "HISTORY.rst"
 license = {text = "MIT license"}
-url='https://github.com/jhineman/pyotc'
-python_requires='>=3.6'
-classifiers=[
-    'Development Status :: 2 - Pre-Alpha',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
-    'Natural Language :: English',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    ]
-include_package_data=True,
-keywords='pyotc'
-name='pyotc'
 
 dependencies = [
     "numpy",
-    "ot",
+    "POT",
     "networkx", 
     "matplotlib", 
 ]
@@ -101,13 +85,8 @@ count = true
 [tool.black]
 # See https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
 line-length = 88
-target-version = ["py311"]
+target-version = ["py310"]
 include = '\.pyi?$|notebooks\/.*\.ipynb?$'
-
-[tool.kedro]
-package_name = "ssh2kinematics"
-project_name = "ssh2kinematics"
-kedro_init_version = "0.18.7"
 
 [tool.isort]
 profile = "black"
