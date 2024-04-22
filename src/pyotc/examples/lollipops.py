@@ -11,6 +11,7 @@ Figure 5 graphs
 
 import networkx as nx
 
+# Define graphs
 left_lollipop_graph = {
     "nodes": [
         {"id": 1},
