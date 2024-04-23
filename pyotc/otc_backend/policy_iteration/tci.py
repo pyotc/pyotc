@@ -19,6 +19,7 @@ def exact_tci(g, h, P0, Px, Py):
     #print(1, P0[18, 1])
     ## Try to improve with respect to g.
     # Check if g is constant.
+    # TODO: separate this to another function
     g_const = True
     for i in range(dx):
         for j in range(i+1, dx):
