@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 
+# TODO: type hinting and docstring; basic reference would be nice
 def stochastic_block_model(sizes, probs):
     # Check input type
     if not isinstance(sizes, np.ndarray) or len(sizes.shape) != 1:
