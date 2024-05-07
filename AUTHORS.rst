@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Jay Hineman <jay.hineman@gmail.com>
+* Jay Hineman
 
 Contributors
 ------------
