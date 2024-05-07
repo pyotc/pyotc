@@ -65,6 +65,8 @@ graph_1 = nx.node_link_graph(data=edge_awareness_1)
 graph_2 = nx.node_link_graph(data=edge_awareness_2_3)
 graph_3 = nx.node_link_graph(data=edge_awareness_2_3)
 
+# TODO: describe c1-c2, d1-d3;
+# TODO: could make this cost separate and as a function.
 # Define the coordinates
 d1 = np.zeros((8, 2))
 for i in range(8):
