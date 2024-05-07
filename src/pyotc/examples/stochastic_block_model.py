@@ -2,7 +2,24 @@ import networkx as nx
 import numpy as np
 
 # TODO: type hinting and docstring; basic reference would be nice
-def stochastic_block_model(sizes, probs):
+# TODO: rework sizes tuple and started explanation below
+def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
+    """Generate the adjacency for a stochastic block model SBM from an array
+    (1xn) of sizes an (nxn) matrix of probabilities.
+
+    Args:
+        sizes (tuple): tuple of node sizes with length of number of blocks
+        probs (np.ndarray): nxn matrix with row sums == 1
+
+    Raises:
+        ValueError: _description_
+        ValueError: _description_
+        ValueError: _description_
+        ValueError: _description_
+
+    Returns:
+        np.ndarray: adjancency matrix for SBM
+    """
     # Check input type
     if not isinstance(sizes, np.ndarray) or len(sizes.shape) != 1:
         raise ValueError("'sizes' must be a 1D numpy array.")
@@ -41,6 +58,7 @@ def stochastic_block_model(sizes, probs):
 
 
 # Seed number
+# TODO: large prime is preferred
 np.random.seed(10)
 
 m = 10
