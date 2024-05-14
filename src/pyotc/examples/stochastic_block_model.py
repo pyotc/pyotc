@@ -4,38 +4,39 @@ import numpy as np
 # TODO: type hinting and docstring; basic reference would be nice
 # TODO: rework sizes tuple and started explanation below
 def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
-    """Generate the adjacency for a stochastic block model SBM from an array
-    (1xn) of sizes an (nxn) matrix of probabilities.
+    """Generate the adjacency for a stochastic block model SBM from a tuple (length n)
+    of sizes an (nxn) matrix of probabilities.
 
     Args:
         sizes (tuple): tuple of node sizes with length of number of blocks
-        probs (np.ndarray): nxn matrix with row sums == 1
+        probs (np.ndarray): nxn symmetric matrix
 
     Raises:
-        ValueError: _description_
-        ValueError: _description_
-        ValueError: _description_
-        ValueError: _description_
+        ValueError: If probs is not a square numpy array
+        ValueError: If probs is not symmetric
+        ValueError: If sizes and probs dimensions do not match
 
     Returns:
         np.ndarray: adjancency matrix for SBM
     """
     # Check input type
-    if not isinstance(sizes, np.ndarray) or len(sizes.shape) != 1:
-        raise ValueError("'sizes' must be a 1D numpy array.")
-    elif not isinstance(probs, np.ndarray) or probs.shape[0] != probs.shape[1]:
+    if not isinstance(probs, np.ndarray) or probs.shape[0] != probs.shape[1]:
         raise ValueError("'probs' must be a square numpy array.")
     elif not np.allclose(probs, probs.T):
         raise ValueError("'probs' must be a symmetric matrix.")
     elif len(sizes) != probs.shape[0]:
         raise ValueError("'sizes' and 'probs' dimensions do not match.")
 
-    n = np.sum(sizes)  # Total number of nodes
+    n = sum(sizes)  # Total number of nodes
     n_b = len(sizes)  # Total number of blocks
     A = np.zeros((n, n))
 
     # Column index of each block's start
-    start = [0] + list(np.cumsum(sizes))
+    cumsum = 0
+    start = [0]
+    for size in sizes:
+        cumsum += size
+        start.append(cumsum)
 
     # Generating Adjacency Matrix (upper)
     # Generate diagonal blocks
@@ -59,17 +60,17 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
 
 # Seed number
 # TODO: large prime is preferred
-np.random.seed(10)
+np.random.seed(1009)
 
 m = 10
 A1 = stochastic_block_model(np.array([m,m,m,m]), np.array([[0.9,0.1,0.1,0.1],[0.1,0.9,0.1,0.1],[0.1,0.1,0.9,0.1],[0.1,0.1,0.1,0.9]]))
 
 # Adjacency matrix
 A2 = A1.copy()
-A2[0, 23] = 0
-A2[23, 0] = 0
-A2[3, 24] = 0
-A2[24, 3] = 0
+A2[2, 20] = 0
+A2[20, 2] = 0
+A2[4, 16] = 0
+A2[16, 4] = 0
 
 A3 = A1.copy()
 A3[0, 1] = 0
