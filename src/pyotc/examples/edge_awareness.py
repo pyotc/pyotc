@@ -65,8 +65,6 @@ graph_1 = nx.node_link_graph(data=edge_awareness_1)
 graph_2 = nx.node_link_graph(data=edge_awareness_2_3)
 graph_3 = nx.node_link_graph(data=edge_awareness_2_3)
 
-# TODO: describe c1-c2, d1-d3;
-# TODO: could make this cost separate and as a function.
 # Define the coordinates of G_1, G_2, G_3
 # All vertices are located on the unit circle in R^2
 # d1: coordinate of G_1 vertices (regular octagon)
