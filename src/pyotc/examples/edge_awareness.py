@@ -67,7 +67,12 @@ graph_3 = nx.node_link_graph(data=edge_awareness_2_3)
 
 # TODO: describe c1-c2, d1-d3;
 # TODO: could make this cost separate and as a function.
-# Define the coordinates
+# Define the coordinates of G_1, G_2, G_3
+# All vertices are located on the unit circle in R^2
+# d1: coordinate of G_1 vertices (regular octagon)
+# d2: coordinate of G_2 vertices (regular octagon)
+# d3: coordinate of G_3 vertices (the vertices are uniformly distributed in the left semicircle)
+
 d1 = np.zeros((8, 2))
 for i in range(8):
     d1[i, 0] = np.cos(np.pi / 8 + np.pi / 4 * i)
@@ -81,13 +86,20 @@ for i in range(8):
     d3[i, 1] = np.sin(np.pi / 2 + np.pi / 7 * i)
 
 # Get cost matrices
-n = 8
-c1 = np.zeros((n, n))
-for i in range(n):
-    for j in range(n):
-        c1[i, j] = np.sum((d2[i, :] - d1[j, :]) ** 2)
+# Define a cost function equal to the squared Euclidean distance between vertex positions
+# c21: cost function between G_2 and G_1
+# c23: cost function between G_2 and G_3
 
-c2 = np.zeros((n, n))
-for i in range(n):
-    for j in range(n):
-        c2[i, j] = np.sum((d2[i, :] - d3[j, :]) ** 2)
+def euclidean_cost(v1, v2):
+    n1 = v1.shape[0]
+    n2 = v2.shape[0]
+    c = np.zeros((n1, n2))
+    for i in range(n1):
+        for j in range(n2):
+            c[i, j] = np.sum((v1[i, :] - v2[j, :]) ** 2)
+
+    return c
+
+c21 = euclidean_cost(d2, d1)
+c23 = euclidean_cost(d2, d3)
+

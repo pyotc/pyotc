@@ -1,8 +1,6 @@
 import networkx as nx
 import numpy as np
 
-# TODO: type hinting and docstring; basic reference would be nice
-# TODO: rework sizes tuple and started explanation below
 def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
     """Generate the adjacency for a stochastic block model SBM from a tuple (length n)
     of sizes an (nxn) matrix of probabilities.
@@ -59,11 +57,10 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
 
 
 # Seed number
-# TODO: large prime is preferred
 np.random.seed(1009)
 
 m = 10
-A1 = stochastic_block_model(np.array([m,m,m,m]), np.array([[0.9,0.1,0.1,0.1],[0.1,0.9,0.1,0.1],[0.1,0.1,0.9,0.1],[0.1,0.1,0.1,0.9]]))
+A1 = stochastic_block_model((m,m,m,m), np.array([[0.9,0.1,0.1,0.1],[0.1,0.9,0.1,0.1],[0.1,0.1,0.9,0.1],[0.1,0.1,0.1,0.9]]))
 
 # Adjacency matrix
 A2 = A1.copy()
