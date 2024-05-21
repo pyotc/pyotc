@@ -4,8 +4,6 @@ from scipy.optimize import linprog
 
 # TODO: Document & Unit test
 def computeot_lp(C, r, c):
-    #nx = r.shape[0]
-    #ny = c.shape[1]
     nx = r.size
     ny = c.size
     Aeq = np.zeros((nx+ny, nx*ny))
@@ -26,10 +24,8 @@ def computeot_lp(C, r, c):
     bound = [[0, None]] * (nx*ny)
 
     # solve OT LP using linprog
-    #cost = C.flatten()
     cost = C.reshape(-1,1)
-    #res = linprog(cost, A_eq=Aeq, b_eq=beq, bounds=(lb, None), method='highs')
-    res = linprog(cost, A_eq=Aeq, b_eq=beq, bounds=bound, method='highs')
+    res = linprog(cost, A_eq=Aeq, b_eq=beq, bounds=bound, method='highs-ipm')
     lp_sol = res.x
     lp_val = res.fun
     return lp_sol, lp_val

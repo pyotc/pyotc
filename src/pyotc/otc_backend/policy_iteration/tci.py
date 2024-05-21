@@ -3,7 +3,7 @@ Original Transition Coupling Improvements (TCI) methods from:
 https://jmlr.csail.mit.edu/papers/volume23/21-0519/21-0519.pdf
 """
 import numpy as np
-from pyotc.otc_backend.optimal_transport.native import computeot_lp
+from pyotc.otc_backend.optimal_transport.scipy import computeot_lp
 
 
 # TODO: document unit test, replace print with logging
