@@ -2,30 +2,50 @@
 import numpy as np
 from scipy.optimize import linprog
 
-# TODO: Document & Unit test
-def computeot_lp(C, r, c):
-    nx = r.size
-    ny = c.size
-    Aeq = np.zeros((nx+ny, nx*ny))
-    beq = np.concatenate((r.flatten(), c.flatten()))
-    beq = beq.reshape(-1,1)
+class OT:
+    def __init__(self, cost, r, c) -> None:
+        self.cost = cost.reshape(-1, 1)
+        self.nx = r.size
+        self.ny = c.size
+        self.A_eq = self._build_A_eq()
+        self.b_eq = self._build_b_eq(r, c)
+        self.bound = [[0, None]] * (self.nx*self.ny)
+    
+    def _build_A_eq(self):
+        Aeq = np.zeros((self.nx+self.ny, self.nx*self.ny))
+        # column sums correct
+        for row in range(self.nx):
+            for t in range(self.ny):
+                Aeq[row, (row*self.ny)+t] = 1
 
-    # column sums correct
-    for row in range(nx):
-        for t in range(ny):
-            Aeq[row, (row*ny)+t] = 1
+        # row sums correct
+        for row in range(self.nx, self.nx+self.ny):
+            for t in range(self.nx):
+                Aeq[row, t*self.ny+(row-self.nx)] = 1
+        
+        return Aeq
+    
+    def _build_b_eq(self, r, c):
+        beq = np.concatenate((r.flatten(), c.flatten()))
+        return beq.reshape(-1,1)
+        
+    def __call__(self) -> np.Any:
+        res = linprog(self.cost, A_eq=self.A_eq, b_eq=self.b_eq, 
+                      bounds=self.bound, method='highs-ipm')
+        return res.x, res.fun
 
-    # row sums correct
-    for row in range(nx, nx+ny):
-        for t in range(nx):
-            Aeq[row, t*ny+(row-nx)] = 1
+def compute_ot(C: np.ndarray, r: np.ndarray, c: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """_summary_
 
-    #lb = np.zeros(nx*ny)
-    bound = [[0, None]] * (nx*ny)
+    Args:
+        C (np.ndarray): cost vector
+        r (np.ndarray): _description_
+        c (np.ndarray): _description_
 
-    # solve OT LP using linprog
-    cost = C.reshape(-1,1)
-    res = linprog(cost, A_eq=Aeq, b_eq=beq, bounds=bound, method='highs-ipm')
-    lp_sol = res.x
-    lp_val = res.fun
+    Returns:
+        tuple[np.ndarray, np.ndarray]: _description_
+    """
+    lp_ot = OT(cost=C, r=r, c=c)
+    lp_sol, lp_val = lp_ot()
     return lp_sol, lp_val
+
