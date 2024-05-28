@@ -16,6 +16,7 @@ class OTC:
     def independent_transition_coupling(self):
         """
         Compute the independent transition coupling.
+        #TODO: confirm that this is just np.kron and replace.
         """
         dx, dx_col = self.Px.shape # TODO: this pattern is different
         dy, dy_col = self.Py.shape
@@ -64,7 +65,7 @@ class ExactOTC(OTC);
         g = sol[0:d].flatten()
         h = sol[d:2*d].flatten()
         return g, h
-    
+
     def improve(self, g, h):
         Pz = np.zeros((self.dx*self.dy, self.dx*self.dy))
         g_const = True
