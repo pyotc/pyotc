@@ -1,6 +1,6 @@
 """
 Original Transition Coupling Improvements (TCI) methods from:
-https://jmlr.csail.mit.edu/papers/volume23/21-0x519/21-0519.pdf
+https://jmlr.csail.mit.edu/papers/volume23/21-0519/21-0519.pdf
 """
 import numpy as np
 import copy
