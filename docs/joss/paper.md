@@ -28,7 +28,9 @@ header-includes:
 Recent scholarly works [@oconnor_optimal_2022] have introduced an extension of optimal transport that applies directly to product structued processes.
 
 # Statement of need
-
+Optimal transport proven a valuable, practical, and natural tool in data science and machine learning. As a problem in calculus of variations, conventional optimal transportation has many possible generalizations. A natural extension beyond probablity distributions is processes. Recent has provided initial theory and algorithms; we aim to provide a practical implementation of this work which is open for community extension. Secondly, our implementation provides a backend framework that is in parity with capability available for conventional optimal transport --- thereby offering parallelism via cpu and gpu.
+Finally, we provide initial and careful baselines of performance. We expect this tool to be practically
+applied in forthcoming work work on networks in chemistry, neuroscience, and biology.
 # Features
 <!--- 
 Test algorithm notation for pandoc
