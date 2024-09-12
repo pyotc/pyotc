@@ -31,6 +31,7 @@ Recent scholarly works [@oconnor_optimal_2022] have introduced an extension of o
 Optimal transport proven a valuable, practical, and natural tool in data science and machine learning. As a problem in calculus of variations, conventional optimal transportation has many possible generalizations. A natural extension beyond probablity distributions is processes. Recent has provided initial theory and algorithms; we aim to provide a practical implementation of this work which is open for community extension. Secondly, our implementation provides a backend framework that is in parity with capability available for conventional optimal transport --- thereby offering parallelism via cpu and gpu.
 Finally, we provide initial and careful baselines of performance. We expect this tool to be practically
 applied in forthcoming work work on networks in chemistry, neuroscience, and biology.
+
 # Features
 <!--- 
 Test algorithm notation for pandoc
@@ -71,7 +72,21 @@ P = np.array([[.5, .5], [.5, .5]])
 Q = np.array([[0, 1], [1, 0]])
 
 exact_otc = ExactOTC(P=P, Q=Q)
+# takes one step of evaluation and improvement
 exact_otc.step()
+
+# psuedo code above becomes
+exact_otc.reset()
+converged = false
+tau = 0.0001
+while not converged:
+  # pyotc provides interface to step
+  exact_otc.step()
+  # user defines stopping criteria
+  d = numpy.linalg.norm(exact_otc.R[-1] - exact_otc.R[-2])
+  converged = d < converged
+
+print(f"Optimal Transport Coupling is {exact_otc.R[-1]}")
 ```
 
 # Conclusion
