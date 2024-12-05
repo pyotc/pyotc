@@ -21,7 +21,7 @@ class OTC:
         self.P = P
         self.Q = Q
         self.c = c
-        self.R = self.reset()
+        self.R = self.initial_couplings()
 
     def initial_couplings(self)->list[np.ndarray]:
         prod = itertools.product(self.P, self.Q)
