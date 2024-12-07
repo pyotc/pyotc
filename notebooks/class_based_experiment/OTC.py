@@ -11,7 +11,6 @@ class OTC:
         Initialize the basic OTC object.
 
         TODO: specify precision (yuning issue)
-        TODO: calculating the stationary version with eigenvalues
         Args:
             P list[np.ndarray]: list of transition matrices
             Q list[np.ndarray]: list of tranistion matrices
@@ -23,17 +22,13 @@ class OTC:
         self.c = c
         self.R = self.initial_couplings()
 
-    def initial_couplings(self)->list[np.ndarray]:
-        prod = itertools.product(self.P, self.Q)
-        return [self.independent_transition_coupling(*pair) for pair in prod]
-
     @staticmethod
     def independent_transition_coupling(Px, Py):
         """
         Compute the independent transition coupling.
         #TODO: confirm that this is just np.kron and replace.
         """
-        dx, dx_col = Px.shape # TODO: this pattern is different
+        dx, dx_col = Px.shape
         dy, dy_col = Py.shape
 
         P_ind = np.zeros((dx*dy, dx_col*dy_col))
@@ -45,7 +40,16 @@ class OTC:
                         idx2 = dy*(x_col) + y_col
                         P_ind[idx1, idx2] = Px[x_row, x_col] * Py[y_row, y_col]
         return P_ind
-    
+
+    def reset(self)->list[np.ndarray]:
+        """Reset to original product coupling P_i \otimes Q_j
+
+        Returns:
+            list[np.ndarray]: P_i \otimes Q_j
+        """
+        prod = itertools.product(self.P, self.Q)
+        return [self.independent_transition_coupling(*pair) for pair in prod]
+
     def evaluate(self):
         """
         Evaluate transition coupling.
@@ -59,27 +63,27 @@ class OTC:
         This is a *step* and not necessarily an *improvement*
         """
         raise NotImplementedError
-    
-    def reset(self):
-        """Reset to initial coupling
 
-        Returns:
-            _type_: _description_
-        """
-        raise NotImplementedError
 
 class ExactOTC(OTC):
-    def evaluate(self):
-        """Evaluate the coupling.
+    #  TODO: calculating the stationary version with eigenvalues
+    def evaluate(self) -> list[tuple[np.ndarray, np.ndarray]]:
+        """Evaluate implementation interface for ExactOTC.
 
         Returns:
-            _type_: _description_
+            list[tuple[np.ndarray, np.ndarray]]: _description_
         """
-        d = self.R.shape[0]
-        c_flat = np.reshape(self.c, (d, -1))
-        A = np.block([[np.eye(d) - self.R, np.zeros((d, d)), np.zeros((d, d))],
-                  [np.eye(d), np.eye(d) - self.R, np.zeros((d, d))],
-                  [np.zeros((d, d)), np.eye(d), np.eye(d) - self.R]])
+        return [self.evaluate_individual(r,c) for r,c in zip(self.R, self.c)]
+    
+    @staticmethod
+    def evaluate_individual(R, c) -> tuple[np.ndarray, np.ndarray]:
+        """Evaluate an individual coupling R given cost c.
+        """
+        d = R.shape[0]
+        c_flat = np.reshape(c, (d, -1))
+        A = np.block([[np.eye(d) - R, np.zeros((d, d)), np.zeros((d, d))],
+                  [np.eye(d), np.eye(d) - R, np.zeros((d, d))],
+                  [np.zeros((d, d)), np.eye(d), np.eye(d) - R]])
         b = np.concatenate([np.zeros((d, 1)), c_flat, np.zeros((d, 1))])
         try:
             sol = np.linalg.solve(A, b)
@@ -90,15 +94,16 @@ class ExactOTC(OTC):
         h = sol[d:2*d].flatten()
         return g, h
 
-    def step(self, g: np.ndarray, h: np.ndarray)->None:
+    @staticmethod
+    def step_individual(g: np.ndarray, h: np.ndarray)->np.ndarray:
         """Perform the exact step proposed in original OTC work.
 
         Args:
-            g (np.ndarray): _description_
-            h (np.ndarray): _description_
+            g (np.ndarray): from evaluate
+            h (np.ndarray): from evaluate
 
         Returns:
-            None: updates self.R
+            R (np.ndarray)
         """
         Pz = np.zeros((self.dx*self.dy, self.dx*self.dy))
         g_const = True
@@ -139,10 +144,8 @@ class ExactOTC(OTC):
                     sol, val = computeot_lp(h_mat, dist_x, dist_y)
                 idx = dy*(x_row)+y_row
                 Pz[idx, :] = np.reshape(sol, (-1, dx*dy))
-        self.R = Pz
+        return Pz
         
-        
-
     def improve(self, g, h):
         """Origianl improve implementation.
 

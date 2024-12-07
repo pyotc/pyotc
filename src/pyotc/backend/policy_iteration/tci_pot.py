@@ -1,6 +1,6 @@
 import numpy as np
 import copy
-from pyotc.otc_backend.optimal_transport.pot import computeot_pot
+from pyotc.backend.optimal_transport.pot import computeot_pot
 
 def exact_tci(g, h, P0, Px, Py):
     dx = Px.shape[0]
