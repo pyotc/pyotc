@@ -77,7 +77,15 @@ Ready to contribute? Here's how to set up `pyotc` for local development.
 
 Before you submit a pull request, check that it meets these guidelines:
 
-0. Run nox
+0. Run `nox` in the root directory. Other [nox cli](https://nox.thea.codes/en/stable/usage.html#command-line-usage) options are avaiable.
 1. The pull request should include tests for new functionality.
 2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
 3. We use github actions ([TODO#19](https://github.com/jhineman/pyotc/issues/19)) for our CI which runs on nox.
+
+## `uv` workflow
+### Running nox via `uv`
+```bash
+# in sources root
+uv run nox
+```
+

@@ -20,7 +20,7 @@ cd pyotc
 pip install -e .
 ```
 
-### Easy button with uv
+### `uv` workflow
 [Install the uv tool](https://docs.astral.sh/uv/getting-started/installation/).
 
 Then
@@ -30,5 +30,7 @@ git clone https://github.com/jhineman/pyotc.git
 cd pyotc
 uv sync
 ```
+
+
 
 
