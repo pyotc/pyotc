@@ -1,6 +1,8 @@
 """A wrapper to python optimal transport POT"""
+
 import numpy as np
 import ot
+
 
 def computeot_pot(C, r, c):
     # Ensure r and c are numpy arrays

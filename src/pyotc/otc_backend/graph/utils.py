@@ -1,7 +1,9 @@
 import numpy as np
 
+
 def weight(x):
     return x / np.sum(x)
+
 
 def adj_to_trans(A):
     nrow = A.shape[0]
@@ -13,7 +15,8 @@ def adj_to_trans(A):
         for idx in range(len(k)):
             T[i, k[idx]] = vals[idx]
     row_sums = T.sum(axis=1)
-    return T/row_sums[:, np.newaxis]
+    return T / row_sums[:, np.newaxis]
+
 
 def get_degree_cost(D1, D2):
     d1 = D1.shape[0]
@@ -23,7 +26,7 @@ def get_degree_cost(D1, D2):
     cost_mat = np.zeros((d1, d2))
     for i in range(d1):
         for j in range(d2):
-            cost_mat[i, j] = (degrees1[i] - degrees2[j])**2
+            cost_mat[i, j] = (degrees1[i] - degrees2[j]) ** 2
     return cost_mat
 
 
@@ -33,7 +36,7 @@ def get_01_cost(D1, D2):
     cost_mat = np.zeros((d1, d2))
     for i in range(d1):
         for j in range(d2):
-            cost_mat[i, j] = (D1[i] != D2[j])
+            cost_mat[i, j] = D1[i] != D2[j]
     return cost_mat
 
 
@@ -43,5 +46,5 @@ def get_sq_cost(V1, V2):
     cost_mat = np.zeros((v1, v2))
     for i in range(v1):
         for j in range(v2):
-            cost_mat[i, j] = (V1[i] - V2[j])**2
+            cost_mat[i, j] = (V1[i] - V2[j]) ** 2
     return cost_mat
