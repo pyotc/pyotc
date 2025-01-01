@@ -2,10 +2,9 @@
 Credits
 =======
 
-Development Lead
-----------------
-
-* Jay Hineman
+* Jay Hineman, @jhineman
+* Bongsoo Yi
+* Yuning Pan
 
 Contributors
 ------------
