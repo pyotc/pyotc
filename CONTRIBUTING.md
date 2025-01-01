@@ -85,7 +85,12 @@ Before you submit a pull request, check that it meets these guidelines:
 ## `uv` workflow
 ### Running nox via `uv`
 ```bash
-# in sources root
+# in project root
 uv run nox
+```
+### Running ruff format via `uv`
+```bash
+# in project root
+uv run ruff format
 ```
 
