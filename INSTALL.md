@@ -16,6 +16,19 @@ We test in venvs provided by [uv](https://docs.astral.sh/uv/) via [nox](https://
 
 ```bash
 git clone https://github.com/jhineman/pyotc.git
-cd pytoc
+cd pyotc
 pip install -e .
 ```
+
+### Easy button with uv
+[Install the uv tool](https://docs.astral.sh/uv/getting-started/installation/).
+
+Then
+
+```bash
+git clone https://github.com/jhineman/pyotc.git
+cd pyotc
+uv sync
+```
+
+

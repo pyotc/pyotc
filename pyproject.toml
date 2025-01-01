@@ -1,13 +1,3 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "build",
-    "wheel",
-    "toml"
-    ]
-
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "pyotc"
 version = "0.1.0"
@@ -17,86 +7,24 @@ authors = [
     {name="Bongsoo Yi"}
 ]
 description = "Perform optimal transition coupling (OTC) in python."
-readme = "README.rst"
+readme = "README.md"
+requires-python = ">=3.10"
 license = {text = "MIT license"}
-
 dependencies = [
-    "numpy",
-    "POT",
-    "networkx", 
-    "matplotlib", 
+    "matplotlib>=3.10.0",
+    "networkx>=3.4.2",
+    "numpy>=2.2.1",
+    "pot>=0.9.5",
 ]
 
-[project.optional-dependencies]
-
-# black code hygeine checks
-black = [ "black[jupyter]" ]
-
-# flake8 code hygeine checks
-flake8 = [
-    "flake8-docstrings",
-    "Flake8-pyproject"
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "ruff>=0.8.4",
+    "nox>=2024.10.9",
 ]
 
-# notebooks is for things that would help a user or developer do example experiments,
-# but are not needed for direct use.
-notebooks = [
-    "matplotlib",
-    "jupyter"
-]
-
-# testing is for things that are required only to run the test suite
-testing = [
-    "pytest",
-    "pytest-cov",
-    "pytest-html",
-    "pytest-pytorch",
-    "pytest-timeout",
-    "pytest-xdist",
-]
-
-# docs is for things that are required only for building the online documentation
-docs = [
-    "jupyter",
-    "nbsphinx",
-    "sphinx",
-    "sphinx-rtd-theme",
-    "toml"
-]
-
-[tool.flake8]
-exclude = [
-    "*_test.py",
-    "docs",
-    "sandbox"
-]
-extend-ignore = [
-    "D200",  # 1-line docstrings will be tolerated
-    "D401",  # First line need not be in imperative mood.
-    "E203",  # not compatible with black https://github.com/psf/black/issues/315
-    "E501",  # can't check line-length and have long hyperlinks in the docs
-    "W391",  # sometimes templating gives extra blank lines
-    "W503"   # we have to choose between W503 and W504. See https://www.flake8rules.com/rules/W503.html
-]
-
-show-source = true
-count = true
-
-[tool.black]
-# See https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
-line-length = 88
-target-version = ["py310"]
-include = '\.pyi?$|notebooks\/.*\.ipynb?$'
-
-[tool.isort]
-profile = "black"
-
-[tool.pytest.ini_options]
-addopts = """
---cov-report term-missing \
---cov src/ssh2kinematics -ra"""
-
-[tool.coverage.report]
-fail_under = 0
-show_missing = true
-exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
