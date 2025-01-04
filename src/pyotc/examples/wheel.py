@@ -30,7 +30,7 @@ wheel_graph_1 = {
         {"id": 13},
         {"id": 14},
         {"id": 15},
-        {"id": 16}
+        {"id": 16},
     ],
     "links": [
         {"source": 1, "target": 2},
@@ -62,7 +62,7 @@ wheel_graph_1 = {
         {"source": 13, "target": 14},
         {"source": 14, "target": 15},
         {"source": 15, "target": 16},
-        {"source": 16, "target": 2}
+        {"source": 16, "target": 2},
     ],
     "name": "wheel graph 1",
 }
@@ -84,7 +84,7 @@ wheel_graph_2 = {
         {"id": 13},
         {"id": 14},
         {"id": 15},
-        {"id": 16}
+        {"id": 16},
     ],
     "links": [
         {"source": 1, "target": 3},
@@ -115,7 +115,7 @@ wheel_graph_2 = {
         {"source": 13, "target": 14},
         {"source": 14, "target": 15},
         {"source": 15, "target": 16},
-        {"source": 16, "target": 2}
+        {"source": 16, "target": 2},
     ],
     "name": "wheel graph 2",
 }
@@ -137,7 +137,7 @@ wheel_graph_3 = {
         {"id": 13},
         {"id": 14},
         {"id": 15},
-        {"id": 16}
+        {"id": 16},
     ],
     "links": [
         {"source": 1, "target": 2},
@@ -168,7 +168,7 @@ wheel_graph_3 = {
         {"source": 12, "target": 13},
         {"source": 13, "target": 14},
         {"source": 14, "target": 15},
-        {"source": 15, "target": 16}
+        {"source": 15, "target": 16},
     ],
     "name": "wheel graph 3",
 }
@@ -176,4 +176,3 @@ wheel_graph_3 = {
 wheel_1 = nx.node_link_graph(data=wheel_graph_1)
 wheel_2 = nx.node_link_graph(data=wheel_graph_2)
 wheel_3 = nx.node_link_graph(data=wheel_graph_3)
-

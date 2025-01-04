@@ -23,7 +23,7 @@ edge_awareness_1 = {
         {"id": 5},
         {"id": 6},
         {"id": 7},
-        {"id": 8}
+        {"id": 8},
     ],
     "links": [
         {"source": 1, "target": 2},
@@ -47,7 +47,7 @@ edge_awareness_2_3 = {
         {"id": 5},
         {"id": 6},
         {"id": 7},
-        {"id": 8}
+        {"id": 8},
     ],
     "links": [
         {"source": 1, "target": 2},
@@ -56,7 +56,7 @@ edge_awareness_2_3 = {
         {"source": 4, "target": 5},
         {"source": 5, "target": 6},
         {"source": 6, "target": 7},
-        {"source": 7, "target": 8}
+        {"source": 7, "target": 8},
     ],
     "name": "edge awareness graph 2, 3",
 }
@@ -88,6 +88,7 @@ for i in range(8):
 # c21: cost function between G_2 and G_1
 # c23: cost function between G_2 and G_3
 
+
 def euclidean_cost(v1, v2):
     n1 = v1.shape[0]
     n2 = v2.shape[0]
@@ -98,6 +99,6 @@ def euclidean_cost(v1, v2):
 
     return c
 
+
 c21 = euclidean_cost(d2, d1)
 c23 = euclidean_cost(d2, d3)
-

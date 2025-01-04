@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 
+
 def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
     """Generate the adjacency for a stochastic block model SBM from a tuple (length n)
     of sizes an (nxn) matrix of probabilities.
@@ -47,8 +48,9 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
     # Generate Nondiagonal blocks
     for i in range(n_b - 1):
         for j in range(i + 1, n_b):
-            A[start[i]:start[i + 1], start[j]:start[j + 1]] = np.random.choice([0, 1], size=(sizes[i], sizes[j]),
-                                                                               p=[1 - probs[i, j], probs[i, j]])
+            A[start[i] : start[i + 1], start[j] : start[j + 1]] = np.random.choice(
+                [0, 1], size=(sizes[i], sizes[j]), p=[1 - probs[i, j], probs[i, j]]
+            )
 
     # Fill lower triangular matrix
     A = A + A.T
@@ -60,7 +62,17 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
 np.random.seed(1009)
 
 m = 10
-A1 = stochastic_block_model((m,m,m,m), np.array([[0.9,0.1,0.1,0.1],[0.1,0.9,0.1,0.1],[0.1,0.1,0.9,0.1],[0.1,0.1,0.1,0.9]]))
+A1 = stochastic_block_model(
+    (m, m, m, m),
+    np.array(
+        [
+            [0.9, 0.1, 0.1, 0.1],
+            [0.1, 0.9, 0.1, 0.1],
+            [0.1, 0.1, 0.9, 0.1],
+            [0.1, 0.1, 0.1, 0.9],
+        ]
+    ),
+)
 
 # Adjacency matrix
 A2 = A1.copy()
