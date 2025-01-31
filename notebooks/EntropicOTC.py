@@ -1,6 +1,12 @@
 import numpy as np
 import copy
 from scipy.optimize import linprog
+import ot
+#from scipy.special import logsumexp
+#import jax
+#import jax.numpy as jnp
+#from ott.solvers.linear.sinkhorn import Sinkhorn
+
 
 def round_transpoly(X, r, c):
     A = X.copy()
@@ -114,6 +120,66 @@ def entropic_tci(h, P0, Px, Py, xi, sink_iter):
     return P
 
 
+def entropic_tci1(h, P0, Px, Py, xi, reg_num, sink_iter):
+
+    dx, dy = Px.shape[0], Py.shape[0]
+    P = P0.copy()
+    #P = copy.deepcopy(P0)
+    h_mat = np.reshape(h, (dx, dy))
+    K = -xi * h_mat
+
+    for i in range(dx):
+        for j in range(dy):
+            dist_x = Px[i, :]
+            dist_y = Py[j, :]
+            x_idxs = np.where(dist_x > 0)[0]
+            y_idxs = np.where(dist_y > 0)[0]
+
+            if len(x_idxs) == 1 or len(y_idxs) == 1:
+                P[dy * i + j, :] = P0[dy * i + j, :]
+            else:
+                A_matrix = K[np.ix_(x_idxs, y_idxs)]
+                sub_dist_x = dist_x[x_idxs]
+                sub_dist_y = dist_y[y_idxs]
+                sol = ot.sinkhorn(sub_dist_x, sub_dist_y, A_matrix, reg = reg_num, numItermax = sink_iter)
+                #sol = logsinkhorn(A_matrix, sub_dist_x, sub_dist_y, sink_iter)
+                sol_full = np.zeros((dx, dy))
+                sol_full[np.ix_(x_idxs, y_idxs)] = sol
+                P[dy * i + j, :] = sol_full.T.flatten()
+
+    return P
+
+
+# def entropic_tci2(h, P0, Px, Py, xi, reg_num, sink_iter):
+
+#     dx, dy = Px.shape[0], Py.shape[0]
+#     P = P0.copy()
+#     #P = copy.deepcopy(P0)
+#     h_mat = np.reshape(h, (dx, dy))
+#     K = -xi * h_mat
+#     solver = Sinkhorn()
+
+#     for i in range(dx):
+#         for j in range(dy):
+#             dist_x = Px[i, :]
+#             dist_y = Py[j, :]
+#             x_idxs = np.where(dist_x > 0)[0]
+#             y_idxs = np.where(dist_y > 0)[0]
+
+#             if len(x_idxs) == 1 or len(y_idxs) == 1:
+#                 P[dy * i + j, :] = P0[dy * i + j, :]
+#             else:
+#                 A_matrix = K[np.ix_(x_idxs, y_idxs)]
+#                 sub_dist_x = dist_x[x_idxs]
+#                 sub_dist_y = dist_y[y_idxs]
+#                 sol = solver(sub_dist_x, sub_dist_y, A_matrix)
+#                 sol_full = np.zeros((dx, dy))
+#                 sol_full[np.ix_(x_idxs, y_idxs)] = sol
+#                 P[dy * i + j, :] = sol_full.T.flatten()
+
+#     return P
+    
+
 def get_ind_tc(Px, Py):
     dx, dx_col = Px.shape
     dy, dy_col = Py.shape
@@ -180,3 +246,75 @@ def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 10, get_sd =
         exp_cost = g[0].item()
 
     return exp_cost, P, stat_dist
+
+
+def entropic_otc1(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_iter = 10, get_sd = False):
+
+    dx, dy = Px.shape[0], Py.shape[0]
+    max_c = np.max(c)
+    tol = 1e-5 * max_c
+
+    g_old = max_c * np.ones(dx * dy)
+    g = g_old - 10 * tol
+    P = get_ind_tc(Px, Py)
+    iter_ctr = 0
+    while g_old[0] - g[0] > tol:
+        iter_ctr += 1
+        P_old = P
+        g_old = g
+
+        # Approximate transition coupling evaluation
+        g, h = approx_tce(P, c, L, T)
+
+        # Entropic transition coupling improvement
+        P = entropic_tci1(h, P_old, Px, Py, xi, reg_num, sink_iter)
+
+    # In case of numerical instability, make non-negative and normalize.
+    P = np.maximum(P, 0)
+    row_sums = np.sum(P, axis=1, keepdims=True)
+    P = P / np.where(row_sums > 0, row_sums, 1)
+
+    if get_sd:
+        stat_dist, exp_cost = get_best_stat_dist(P,c)
+        stat_dist = np.reshape(stat_dist, (dx, dy))
+    else:
+        stat_dist = None
+        exp_cost = g[0].item()
+
+    return exp_cost, P, stat_dist
+
+
+# def entropic_otc2(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_iter = 10, get_sd = False):
+
+#     dx, dy = Px.shape[0], Py.shape[0]
+#     max_c = np.max(c)
+#     tol = 1e-5 * max_c
+
+#     g_old = max_c * np.ones(dx * dy)
+#     g = g_old - 10 * tol
+#     P = get_ind_tc(Px, Py)
+#     iter_ctr = 0
+#     while g_old[0] - g[0] > tol:
+#         iter_ctr += 1
+#         P_old = P
+#         g_old = g
+
+#         # Approximate transition coupling evaluation
+#         g, h = approx_tce(P, c, L, T)
+
+#         # Entropic transition coupling improvement
+#         P = entropic_tci2(h, P_old, Px, Py, xi, reg_num, sink_iter)
+
+#     # In case of numerical instability, make non-negative and normalize.
+#     P = np.maximum(P, 0)
+#     row_sums = np.sum(P, axis=1, keepdims=True)
+#     P = P / np.where(row_sums > 0, row_sums, 1)
+
+#     if get_sd:
+#         stat_dist, exp_cost = get_best_stat_dist(P,c)
+#         stat_dist = np.reshape(stat_dist, (dx, dy))
+#     else:
+#         stat_dist = None
+#         exp_cost = g[0].item()
+
+#     return exp_cost, P, stat_dist
