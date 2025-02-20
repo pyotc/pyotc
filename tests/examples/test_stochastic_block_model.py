@@ -23,10 +23,10 @@ A1 = stochastic_block_model(
 sbm_1 = nx.from_numpy_array(A1)
 
 def test_shape_A1():
-    assert A1.shape == (10,10)
+    assert A1.shape == (40,40)
 
 def test_A1_symmetry():
     assert np.array_equal(A1, A1.T)
 
 def test_A1_graph():
-    assert len(sbm_1.edges()) == 124
+    assert len(sbm_1.edges()) == 216
