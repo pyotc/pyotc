@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 from scipy.optimize import linprog
 import ot
 

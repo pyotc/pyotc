@@ -1,7 +1,6 @@
 import numpy as np
 from numpy.linalg import pinv
 from scipy.optimize import linprog
-from scipy.linalg import fractional_matrix_power
 import copy
 import ot
 
