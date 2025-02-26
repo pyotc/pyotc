@@ -2,10 +2,6 @@ import numpy as np
 import copy
 from scipy.optimize import linprog
 import ot
-#from scipy.special import logsumexp
-#import jax
-#import jax.numpy as jnp
-#from ott.solvers.linear.sinkhorn import Sinkhorn
 
 
 def round_transpoly(X, r, c):
@@ -81,7 +77,7 @@ def approx_tce(P, c, L, T):
 
     g = np.mean(g) * np.ones((d, 1))
     diff = c - g
-    h = diff
+    h = diff.copy()
     t = 1
     while t <= T and np.max(np.abs(P @ diff)) > tol * c_max:
         h += P @ diff
@@ -115,7 +111,7 @@ def entropic_tci(h, P0, Px, Py, xi, sink_iter):
                 sol = logsinkhorn(A_matrix, sub_dist_x, sub_dist_y, sink_iter)
                 sol_full = np.zeros((dx, dy))
                 sol_full[np.ix_(x_idxs, y_idxs)] = sol
-                P[dy * i + j, :] = sol_full.T.flatten()
+                P[dy * i + j, :] = sol_full.flatten()
 
     return P
 
@@ -145,7 +141,7 @@ def entropic_tci1(h, P0, Px, Py, xi, reg_num, sink_iter):
                 #sol = logsinkhorn(A_matrix, sub_dist_x, sub_dist_y, sink_iter)
                 sol_full = np.zeros((dx, dy))
                 sol_full[np.ix_(x_idxs, y_idxs)] = sol
-                P[dy * i + j, :] = sol_full.T.flatten()
+                P[dy * i + j, :] = sol_full.flatten()
 
     return P
 
@@ -175,7 +171,7 @@ def entropic_tci1(h, P0, Px, Py, xi, reg_num, sink_iter):
 #                 sol = solver(sub_dist_x, sub_dist_y, A_matrix)
 #                 sol_full = np.zeros((dx, dy))
 #                 sol_full[np.ix_(x_idxs, y_idxs)] = sol
-#                 P[dy * i + j, :] = sol_full.T.flatten()
+#                 P[dy * i + j, :] = sol_full.flatten()
 
 #     return P
     
