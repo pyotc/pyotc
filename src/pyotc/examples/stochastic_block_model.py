@@ -1,4 +1,3 @@
-import networkx as nx
 import numpy as np
 
 
@@ -56,37 +55,3 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
     A = A + A.T
 
     return A
-
-
-# Seed number
-np.random.seed(1009)
-
-m = 10
-A1 = stochastic_block_model(
-    (m, m, m, m),
-    np.array(
-        [
-            [0.9, 0.1, 0.1, 0.1],
-            [0.1, 0.9, 0.1, 0.1],
-            [0.1, 0.1, 0.9, 0.1],
-            [0.1, 0.1, 0.1, 0.9],
-        ]
-    ),
-)
-
-# Adjacency matrix
-A2 = A1.copy()
-A2[2, 20] = 0
-A2[20, 2] = 0
-A2[4, 16] = 0
-A2[16, 4] = 0
-
-A3 = A1.copy()
-A3[0, 1] = 0
-A3[1, 0] = 0
-A3[3, 4] = 0
-A3[4, 3] = 0
-
-sbm_1 = nx.from_numpy_array(A1)
-sbm_2 = nx.from_numpy_array(A2)
-sbm_3 = nx.from_numpy_array(A3)
