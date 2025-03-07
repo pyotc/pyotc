@@ -32,13 +32,13 @@ test_data = zip(M, sbms, trans, costs)
 def test_time_exact_otc(m, sbm, transition, cost):
     # scipy linprog algo
     start = time.time()
-    iter_ctr1, exp_cost1, otc1, stat_dist1 = exact_otc1(transition["P1"], transition["P2"], cost)
+    exp_cost1, otc1, stat_dist1 = exact_otc1(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc1` (scipy) run time: {end - start}")
 
     # python optimal transport algo
     start = time.time()
-    iter_ctr2, exp_cost2, otc2, stat_dist2 = exact_otc1_pot(transition["P1"], transition["P2"], cost)
+    exp_cost2, otc2, stat_dist2 = exact_otc1_pot(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc1_pot` (pot) run time: {end - start}")
 
