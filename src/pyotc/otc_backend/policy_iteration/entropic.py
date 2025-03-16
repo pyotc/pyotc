@@ -31,7 +31,7 @@ def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 10, get_sd =
     P = P / np.where(row_sums > 0, row_sums, 1)
 
     if get_sd:
-        stat_dist, exp_cost = get_best_stat_dist(P,c)
+        stat_dist, exp_cost = get_best_stat_dist(P, c)
         stat_dist = np.reshape(stat_dist, (dx, dy))
     else:
         stat_dist = None
@@ -67,7 +67,7 @@ def entropic_otc1(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_ite
     P = P / np.where(row_sums > 0, row_sums, 1)
 
     if get_sd:
-        stat_dist, exp_cost = get_best_stat_dist(P,c)
+        stat_dist, exp_cost = get_best_stat_dist(P, c)
         stat_dist = np.reshape(stat_dist, (dx, dy))
     else:
         stat_dist = None

@@ -32,9 +32,10 @@ def get_best_stat_dist(P, c):
     
     return stat_dist, exp_cost
 
-def get_stat_dist(Pz):
+
+def get_stat_dist(P):
     # Calculate the eigenvalues and eigenvectors
-    eigenvalues, eigenvectors = np.linalg.eig(Pz.T)
+    eigenvalues, eigenvectors = np.linalg.eig(P.T)
 
     # Find the index of the eigenvalue closest to 1
     idx = np.argmin(np.abs(eigenvalues - 1))
@@ -46,3 +47,4 @@ def get_stat_dist(Pz):
     )  # Normalize to make it a probability distribution
 
     return stationary_dist
+

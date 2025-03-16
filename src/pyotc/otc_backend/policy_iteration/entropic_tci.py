@@ -7,7 +7,6 @@ def entropic_tci(h, P0, Px, Py, xi, sink_iter):
 
     dx, dy = Px.shape[0], Py.shape[0]
     P = P0.copy()
-    #P = copy.deepcopy(P0)
     h_mat = np.reshape(h, (dx, dy))
     K = -xi * h_mat
 
@@ -36,7 +35,6 @@ def entropic_tci1(h, P0, Px, Py, xi, reg_num, sink_iter):
 
     dx, dy = Px.shape[0], Py.shape[0]
     P = P0.copy()
-    #P = copy.deepcopy(P0)
     h_mat = np.reshape(h, (dx, dy))
     K = -xi * h_mat
 
