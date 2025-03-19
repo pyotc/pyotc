@@ -28,7 +28,7 @@ def exact_otc_lp(Px, Py, c, get_best_sd=True):
             else:         
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
-                exp_cost = np.sum(stat_dist * c)
+                exp_cost = g[0].item()
             return float(exp_cost), P, stat_dist
 
     return None, None, None
@@ -57,7 +57,7 @@ def exact_otc_pot(Px, Py, c, get_best_sd=True):
             else:         
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
-                exp_cost = np.sum(stat_dist * c)
+                exp_cost = g[0].item()
             return float(exp_cost), P, stat_dist
 
     return None, None, None
