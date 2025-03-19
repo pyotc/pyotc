@@ -5,7 +5,7 @@ from .exact_tci_pot import exact_tci as exact_tci_pot
 from .utils import get_ind_tc, get_stat_dist, get_best_stat_dist
 
 
-def exact_otc_lp(Px, Py, c, get_best_sd=False):
+def exact_otc_lp(Px, Py, c, get_best_sd=True):
     dx = Px.shape[0]
     dy = Py.shape[0]
 
@@ -29,12 +29,12 @@ def exact_otc_lp(Px, Py, c, get_best_sd=False):
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = np.sum(stat_dist * c)
-            return exp_cost, P, stat_dist
+            return float(exp_cost), P, stat_dist
 
     return None, None, None
 
 
-def exact_otc_pot(Px, Py, c, get_best_sd=False):
+def exact_otc_pot(Px, Py, c, get_best_sd=True):
     dx = Px.shape[0]
     dy = Py.shape[0]
 
@@ -58,6 +58,6 @@ def exact_otc_pot(Px, Py, c, get_best_sd=False):
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = np.sum(stat_dist * c)
-            return exp_cost, P, stat_dist
+            return float(exp_cost), P, stat_dist
 
     return None, None, None

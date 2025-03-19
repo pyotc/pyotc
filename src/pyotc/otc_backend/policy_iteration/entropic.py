@@ -4,7 +4,7 @@ from .approx_tce import approx_tce
 from .entropic_tci import entropic_tci, entropic_tci1
 
 
-def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 10, get_sd = False):
+def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 100, get_sd = False):
 
     dx, dy = Px.shape[0], Py.shape[0]
     max_c = np.max(c)
@@ -40,7 +40,7 @@ def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 10, get_sd =
     return exp_cost, P, stat_dist
 
 
-def entropic_otc1(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_iter = 10, get_sd = False):
+def entropic_otc1(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_iter = 100, get_sd = False):
 
     dx, dy = Px.shape[0], Py.shape[0]
     max_c = np.max(c)
