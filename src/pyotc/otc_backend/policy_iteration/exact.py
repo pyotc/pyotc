@@ -24,8 +24,8 @@ def exact_otc_lp(Px, Py, c, get_best_sd=False):
         if np.all(P == P_old):
             if get_best_sd:
                 stat_dist, exp_cost = get_best_stat_dist(P, c)
-                stat_dist = np.reshape(stat_dist, (dx, dy))                
-            else:         
+                stat_dist = np.reshape(stat_dist, (dx, dy))
+            else:
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = np.sum(stat_dist * c)
@@ -53,8 +53,8 @@ def exact_otc_pot(Px, Py, c, get_best_sd=False):
         if np.all(P == P_old):
             if get_best_sd:
                 stat_dist, exp_cost = get_best_stat_dist(P, c)
-                stat_dist = np.reshape(stat_dist, (dx, dy))                
-            else:         
+                stat_dist = np.reshape(stat_dist, (dx, dy))
+            else:
                 stat_dist = get_stat_dist(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = np.sum(stat_dist * c)

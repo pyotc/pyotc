@@ -9,6 +9,7 @@ import numpy as np
 import copy
 from pyotc.otc_backend.optimal_transport.pot import computeot_pot
 
+
 def check_constant(f, Px, threshold=1e-3):
     dx = Px.shape[0]
     g_const = True
@@ -47,7 +48,7 @@ def exact_tci(g, h, P0, Px, Py):
     dy = Py.shape[0]
     Pz = np.zeros((dx * dy, dx * dy))
     g_const = check_constant(f=g, Px=Px)
-    
+
     # If g is not constant, improve transition coupling against g.
     if not g_const:
         Pz = setup_ot(f=g, Px=Px, Py=Py, Pz=Pz)
@@ -55,10 +56,10 @@ def exact_tci(g, h, P0, Px, Py):
             Pz = copy.deepcopy(P0)
         else:
             return Pz
-        
+
     # Try to improve with respect to h.
     Pz = setup_ot(f=h, Px=Px, Py=Py, Pz=Pz)
     if np.max(np.abs(np.matmul(P0, h) - np.matmul(Pz, h))) <= 1e-4:
         Pz = copy.deepcopy(P0)
-        
+
     return Pz

@@ -1,8 +1,9 @@
 import numpy as np
 
+
 def round_transpoly(X, r, c):
     A = X.copy()
-    #A = copy.deepcopy(X)
+    # A = copy.deepcopy(X)
     n1, n2 = A.shape
 
     r_A = np.sum(A, axis=1)
@@ -25,19 +26,21 @@ def round_transpoly(X, r, c):
 
     return A
 
+
 def logsumexp(X, axis=None):
-    
-    y = np.max(X, axis=axis, keepdims=True) #use 'keepdims' to make matrix operation X-y work
+    y = np.max(
+        X, axis=axis, keepdims=True
+    )  # use 'keepdims' to make matrix operation X-y work
     s = y + np.log(np.sum(np.exp(X - y), axis=axis, keepdims=True))
-    
+
     return np.squeeze(s, axis=axis)
 
-def logsinkhorn(A, r, c, T):
 
+def logsinkhorn(A, r, c, T):
     dx, dy = A.shape
     f = np.zeros(dx)
     g = np.zeros(dy)
-    
+
     for t in range(T):
         if t % 2 == 0:
             f = np.log(r) - logsumexp(A + g, axis=1)
@@ -45,5 +48,5 @@ def logsinkhorn(A, r, c, T):
             g = np.log(c) - logsumexp(A + f[:, np.newaxis], axis=0)
 
     P = round_transpoly(np.exp(f[:, np.newaxis] + A + g), r, c)
-    
+
     return P

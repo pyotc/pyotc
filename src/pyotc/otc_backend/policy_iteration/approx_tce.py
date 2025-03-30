@@ -1,11 +1,11 @@
 import numpy as np
 
-def approx_tce(P, c, L, T):
 
+def approx_tce(P, c, L, T):
     d = P.shape[0]
     c = np.reshape(c, (d, -1))
     c_max = np.max(c)
-    
+
     g_old = c
     g = P @ g_old
     l = 1
