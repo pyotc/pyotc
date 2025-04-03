@@ -83,6 +83,19 @@ Before you submit a pull request, check that it meets these guidelines:
 3. We use github actions ([TODO#19](https://github.com/jhineman/pyotc/issues/19)) for our CI which runs on nox.
 
 ## `uv` workflow
+
+### Adding dependencies with uv
+If you're adding true dependency, say for example `pytorch`, this is done simply with
+```bash
+uv add pytorch
+```
+See also documentation on [adding dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/#adding-dependencies)
+
+If you're adding a [development dependency](https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies) (e.g `pytest`) there is a little extra
+```bash
+uv add --dev pytest
+```
+
 ### Running nox via `uv`
 ```bash
 # in project root
