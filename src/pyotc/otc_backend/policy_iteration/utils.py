@@ -17,6 +17,20 @@ def get_ind_tc(Px, Py):
     
 
 def get_best_stat_dist(P, c):
+    """    
+    Given a transition matrix P and a cost vector c,
+    this function computes the stationary distribution that minimizes the expected cost
+    via linear programming.
+    
+    Args:
+        P (np.ndarray): Transition matrix.
+        c (np.ndarray): Cost vector.
+        
+    Returns:
+        stat_dist (np.ndarray): Best stationary distribution.
+        exp_cost (float): Corresponding expected cost.
+    """
+
     # Set up constraints.
     n = P.shape[0]
     c = np.reshape(c, (n, -1))
@@ -34,6 +48,17 @@ def get_best_stat_dist(P, c):
 
 
 def get_stat_dist(P):
+    """
+    Computes the stationary distribution of a Markov chain given its transition matrix 
+    using the eigenvalue method.
+
+    Args:
+        P (np.ndarray): Transition matrix of shape (n, n).
+
+    Returns:
+        stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
+    """
+    
     # Calculate the eigenvalues and eigenvectors
     eigenvalues, eigenvectors = np.linalg.eig(P.T)
 
@@ -42,9 +67,7 @@ def get_stat_dist(P):
 
     # Get the corresponding eigenvector
     stationary_dist = np.real(eigenvectors[:, idx])
-    stationary_dist /= np.sum(
-        stationary_dist
-    )  # Normalize to make it a probability distribution
+    stationary_dist /= np.sum(stationary_dist)  # Normalize to make it a probability distribution
 
     return stationary_dist
 
