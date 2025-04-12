@@ -50,16 +50,16 @@ def exact_otc_pot(Px, Py, c, get_best_sd=True):
     can be found in Chapters 8 and 9 of "Markov Decision Processes: Discrete Stochastic Dynamic Programming" by Martin L. Puterman.
 
     Args:
-        Px (np.ndarray): Transition matrix of the source Markov chain (shape: dx * dx).
-        Py (np.ndarray): Transition matrix of the target Markov chain (shape: dy * dy).
-        c (np.ndarray): Cost function (shape: dx * dy).
+        Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
+        c (np.ndarray): Cost function of shape (dx, dy).
         get_best_sd (bool): If True, compute the best stationary distribution and exact expected cost
                             via linear programming; otherwise, return any stationary distribution of the OTC.
 
     Returns:
         exp_cost (float): Expected transport cost under the optimal transition coupling.
-        P (np.ndarray): Optimal transition coupling matrix (shape: dx*dy*dx*dy).
-        stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling (shape: dx*dy).
+        P (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
+        stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
 
         Returns (None, None, None) if the algorithm fails to converge.
     """

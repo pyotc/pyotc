@@ -19,12 +19,12 @@ def exact_tce(Pz, c):
     If the system is not full rank, a pseudo-inverse (pinv) is used as fallback.
 
     Args:
-        Pz (np.ndarray): Transition matrix of shape (d, d).
-        c (np.ndarray): Cost vector of shape (d,) or (d, 1).
+        Pz (np.ndarray): Transition matrix of shape (dx*dy, dx*dy).
+        c (np.ndarray): Cost vector of shape (dx*dy,) or (dx*dy, 1).
 
     Returns:
-        g (np.ndarray): First coupling vector of shape (d,).
-        h (np.ndarray): Second coupling vector of shape (d,).
+        g (np.ndarray): First coupling vector of shape (dx*dy,).
+        h (np.ndarray): Second coupling vector of shape (dx*dy,).
 
     Notes:
         - If the matrix A is singular or ill-conditioned, the solution uses `np.linalg.pinv`, 

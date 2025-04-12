@@ -9,17 +9,17 @@ import numpy as np
 import copy
 from pyotc.otc_backend.optimal_transport.pot import computeot_pot
 
-def check_constant(f, Px, threshold=1e-3):
+def check_constant(f, Px, threshold=1e-3):    
     dx = Px.shape[0]
-    g_const = True
+    f_const = True
     for i in range(dx):
         for j in range(i + 1, dx):
             if abs(f[i] - f[j]) > threshold:
-                g_const = False
+                f_const = False
                 break
-        if not g_const:
+        if not f_const:
             break
-    return g_const
+    return f_const
 
 
 def setup_ot(f, Px, Py, Pz):
@@ -42,6 +42,23 @@ def setup_ot(f, Px, Py, Pz):
 
 
 def exact_tci(g, h, P0, Px, Py):
+    """
+    Performs exact Transition Coupling Improvement (TCI) using optimal transport.
+
+    This function iteratively refines a transition coupling matrix by solving OT problems
+    with respect to coupling evaluation functions g and h. 
+    
+    Args:
+        g (np.ndarray): TCE vector g of shape dx*dy.
+        h (np.ndarray): TCE vector h of shape dx*dy.
+        P0 (np.ndarray): Previous transition coupling matrix of shape (dx*dy, dx*dy).
+        Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
+
+    Returns:
+        np.ndarray: Updated transition coupling matrix of shape (dx*dy, dx*dy).
+    """
+    
     # Check if g is constant.
     dx = Px.shape[0]
     dy = Py.shape[0]
