@@ -1,7 +1,23 @@
 import numpy as np
 from scipy.optimize import linprog
 
+# Check whether we can refactor the implementation using np.kron.
 def get_ind_tc(Px, Py):
+    """
+    Computes the independent transition coupling of two transition matrices.
+
+    Given two transition matrices Px and Py, this function returns the product
+    transition matrix over the joint state space, assuming independence between
+    the two chains.
+
+    Args:
+        Px (np.ndarray): Transition matrix of the first Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the second Markov chain of shape (dy, dy).
+
+    Returns:
+        np.ndarray: Independent transition coupling matrix of shape (dx * dy, dx * dy),
+                    where entry (i, j) = Px[x_row, x_col] * Py[y_row, y_col].
+    """
     dx, dx_col = Px.shape
     dy, dy_col = Py.shape
 
