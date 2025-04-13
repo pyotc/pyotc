@@ -9,11 +9,22 @@ import numpy as np
 import copy
 from pyotc.otc_backend.optimal_transport.pot import computeot_pot
 
-def check_constant(f, Px, threshold=1e-3):    
-    dx = Px.shape[0]
+def check_constant(f, threshold=1e-3):  
+    """
+    Determines whether all elements of the vector f are approximately equal.
+
+    Args:
+        f (np.ndarray): Function vector of shape (d,).
+        threshold (float): Tolerance for the maximum allowable difference between elements.
+
+    Returns:
+        bool: True if all elements of f differ by no more than the threshold; False otherwise.
+    """
+   
+    d = f.shape[0]
     f_const = True
-    for i in range(dx):
-        for j in range(i + 1, dx):
+    for i in range(d):
+        for j in range(i + 1, d):
             if abs(f[i] - f[j]) > threshold:
                 f_const = False
                 break
@@ -23,6 +34,26 @@ def check_constant(f, Px, threshold=1e-3):
 
 
 def setup_ot(f, Px, Py, Pz):
+    """
+    This improvement step selects a new transition coupling matrix Pz that minimizes Pzf.
+    In more detail, we may select a transition coupling Pz such that for each state pair (x, y), 
+    the corresponding row r = Pz((x, y), ·) minimizes rf over couplings r \in \Pi(P(x, ·), Q(y, ·)).
+    This is done by solving the optimal transport problem for each state pair (x, y) in the source
+    and target Markov chains. The resulting transition coupling matrix Pz is updated accordingly.
+
+    This function uses the POT (Python Optimal Transport) library to solve the optimal transport problem
+    for each (x, y) state pair and updates the transition coupling matrix.
+
+    Args:
+        f (np.ndarray): Cost function reshaped as of shape (dx*dy,).
+        Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
+        Pz (np.ndarray): Transition coupling matrix to update of shape (dx*dy, dx*dy).
+
+    Returns:
+        np.ndarray: Updated transition coupling matrix Pz.
+    """
+    
     dx = Px.shape[0]
     dy = Py.shape[0]
     f_mat = np.reshape(f, (dx, dy))
@@ -63,7 +94,7 @@ def exact_tci(g, h, P0, Px, Py):
     dx = Px.shape[0]
     dy = Py.shape[0]
     Pz = np.zeros((dx * dy, dx * dy))
-    g_const = check_constant(f=g, Px=Px)
+    g_const = check_constant(f=g)
     
     # If g is not constant, improve transition coupling against g.
     if not g_const:
