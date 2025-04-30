@@ -37,7 +37,7 @@ def setup_ot(f, Px, Py, Pz):
     """
     This improvement step selects a new transition coupling matrix Pz that minimizes Pzf.
     In more detail, we may select a transition coupling Pz such that for each state pair (x, y), 
-    the corresponding row r = Pz((x, y), ·) minimizes rf over couplings r \in \Pi(P(x, ·), Q(y, ·)).
+    the corresponding row r = Pz((x, y), ·) minimizes rf over couplings r in Pi(P(x, ·), Q(y, ·)).
     This is done by solving the optimal transport problem for each state pair (x, y) in the source
     and target Markov chains. The resulting transition coupling matrix Pz is updated accordingly.
 

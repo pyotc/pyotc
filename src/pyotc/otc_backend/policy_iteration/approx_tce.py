@@ -1,6 +1,20 @@
 import numpy as np
 
 def approx_tce(P, c, L, T):
+    """
+    Approximates the Transition Coupling Evaluation (TCE) vectors g and h
+    using a truncation-based approximation of the exact TCE method. 
+    
+    Args:
+        P (np.ndarray): Transition matrix of shape (dx*dy, dx*dy).
+        c (np.ndarray): Cost vector of shape (dx*dy,) or (dx*dy, 1).
+        L (int): Maximum number of iterations for computing the cost vector g.
+        T (int): Maximum number of iterations for computing the bias vector h.
+
+    Returns:
+        g (np.ndarray): Approximated average cost (gain) vector of shape (dx*dy,).
+        h (np.ndarray): Approximated bias vector of shape (dx*dy,).
+    """
 
     d = P.shape[0]
     c = np.reshape(c, (d, -1))

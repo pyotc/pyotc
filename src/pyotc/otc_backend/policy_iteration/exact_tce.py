@@ -23,8 +23,8 @@ def exact_tce(Pz, c):
         c (np.ndarray): Cost vector of shape (dx*dy,) or (dx*dy, 1).
 
     Returns:
-        g (np.ndarray): First coupling vector of shape (dx*dy,).
-        h (np.ndarray): Second coupling vector of shape (dx*dy,).
+        g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
+        h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
 
     Notes:
         - If the matrix A is singular or ill-conditioned, the solution uses `np.linalg.pinv`, 
