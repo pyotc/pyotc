@@ -7,7 +7,6 @@ import numpy as np
 from numpy.linalg import pinv
 
 
-# TODO: document, unit test, add warnings about pinv
 def exact_tce(Pz, c):
     """
     Computes the exact Transition Coupling Evaluation (TCE) vectors g and h 
