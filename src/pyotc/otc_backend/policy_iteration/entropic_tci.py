@@ -4,6 +4,24 @@ from pyotc.otc_backend.optimal_transport.logsinkhorn import logsinkhorn
 
 
 def entropic_tci(h, P0, Px, Py, xi, sink_iter):
+    """
+    Performs entropic Transition Coupling Improvement (TCI) using log-domain Sinkhorn algorithm.
+
+    For each (i, j) state pair from the product space of two Markov chains, this function solves
+    a local entropic optimal transport problem based on the bias vector h.
+
+    Args:
+        h (np.ndarray): Bias vector of shape (dx*dy,).
+        P0 (np.ndarray): Previous transition coupling matrix of shape (dx*dy, dx*dy).
+        Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
+        xi (float): Scaling factor for entropic cost adjustment.
+        sink_iter (int): Number of iterations for the log-Sinkhorn solver.
+
+    Returns:
+        np.ndarray: Updated transition coupling matrix of shape (dx*dy, dx*dy).
+    """
+
     dx, dy = Px.shape[0], Py.shape[0]
     P = P0.copy()
     h_mat = np.reshape(h, (dx, dy))
@@ -31,6 +49,22 @@ def entropic_tci(h, P0, Px, Py, xi, sink_iter):
 
 
 def entropic_tci1(h, P0, Px, Py, xi, reg_num, sink_iter):
+    """
+    Performs entropic Transition Coupling Improvement (TCI) using the Sinkhorn algorithm from POT.
+
+    Args:
+        h (np.ndarray): Bias vector of shape (dx*dy,).
+        P0 (np.ndarray): Previous transition coupling matrix of shape (dx*dy, dx*dy).
+        Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
+        Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
+        xi (float): Scaling factor for entropic cost adjustment.
+        reg_num (float): Regularization strength for the Sinkhorn solver.
+        sink_iter (int): Maximum number of Sinkhorn iterations.
+
+    Returns:
+        np.ndarray: Updated transition coupling matrix of shape (dx*dy, dx*dy).
+    """
+
     dx, dy = Px.shape[0], Py.shape[0]
     P = P0.copy()
     h_mat = np.reshape(h, (dx, dy))

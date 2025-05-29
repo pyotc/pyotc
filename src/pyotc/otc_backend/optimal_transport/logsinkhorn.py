@@ -28,15 +28,39 @@ def round_transpoly(X, r, c):
 
 
 def logsumexp(X, axis=None):
-    y = np.max(
-        X, axis=axis, keepdims=True
-    )  # use 'keepdims' to make matrix operation X-y work
+    """
+    Numerically stable log-sum-exp operation.
+
+    Args:
+        X (np.ndarray): Input array.
+        axis (int or tuple of ints, optional): Axis or axes over which to operate.
+
+    Returns:
+        np.ndarray: The result of log(sum(exp(X))) along the specified axis.
+    """
+    
+    y = np.max(X, axis=axis, keepdims=True) #use 'keepdims' to make matrix operation X-y work
     s = y + np.log(np.sum(np.exp(X - y), axis=axis, keepdims=True))
 
     return np.squeeze(s, axis=axis)
 
 
 def logsinkhorn(A, r, c, T):
+    """
+    Implementation of classical Sinkhorn algorithm for matrix scaling.
+    Each iteration simply alternately updates (projects) all rows or
+    all columns to have correct marginals.
+
+    Args:
+        A (np.ndarray): Negative scaled cost matrix of shape (dx, dy), e.g., -xi * cost.
+        r (np.ndarray): desired row sums (marginals) (shape: dx,). Should sum to 1.
+        c (np.ndarray): desired column sums (marginals) (shape: dy,). Should sum to 1.
+        T (int): Number of full Sinkhorn iterations.
+
+    Returns:
+        np.ndarray: Final scaled matrix of shape (dx, dy).
+    """
+
     dx, dy = A.shape
     f = np.zeros(dx)
     g = np.zeros(dy)

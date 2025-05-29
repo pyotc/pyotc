@@ -1,6 +1,7 @@
 """Test and benchmark exact OTC technique"""
 
 import numpy as np
+import networkx as nx
 import time
 import pytest
 
@@ -8,86 +9,83 @@ from pyotc.otc_backend.policy_iteration.exact import exact_otc_lp
 from pyotc.otc_backend.policy_iteration.exact import exact_otc_pot
 from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
+from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
+from pyotc.examples.edge_awareness import graph_1, graph_2, graph_3, c21, c23
 
+# 1. Test exact OTC on stochastic block model
 np.random.seed(1009)
-
-def two_comm_sbm():
-    P = np.array([[.8, .2],[.2, .8]])
-    return P
-
-def assortative_sbm():
-    """Creates a 4-community assortative stochastic block model matrix."""
-    P = np.array([
-        [0.8, 0.1, 0.05, 0.05],
-        [0.1, 0.8, 0.05, 0.05],
-        [0.05, 0.05, 0.8, 0.1],
-        [0.05, 0.05, 0.1, 0.8]
-    ])
-    return P
-
-def hierarchical_sbm():
-    """Creates a 4-community hierarchical stochastic block model matrix."""
-    P = np.array([
-        [0.7, 0.6, 0.2, 0.1],
-        [0.6, 0.7, 0.2, 0.1],
-        [0.2, 0.2, 0.7, 0.6],
-        [0.1, 0.1, 0.6, 0.7]
-    ])
-    return P
-prob_mat_0 = two_comm_sbm()
-prob_mat_1 = assortative_sbm()
-prob_mat_2 = hierarchical_sbm()
-
+prob_mat = np.array(
+        [
+            [0.9, 0.1, 0.1, 0.1],
+            [0.1, 0.9, 0.1, 0.1],
+            [0.1, 0.1, 0.9, 0.1],
+            [0.1, 0.1, 0.1, 0.9],
+        ]
+    )
 M = [2, 4, 8, 16]
-sbms = [
-    {
-        "A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat_1),
-        "A2": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat_1),
-    }
-    for m in M
-]
-trans = [{"P1": adj_to_trans(s["A1"]), "P2": adj_to_trans(s["A2"])} for s in sbms]
-costs = [get_degree_cost(a["P1"], a["P2"]) for a in trans]
-expected_costs = [0.0, 0.0, 0.0, 0.0]
-test_data = zip(M, trans, costs, expected_costs)
-marked_test_data = [data if data[0] <= 4 else pytest.param(*data, marks=pytest.mark.slow) for data in test_data]
+sbms = [{"A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
+        "A2": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),}
+        for m in M]
+trans = [{"P1": adj_to_trans(s["A1"]), "P2": adj_to_trans(s["A2"])} 
+        for s in sbms]
+costs = [get_degree_cost(s["A1"], s["A2"]) for s in sbms]
+
+test_data = zip(trans, costs)
+
+@pytest.mark.parametrize("transition, cost", test_data)
+def test_sbm_exact_otc(transition, cost):
+    # scipy linprog algo
+    start = time.time()
+    exp_cost1, _, _ = exact_otc_lp(transition["P1"], transition["P2"], cost)
+    end = time.time()
+    print(f"`exact_otc` (scipy) run time: {end - start}")
+
+    # python optimal transport algo
+    start = time.time()
+    exp_cost2, _, _ = exact_otc_pot(transition["P1"], transition["P2"], cost)
+    end = time.time()
+    print(f"`exact_otc_pot` (pot) run time: {end - start}")
+
+    # check consistency
+    assert np.allclose(exp_cost1, exp_cost2)
+
+    
+
+# 2. Test exact OTC on wheel graph
+wheel_A = [nx.to_numpy_array(wheel_1), nx.to_numpy_array(wheel_2), nx.to_numpy_array(wheel_3)]
+wheel_P = [adj_to_trans(A) for A in wheel_A]
+wheel_c = [get_degree_cost(wheel_A[0], wheel_A[1]), get_degree_cost(wheel_A[0], wheel_A[2])]
+
+def test_wheel_exact_otc():
+    # python optimal transport algo
+    start = time.time()
+    exp_cost12, _, _ = exact_otc_pot(wheel_P[0], wheel_P[1], wheel_c[0])
+    exp_cost13, _, _ = exact_otc_pot(wheel_P[0], wheel_P[2], wheel_c[1])
+    end = time.time()
+    print(f"`exact_otc_pot` (pot) run time: {end - start}")
+
+    # check consistency
+    print(exp_cost12, exp_cost13)
+    assert np.allclose(exp_cost12, 2.6551724137931036)
+    assert np.allclose(exp_cost13, 2.551724137931033)
+    
 
 
-@pytest.mark.parametrize("m, transition, cost, expected_cost", marked_test_data)
-def test_exact_otc_lp(m, transition, cost, expected_cost):
-    exp_cost1, otc1, stat_dist1 = exact_otc_lp(transition["P1"], transition["P2"], cost)
-    assert np.allclose(exp_cost1, expected_cost)
+# 3. Test exact OTC on edge awareness example
+edge_awareness_A = [nx.to_numpy_array(graph_1), nx.to_numpy_array(graph_2), nx.to_numpy_array(graph_3)]
+edge_awareness_P = [adj_to_trans(A) for A in edge_awareness_A]
+edge_awareness_c = [c21, c23]
 
+def test_edge_awareness_exact_otc():
+    # python optimal transport algo
+    start = time.time()
+    exp_cost21, _, _ = exact_otc_pot(edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0])
+    exp_cost23, _, _ = exact_otc_pot(edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1])
+    end = time.time()
+    print(f"`exact_otc_pot` (pot) run time: {end - start}")
 
-@pytest.mark.parametrize("m, transition, cost, expected_cost", marked_test_data)
-def test_exact_otc_pot(m, transition, cost, expected_cost):
-    exp_cost1, otc1, stat_dist1 = exact_otc_pot(transition["P1"], transition["P2"], cost)
-    assert np.allclose(exp_cost1, expected_cost)
-
-
-# @pytest.mark.parametrize("m, sbm, transition, cost", test_data)
-# def test_time_exact_otc(m, sbm, transition, cost):
-#     # scipy linprog algo
-#     start = time.time()
-#     exp_cost1, otc1, stat_dist1 = exact_otc_lp(transition["P1"], transition["P2"], cost)
-#     end = time.time()
-#     print(f"`exact_otc` (scipy) run time: {end - start}")
-
-#     # python optimal transport algo
-#     start = time.time()
-#     exp_cost2, otc2, stat_dist2 = exact_otc_pot(
-#         transition["P1"], transition["P2"], cost
-#     )
-#     end = time.time()
-#     print(f"`exact_otc_pot` (pot) run time: {end - start}")
-
-#     start = time.time()
-#     exp_cost3, otc3, stat_dist3 = exact_otc_pot(
-#         transition["P1"], transition["P2"], cost, get_best_sd=True
-#     )
-#     end = time.time()
-#     print(f"`exact_otc_pot` (pot, get_best_sd) run time: {end - start}")
-
-#     # check consistency
-#     assert np.allclose(exp_cost1, exp_cost2)
-#     assert np.allclose(exp_cost2, exp_cost3)
+    # check consistency
+    print(exp_cost21, exp_cost23)
+    assert np.allclose(exp_cost21, 0.5714285714285714)
+    assert np.allclose(exp_cost23, 0.4464098659648351)
+    
