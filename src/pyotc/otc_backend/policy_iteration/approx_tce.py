@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def approx_tce(P, c, L, T):
     """
     Approximates the Transition Coupling Evaluation (TCE) vectors g and h
@@ -19,7 +20,7 @@ def approx_tce(P, c, L, T):
     d = P.shape[0]
     c = np.reshape(c, (d, -1))
     c_max = np.max(c)
-    
+
     g_old = c
     g = P @ g_old
     l = 1
