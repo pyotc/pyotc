@@ -1,5 +1,5 @@
-"""Test and benchmark exact OTC technique
-"""
+"""Test and benchmark exact OTC technique"""
+
 import numpy as np
 import networkx as nx
 import time
