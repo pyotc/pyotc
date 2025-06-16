@@ -2,10 +2,9 @@ import numpy as np
 import scipy.sparse as sp
 from scipy.optimize import linprog 
 import ot
-
 import time
 
-
+### Existing code imported from other folders
 def weight(x):
     return x / np.sum(x)
 
@@ -20,7 +19,6 @@ def adj_to_trans(A):
             T[i, k[idx]] = vals[idx]
     row_sums = T.sum(axis=1)
     return T / row_sums[:, np.newaxis]
-
 
 def get_degree_cost(A1, A2):
     n1 = A1.shape[0]
@@ -70,7 +68,6 @@ def stochastic_block_model(sizes: tuple, probs: np.ndarray) -> np.ndarray:
 
     # Fill lower triangular matrix
     A = A + A.T
-
     return A
 
 def computeot_pot(C, r, c):
@@ -84,8 +81,19 @@ def computeot_pot(C, r, c):
 
     return lp_sol, lp_val
 
-
+# Adapted exact_tce and exact_tci to be compatible with sparse data types, 
+# specifically those from scipy.sparse (e.g., as used with import scipy.sparse as sp)
 def exact_tce_sparse(R_sparse, c):
+    '''
+    Computes the exact TCE (Transport Cost Estimation) for a sparse transition matrix R_sparse and cost vector c.
+
+    Solving Ax = b using a direct solver (sp.linalg.spsolve) on large networks resulted in:
+    "Not enough memory to perform factorization."
+    This is likely due to excessive fill-in during LU factorization of the large sparse matrix.
+
+    To address this, we switch to an iterative solver (scipy.sparse.linalg.lsmr),
+    which is more memory-efficient and better suited for large-scale sparse systems.
+    '''
     n = R_sparse.shape[0]
     c = np.reshape(c, (n, -1))
     I = sp.eye(n, format='csr')
@@ -102,11 +110,10 @@ def exact_tce_sparse(R_sparse, c):
     # permc_specs = ['COLAMD', 'MMD_ATA', 'MMD_AT_PLUS_A', 'NATURAL']
     # solution = None 
     # for spec in permc_specs:
-    #     print(spec)
     #     try:
     #         current_solution = sp.linalg.spsolve(A, rhs, permc_spec=spec)
-    #         print("spsolve successful with spec:", spec)
     #         if not np.any(np.abs(current_solution) > 1e15):
+    #         print("spsolve successful with spec:", spec)
     #             solution = current_solution
     #             break 
     #         else:
@@ -158,9 +165,22 @@ def exact_tci_sparse(g, h, P0, Px, Py):
     Pz = setup_ot_sparse_fixed(h, Px, Py, Pz) 
     if np.max(np.abs(P0.dot(h) - Pz.dot(h))) <= 1e-4:
         Pz = P0.copy()
-
     return Pz
 
+
+
+# After iteratively repeating 'tce' and 'tci' until convergence, we obtain the optimal transition coupling P.
+# The subsequent objective is to compute its stationary distribution.
+# More precisely, our goal is to identify the stationary distribution that corresponds to the optimal (minimum) transport cost.
+
+# Finding the cost-minimizing stationary distribution can be computationally expensive.
+# Therefore, we also provide methods to compute an arbitrary stationary distribution.
+# Note: For finite-state ergodic Markov chains, the stationary distribution is unique.
+
+# We provide multiple options for computing the stationary distribution:
+# - 'best': Aims to find the stationary distribution that explicitly minimizes the optimal transport (OT) cost.
+# - 'eigenvalue': Computes and returns a stationary distribution using an eigenvalue approach.
+# - 'iterative': Derives a stationary distribution through a power iterative process.
 
 def get_best_stat_dist(P, c):
     # Set up constraints.
@@ -178,8 +198,12 @@ def get_best_stat_dist(P, c):
     
     return stat_dist, exp_cost
 
-
 def get_best_stat_dist_sparse(P_sparse, c):
+    '''
+    This is a sparse version of 'get_best_stat_dist', but for unknown reasons,
+    it is more susceptible to memory issues than 'get_best_stat_dist'.
+    It is kept for record-keeping purposes but is not actively used.
+    '''
     n = P_sparse.shape[0]
     c = np.reshape(c, (n, -1))
 
@@ -201,7 +225,7 @@ def get_best_stat_dist_sparse(P_sparse, c):
 
     return res.x, res.fun
 
-def get_stat_dist_sparse(P_sparse, max_iter=10000, tol=1e-10):
+def get_stat_dist_iterative(P_sparse, max_iter=10000, tol=1e-10):
     """
     Computes the stationary distribution of a sparse transition matrix using power iteration.
 
@@ -225,18 +249,42 @@ def get_stat_dist_sparse(P_sparse, max_iter=10000, tol=1e-10):
     pi /= np.sum(pi)  # ensure normalization
     return pi
 
+def get_stat_dist_eigenvalue(P):
+    """
+    Computes the stationary distribution of a Markov chain given its transition matrix 
+    using the eigenvalue method.
 
+    Args:
+        P (np.ndarray): Transition matrix of shape (n, n).
 
-def exact_otc_pot_sparse(Px, Py, c, get_best_sd=True, max_iter=100):
-    start = time.time()
+    Returns:
+        stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
+    """
     
+    # Calculate the eigenvalues and eigenvectors
+    eigenvalues, eigenvectors = np.linalg.eig(P.T)
+
+    # Find the index of the eigenvalue closest to 1
+    idx = np.argmin(np.abs(eigenvalues - 1))
+
+    # Get the corresponding eigenvector
+    stationary_dist = np.real(eigenvectors[:, idx])
+    stationary_dist /= np.sum(stationary_dist)  # Normalize to make it a probability distribution
+
+    return stationary_dist
+
+
+# Sparse version of the optimal transport coupling (OTC)
+# Combines exact_tce_sparse and exact_tci_sparse methods to compute the optimal transport coupling
+def exact_otc_pot_sparse(Px, Py, c, stat_dist='best', max_iter=100):
+    
+    start = time.time()
     print("Starting exact_otc_pot_sparse...")
     dx, dy = Px.shape[0], Py.shape[0]
     P = sp.kron(sp.csr_matrix(Px), sp.csr_matrix(Py), format='csr')
     
     for iter in range(max_iter):
         print("Iteration:", iter)
-
         P_old = P.copy()
         
         print("Computing exact TCE...")
@@ -245,18 +293,24 @@ def exact_otc_pot_sparse(Px, Py, c, get_best_sd=True, max_iter=100):
         print("Computing exact TCI...")
         P = exact_tci_sparse(g, h, P_old, Px, Py) #, forbidden_set)
 
-        #print(np.max(np.abs(P.toarray()-P_old.toarray())))
         #if np.max(np.abs(P.toarray()-P_old.toarray())) <= 1e-10:
         if (P != P_old).nnz == 0:
             print("Convergence reached. Computing stationary distribution...")
-            if get_best_sd:
-                #stat_dist, exp_cost = get_best_stat_dist(P,c)
-                stat_dist, exp_cost = get_best_stat_dist_sparse(P, c)
+            if stat_dist == 'best':
+                stat_dist, exp_cost = get_best_stat_dist(P, c)
+                # stat_dist, exp_cost = get_best_stat_dist_sparse(P, c)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
-            else:
-                stat_dist = get_stat_dist_sparse(P)
+            elif stat_dist == 'iterative':
+                stat_dist = get_stat_dist_iterative(P)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = g[0].item()
+            elif stat_dist == 'eigenvalue':
+                stat_dist = get_stat_dist_eigenvalue(P.toarray())
+                #stat_dist = get_stat_dist_eigenvalue(P)
+                stat_dist = np.reshape(stat_dist, (dx, dy))
+                exp_cost = g[0].item()
+            else:
+                raise ValueError("Invalid value for stat_dist. Choose 'best', 'iterative', or 'eigenvalue'.")
             end = time.time()
             print(f"Convergence reached in {iter} iterations, took {end - start:.4f} seconds")
             return float(exp_cost), P, stat_dist
@@ -269,7 +323,7 @@ if __name__ == "__main__":
     # Seed number
     np.random.seed(1004)
     
-    m = 40
+    m = 5
     A1 = stochastic_block_model(
         (m, m, m, m),
         np.array(
@@ -297,7 +351,7 @@ if __name__ == "__main__":
     c = get_degree_cost(A1, A2)
 
     start = time.time()
-    exp_cost, otc, stat_dist = exact_otc_pot_sparse(P1, P2, c)
+    exp_cost, _, stat_dist = exact_otc_pot_sparse(P1, P2, c, stat_dist='iterative')
     end = time.time()
     print("Cost:", exp_cost)
     print("Time:", end - start)
