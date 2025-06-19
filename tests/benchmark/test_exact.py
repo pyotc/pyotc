@@ -5,8 +5,8 @@ import networkx as nx
 import time
 import pytest
 
-from pyotc.otc_backend.policy_iteration.exact import exact_otc_lp
-from pyotc.otc_backend.policy_iteration.exact import exact_otc_pot
+from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc_lp
+from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc_pot
 from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
 from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3

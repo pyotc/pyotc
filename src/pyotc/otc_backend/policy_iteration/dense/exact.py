@@ -2,39 +2,41 @@ import numpy as np
 from .exact_tce import exact_tce
 from .exact_tci_lp import exact_tci as exact_tci_lp
 from .exact_tci_pot import exact_tci as exact_tci_pot
-from .utils import get_ind_tc, get_stat_dist, get_best_stat_dist
+from ..utils import get_ind_tc, get_stat_dist
+import time
 
-
-def exact_otc_lp(Px, Py, c, get_best_sd=True):
+def exact_otc_lp(Px, Py, c, stat_dist='best'):
+    start = time.time()
+    print("Starting exact_otc_sparse...")
+    
     dx = Px.shape[0]
     dy = Py.shape[0]
-
     P_old = np.ones((dx * dy, dx * dy))
     P = get_ind_tc(Px, Py)
+    
     while np.max(np.abs(P - P_old)) > 1e-10:
         P_old = np.copy(P)
 
-        # Transition coupling evaluation.
+        print("Computing exact TCE...")
         g, h = exact_tce(P, c)
 
-        # Transition coupling improvement.
+        print("Computing exact TCI...")
         P = exact_tci_lp(g, h, P_old, Px, Py)
 
         # Check for convergence.
         if np.all(P == P_old):
-            if get_best_sd:
-                stat_dist, exp_cost = get_best_stat_dist(P, c)
-                stat_dist = np.reshape(stat_dist, (dx, dy))
-            else:
-                stat_dist = get_stat_dist(P)
-                stat_dist = np.reshape(stat_dist, (dx, dy))
-                exp_cost = g[0].item()
+            print("Convergence reached. Computing stationary distribution...")
+            stat_dist = get_stat_dist(P, method=stat_dist, c=c)
+            stat_dist = np.reshape(stat_dist, (dx, dy))
+            exp_cost = g[0].item()
+            end = time.time()
+            print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
             return float(exp_cost), P, stat_dist
 
     return None, None, None
 
 
-def exact_otc_pot(Px, Py, c, get_best_sd=True):
+def exact_otc_pot(Px, Py, c, stat_dist='best'):
     """
     Solves the Optimal Transition Coupling (OTC) problem between two Markov chains 
     using policy iteration, as described in Algorithm 1 of the paper:
@@ -63,30 +65,31 @@ def exact_otc_pot(Px, Py, c, get_best_sd=True):
 
         Returns (None, None, None) if the algorithm fails to converge.
     """
+    start = time.time()
+    print("Starting exact_otc_sparse...")
     
     dx = Px.shape[0]
     dy = Py.shape[0]
-
     P_old = np.ones((dx * dy, dx * dy))
     P = get_ind_tc(Px, Py)
+    
     while np.max(np.abs(P - P_old)) > 1e-10:
         P_old = np.copy(P)
 
-        # Transition coupling evaluation.
+        print("Computing exact TCE...")
         g, h = exact_tce(P, c)
 
-        # Transition coupling improvement.
+        print("Computing exact TCI...")
         P = exact_tci_pot(g, h, P_old, Px, Py)
 
         # Check for convergence.
         if np.all(P == P_old):
-            if get_best_sd:
-                stat_dist, exp_cost = get_best_stat_dist(P, c)
-                stat_dist = np.reshape(stat_dist, (dx, dy))
-            else:
-                stat_dist = get_stat_dist(P)
-                stat_dist = np.reshape(stat_dist, (dx, dy))
-                exp_cost = g[0].item()
+            print("Convergence reached. Computing stationary distribution...")
+            stat_dist = get_stat_dist(P, method=stat_dist, c=c)
+            stat_dist = np.reshape(stat_dist, (dx, dy))
+            exp_cost = g[0].item()
+            end = time.time()
+            print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
             return float(exp_cost), P, stat_dist
-
+        
     return None, None, None

@@ -63,26 +63,78 @@ def get_best_stat_dist(P, c):
     return stat_dist, exp_cost
 
 
-def get_stat_dist(P):
-    """
-    Computes the stationary distribution of a Markov chain given its transition matrix 
-    using the eigenvalue method.
+# def get_stat_dist(P):
+#     """
+#     Computes the stationary distribution of a Markov chain given its transition matrix 
+#     using the eigenvalue method.
 
-    Args:
-        P (np.ndarray): Transition matrix of shape (n, n).
+#     Args:
+#         P (np.ndarray): Transition matrix of shape (n, n).
 
-    Returns:
-        stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
-    """
+#     Returns:
+#         stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
+#     """
     
-    # Calculate the eigenvalues and eigenvectors
-    eigenvalues, eigenvectors = np.linalg.eig(P.T)
+#     # Calculate the eigenvalues and eigenvectors
+#     eigenvalues, eigenvectors = np.linalg.eig(P.T)
 
-    # Find the index of the eigenvalue closest to 1
-    idx = np.argmin(np.abs(eigenvalues - 1))
+#     # Find the index of the eigenvalue closest to 1
+#     idx = np.argmin(np.abs(eigenvalues - 1))
 
-    # Get the corresponding eigenvector
-    stationary_dist = np.real(eigenvectors[:, idx])
-    stationary_dist /= np.sum(stationary_dist)  # Normalize to make it a probability distribution
+#     # Get the corresponding eigenvector
+#     stationary_dist = np.real(eigenvectors[:, idx])
+#     stationary_dist /= np.sum(stationary_dist)  # Normalize to make it a probability distribution
 
-    return stationary_dist
+#     return stationary_dist
+
+
+def get_stat_dist(P, method="eigenvalue", c=None):
+    if method == "best":
+        if c is None:
+            raise ValueError("Cost function 'c' is required when method='best'.")
+            # Set up constraints.
+        n = P.shape[0]
+        c = np.reshape(c, (n, -1))
+        Aeq = np.concatenate((P.T - np.eye(n), np.ones((1, n))), axis = 0)
+        beq = np.concatenate((np.zeros((n, 1)), 1), axis = None)
+        beq = beq.reshape(-1,1)
+        bound = [[0, None]] * n
+        
+        # Solve linear program.
+        res = linprog(c, A_eq=Aeq, b_eq=beq, bounds=bound)
+        pi = res.x
+        
+        return pi
+
+    elif method == "eigenvalue":
+        # Computes the stationary distribution of a Markov chain given its transition matrix using the eigenvalue method.
+            
+        # Calculate the eigenvalues and eigenvectors
+        eigenvalues, eigenvectors = np.linalg.eig(P.T)
+
+        # Find the index of the eigenvalue closest to 1
+        idx = np.argmin(np.abs(eigenvalues - 1))
+
+        # Get the corresponding eigenvector
+        pi = np.real(eigenvectors[:, idx])
+        pi /= np.sum(pi)  # Normalize to make it a probability distribution
+        return pi
+
+    elif method == "iterative":
+        # Computes the stationary distribution of a sparse transition matrix using power iteration.
+        max_iter = 10000
+        tol = 1e-10
+        
+        n = P.shape[0]
+        pi = np.ones(n) / n  # initial uniform distribution
+
+        for _ in range(max_iter):
+            pi_new = pi @ P
+            if np.linalg.norm(pi_new - pi, ord=1) < tol:
+                break
+            pi = pi_new
+        pi /= np.sum(pi)  # ensure normalization
+        return pi
+    
+    else:
+        raise ValueError(f"Invalid method '{method}'. Must be one of 'best', 'eigenvalue', or 'iterative'.")

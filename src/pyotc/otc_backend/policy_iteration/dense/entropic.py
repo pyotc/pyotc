@@ -14,7 +14,7 @@ Functions:
 """
 
 import numpy as np
-from .utils import get_ind_tc, get_best_stat_dist
+from ..utils import get_ind_tc, get_best_stat_dist
 from .approx_tce import approx_tce
 from .entropic_tci import entropic_tci, entropic_tci1
 
