@@ -50,7 +50,7 @@ def entropic_otc(Px, Py, c, L = 100, T = 100, xi = 0.1, sink_iter = 100, get_sd 
 
     g_old = max_c * np.ones(dx * dy)
     g = g_old - 10 * tol
-    P = get_ind_tc(Px, Py)
+    P = np.kron(Px, Py)
     iter_ctr = 0
     while g_old[0] - g[0] > tol:
         iter_ctr += 1
@@ -86,7 +86,7 @@ def entropic_otc1(Px, Py, c, L = 100, T = 100, xi = 0.1, reg_num = 0.1, sink_ite
 
     g_old = max_c * np.ones(dx * dy)
     g = g_old - 10 * tol
-    P = get_ind_tc(Px, Py)
+    P = np.kron(Px, Py)
     iter_ctr = 0
     while g_old[0] - g[0] > tol:
         iter_ctr += 1

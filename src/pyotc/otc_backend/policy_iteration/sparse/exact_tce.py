@@ -1,28 +1,49 @@
+'''
+Original Transition Coupling Evaluation (TCE) method from:
+https://www.jmlr.org/papers/volume23/21-0519/21-0519.pdf 
+'''
+
 import numpy as np
 import scipy.sparse as sp
 
 def exact_tce(R_sparse, c):
     '''
-    Computes the exact TCE (Transport Cost Estimation) for a sparse transition matrix R_sparse and cost vector c.
+    Computes the exact Transition Coupling Evaluation (TCE) vectors g and h for a given sparse transition matrix R_sparse and cost vector c.
+    
+    Specifically, solves the block linear system outlined in Algorithm 1a of the paper:
+    "Optimal Transport for Stationary Markov Chains via Policy Iteration"
+    (https://www.jmlr.org/papers/volume23/21-0519/21-0519.pdf).
 
-    Solving Ax = b using a direct solver (sp.linalg.spsolve) on large networks resulted in:
-    "Not enough memory to perform factorization."
-    This is likely due to excessive fill-in during LU factorization of the large sparse matrix.
-
-    To address this, we switch to an iterative solver (scipy.sparse.linalg.lsmr),
-    which is more memory-efficient and better suited for large-scale sparse systems.
+    Due to memory constraints associated with direct solvers (e.g., sp.linalg.spsolve),
+    an iterative solver (scipy.sparse.linalg.lsmr) is employed to efficiently handle large-scale sparse systems.
+    
+    Notes:
+        Solving Ax = b using a direct solver (sp.linalg.spsolve) on large networks resulted in:
+        "Not enough memory to perform factorization."
+        This is likely due to excessive fill-in during LU factorization of the large sparse matrix.
+        To address this, we switch to an iterative solver (scipy.sparse.linalg.lsmr), 
+        which is more memory-efficient and better suited for large-scale sparse systems.
+        
+    Args:
+        R_sparse (scipy.sparse.csr_matrix): Sparse transition matrix of shape (dx*dy, dx*dy).
+        c (np.ndarray): Cost vector of shape (dx, dy).
+    
+    Returns:
+        g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
+        h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
     '''
     n = R_sparse.shape[0]
-    c = np.reshape(c, (n, -1))
+    c = c.reshape(n)
+    
+    # Construct the block matrix A and right-hand side vector b
     I = sp.eye(n, format='csr')
-
     zero = sp.csr_matrix((n, n))
     A = sp.bmat([
         [I - R_sparse, zero, zero],
         [I, I - R_sparse, zero],
         [zero, I, I - R_sparse]
     ], format='csr')
-    rhs = np.concatenate([np.zeros((n, 1)), c, np.zeros((n, 1))])
+    b = np.concatenate([np.zeros(n), c, np.zeros(n)])
 
     # print("Solving sparse linear system in exact tce...")
     # permc_specs = ['COLAMD', 'MMD_ATA', 'MMD_AT_PLUS_A', 'NATURAL']
@@ -38,12 +59,14 @@ def exact_tce(R_sparse, c):
     #             print(f"Solution with {spec} contains large values, trying next spec.")
     #     except ValueError as e:
     #         print(f"spsolve with {spec} encountered an error: trying next spec.")
+    #   if solution is None:
+    #     raise RuntimeError("Failed to find a stable solution with any of the provided permc_specs for sp.linalg.spsolve solver.")
 
-    solution = sp.linalg.lsmr(A, rhs, atol=1e-10, btol=1e-10)[0]
-    
-    if solution is None:
-        raise RuntimeError("Failed to find a stable solution with any of the provided permc_specs for sp.linalg.spsolve solver.")
-    
+    # Solve the linear system using an iterative solver (lsmr)
+    solution = sp.linalg.lsmr(A, b, atol=1e-10, btol=1e-10)[0]
+
+    # Extract vectors g and h from the solution
     g = solution[:n]
     h = solution[n:2*n]
+    
     return g, h

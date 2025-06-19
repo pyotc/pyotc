@@ -1,37 +1,6 @@
 import numpy as np
 from scipy.optimize import linprog
 
-# Check whether we can refactor the implementation using np.kron.
-def get_ind_tc(Px, Py):
-    """
-    Computes the independent transition coupling of two transition matrices.
-
-    Given two transition matrices Px and Py, this function returns the product
-    transition matrix over the joint state space, assuming independence between
-    the two chains.
-
-    Args:
-        Px (np.ndarray): Transition matrix of the first Markov chain of shape (dx, dx).
-        Py (np.ndarray): Transition matrix of the second Markov chain of shape (dy, dy).
-
-    Returns:
-        np.ndarray: Independent transition coupling matrix of shape (dx * dy, dx * dy),
-                    where entry (i, j) = Px[x_row, x_col] * Py[y_row, y_col].
-    """
-    dx, dx_col = Px.shape
-    dy, dy_col = Py.shape
-
-    P_ind = np.zeros((dx * dy, dx_col * dy_col))
-    for x_row in range(dx):
-        for x_col in range(dx_col):
-            for y_row in range(dy):
-                for y_col in range(dy_col):
-                    idx1 = dy * (x_row) + y_row
-                    idx2 = dy * (x_col) + y_col
-                    P_ind[idx1, idx2] = Px[x_row, x_col] * Py[y_row, y_col]
-    return P_ind
-
-
 def get_best_stat_dist(P, c):
     """    
     Given a transition matrix P and a cost vector c,
@@ -88,53 +57,78 @@ def get_best_stat_dist(P, c):
 #     return stationary_dist
 
 
-def get_stat_dist(P, method="eigenvalue", c=None):
+def get_stat_dist(P, method='best', c=None):
+    """
+    Computes the stationary distribution of a Markov chain given its transition matrix P.
+
+    Supports multiple methods:
+        - 'best': Solves a linear program that minimizes cost under stationarity constraints.
+        - 'eigen': Solves for the stationary distribution using the eigenvalue method.
+        - 'iterative': Uses power iteration for large or sparse matrices.
+
+    Args:
+        P (np.ndarray): Transition matrix of the Markov chain, shape (n, n).
+        method (str): Method used to compute the stationary distribution. 
+                      One of 'eigen', 'iterative', or 'best'. Defaults to 'best'.
+        c (np.ndarray, optional): Cost vector of shape (n,) used only when method='best'.
+
+    Returns:
+        pi (np.ndarray): Stationary distribution vector of shape (n,), summing to 1.
+
+    Raises:
+        ValueError: If method is 'best' but cost vector `c` is not provided,
+                    or if an invalid method name is given.
+    """
     if method == "best":
+        # 'best' method minimizes expected cost under stationary constraints
         if c is None:
             raise ValueError("Cost function 'c' is required when method='best'.")
-            # Set up constraints.
+            
         n = P.shape[0]
         c = np.reshape(c, (n, -1))
+        
+        # Stationarity constraint: π^T P = π^T  ⇨  (P^T - I)^T π = 0
+        # Add additional constraint: sum(π) = 1
         Aeq = np.concatenate((P.T - np.eye(n), np.ones((1, n))), axis = 0)
         beq = np.concatenate((np.zeros((n, 1)), 1), axis = None)
         beq = beq.reshape(-1,1)
+        
         bound = [[0, None]] * n
         
-        # Solve linear program.
+        # Solve the linear program: minimize c^T π s.t. Aeq π = beq
         res = linprog(c, A_eq=Aeq, b_eq=beq, bounds=bound)
         pi = res.x
-        
         return pi
 
-    elif method == "eigenvalue":
-        # Computes the stationary distribution of a Markov chain given its transition matrix using the eigenvalue method.
-            
+    elif method == "eigen":
+        # Computes the stationary distribution using eigenvalue decomposition
         # Calculate the eigenvalues and eigenvectors
         eigenvalues, eigenvectors = np.linalg.eig(P.T)
 
-        # Find the index of the eigenvalue closest to 1
+        # Identify the eigenvector associated with eigenvalue closest to 1 and normalize to obtain a valid distribution
         idx = np.argmin(np.abs(eigenvalues - 1))
-
-        # Get the corresponding eigenvector
         pi = np.real(eigenvectors[:, idx])
-        pi /= np.sum(pi)  # Normalize to make it a probability distribution
+        pi /= np.sum(pi)  
         return pi
 
     elif method == "iterative":
-        # Computes the stationary distribution of a sparse transition matrix using power iteration.
+        # Computes the stationary distribution using power iteration
         max_iter = 10000
         tol = 1e-10
-        
         n = P.shape[0]
-        pi = np.ones(n) / n  # initial uniform distribution
+        
+        # Start from uniform distribution
+        pi = np.ones(n) / n  
 
         for _ in range(max_iter):
             pi_new = pi @ P
             if np.linalg.norm(pi_new - pi, ord=1) < tol:
                 break
             pi = pi_new
-        pi /= np.sum(pi)  # ensure normalization
+        
+        # Normalize the resulting distribution
+        pi /= np.sum(pi)
         return pi
     
     else:
-        raise ValueError(f"Invalid method '{method}'. Must be one of 'best', 'eigenvalue', or 'iterative'.")
+        raise ValueError(f"Invalid method '{method}'. Must be one of 'best', 'eigen', or 'iterative'.")
