@@ -33,4 +33,5 @@ jobs:
       - name: Run nox
         # the nox sessions here are small, thus we glob them together;
         # TODO: split across matrix that nox already knows: https://nox.thea.codes/en/stable/cookbook.html#generating-a-matrix-with-github-actions
-        run: uv run nox
+        # run: uv run nox
+        run: python -m nox --session tests-${{ matrix.python-version }}
