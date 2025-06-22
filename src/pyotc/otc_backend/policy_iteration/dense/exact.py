@@ -4,7 +4,7 @@ import time
 from .exact_tce import exact_tce
 from .exact_tci_lp import exact_tci as exact_tci_lp
 from .exact_tci_pot import exact_tci as exact_tci_pot
-from ..utils import get_ind_tc, get_stat_dist
+from ..utils import get_stat_dist
 
 
 def exact_otc_lp(Px, Py, c, stat_dist="best"):
