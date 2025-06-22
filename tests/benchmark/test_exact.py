@@ -15,22 +15,26 @@ from pyotc.examples.edge_awareness import graph_1, graph_2, graph_3, c21, c23
 # 1. Test exact OTC on stochastic block model
 np.random.seed(1009)
 prob_mat = np.array(
-        [
-            [0.9, 0.1, 0.1, 0.1],
-            [0.1, 0.9, 0.1, 0.1],
-            [0.1, 0.1, 0.9, 0.1],
-            [0.1, 0.1, 0.1, 0.9],
-        ]
-    )
+    [
+        [0.9, 0.1, 0.1, 0.1],
+        [0.1, 0.9, 0.1, 0.1],
+        [0.1, 0.1, 0.9, 0.1],
+        [0.1, 0.1, 0.1, 0.9],
+    ]
+)
 M = [2, 4, 8, 16]
-sbms = [{"A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
-        "A2": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),}
-        for m in M]
-trans = [{"P1": adj_to_trans(s["A1"]), "P2": adj_to_trans(s["A2"])} 
-        for s in sbms]
+sbms = [
+    {
+        "A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
+        "A2": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
+    }
+    for m in M
+]
+trans = [{"P1": adj_to_trans(s["A1"]), "P2": adj_to_trans(s["A2"])} for s in sbms]
 costs = [get_degree_cost(s["A1"], s["A2"]) for s in sbms]
 
 test_data = zip(trans, costs)
+
 
 @pytest.mark.parametrize("transition, cost", test_data)
 def test_sbm_exact_otc(transition, cost):
@@ -49,12 +53,19 @@ def test_sbm_exact_otc(transition, cost):
     # check consistency
     assert np.allclose(exp_cost1, exp_cost2)
 
-    
 
 # 2. Test exact OTC on wheel graph
-wheel_A = [nx.to_numpy_array(wheel_1), nx.to_numpy_array(wheel_2), nx.to_numpy_array(wheel_3)]
+wheel_A = [
+    nx.to_numpy_array(wheel_1),
+    nx.to_numpy_array(wheel_2),
+    nx.to_numpy_array(wheel_3),
+]
 wheel_P = [adj_to_trans(A) for A in wheel_A]
-wheel_c = [get_degree_cost(wheel_A[0], wheel_A[1]), get_degree_cost(wheel_A[0], wheel_A[2])]
+wheel_c = [
+    get_degree_cost(wheel_A[0], wheel_A[1]),
+    get_degree_cost(wheel_A[0], wheel_A[2]),
+]
+
 
 def test_wheel_exact_otc():
     # python optimal transport algo
@@ -68,19 +79,27 @@ def test_wheel_exact_otc():
     print(exp_cost12, exp_cost13)
     assert np.allclose(exp_cost12, 2.6551724137931036)
     assert np.allclose(exp_cost13, 2.551724137931033)
-    
 
 
 # 3. Test exact OTC on edge awareness example
-edge_awareness_A = [nx.to_numpy_array(graph_1), nx.to_numpy_array(graph_2), nx.to_numpy_array(graph_3)]
+edge_awareness_A = [
+    nx.to_numpy_array(graph_1),
+    nx.to_numpy_array(graph_2),
+    nx.to_numpy_array(graph_3),
+]
 edge_awareness_P = [adj_to_trans(A) for A in edge_awareness_A]
 edge_awareness_c = [c21, c23]
+
 
 def test_edge_awareness_exact_otc():
     # python optimal transport algo
     start = time.time()
-    exp_cost21, _, _ = exact_otc_pot(edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0])
-    exp_cost23, _, _ = exact_otc_pot(edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1])
+    exp_cost21, _, _ = exact_otc_pot(
+        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0]
+    )
+    exp_cost23, _, _ = exact_otc_pot(
+        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1]
+    )
     end = time.time()
     print(f"`exact_otc_pot` (pot) run time: {end - start}")
 
@@ -88,4 +107,3 @@ def test_edge_awareness_exact_otc():
     print(exp_cost21, exp_cost23)
     assert np.allclose(exp_cost21, 0.5714285714285714)
     assert np.allclose(exp_cost23, 0.4464098659648351)
-    

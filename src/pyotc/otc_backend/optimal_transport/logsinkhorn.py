@@ -38,8 +38,10 @@ def logsumexp(X, axis=None):
     Returns:
         np.ndarray: The result of log(sum(exp(X))) along the specified axis.
     """
-    
-    y = np.max(X, axis=axis, keepdims=True) #use 'keepdims' to make matrix operation X-y work
+
+    y = np.max(
+        X, axis=axis, keepdims=True
+    )  # use 'keepdims' to make matrix operation X-y work
     s = y + np.log(np.sum(np.exp(X - y), axis=axis, keepdims=True))
 
     return np.squeeze(s, axis=axis)

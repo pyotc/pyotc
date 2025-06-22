@@ -1,16 +1,17 @@
-'''
+"""
 Original Transition Coupling Improvements (TCI) method from:
-https://www.jmlr.org/papers/volume23/21-0519/21-0519.pdf 
-'''
+https://www.jmlr.org/papers/volume23/21-0519/21-0519.pdf
+"""
 
 import numpy as np
 import scipy.sparse as sp
 from pyotc.otc_backend.optimal_transport.pot import computeot_pot
 
+
 def setup_ot(f, Px, Py, R):
-    '''
+    """
     This improvement step updates the transition coupling matrix R that minimizes the product Rf element-wise.
-    In more detail, we may select a transition coupling R such that for each state pair (x, y), 
+    In more detail, we may select a transition coupling R such that for each state pair (x, y),
     the corresponding row r = R((x, y), ·) minimizes rf over couplings r in Pi(Px(x, ·), Py(y, ·)).
     This is done by solving the optimal transport problem for each state pair (x, y) in the source
     and target Markov chains. The resulting transition coupling matrix R is updated accordingly.
@@ -26,8 +27,8 @@ def setup_ot(f, Px, Py, R):
 
     Returns:
         R (np.ndarray): Updated transition coupling matrix of shape (dx*dy, dx*dy).
-    '''
-    
+    """
+
     dx, dy = Px.shape[0], Py.shape[0]
     f_mat = np.reshape(f, (dx, dy))
 
@@ -39,19 +40,20 @@ def setup_ot(f, Px, Py, R):
             if np.any(dist_x == 1) or np.any(dist_y == 1):
                 sol = np.outer(dist_x, dist_y)
             else:
-                sol, _ = computeot_pot(f_mat, dist_x, dist_y) 
+                sol, _ = computeot_pot(f_mat, dist_x, dist_y)
             idx = dy * x_row + y_row
             sol_flat = sol.flatten()
             for j in np.nonzero(sol_flat)[0]:
                 R[idx, j] = sol_flat[j]
-                
+
     return R
 
-def exact_tci(g, h, R0, Px, Py): 
-    '''
+
+def exact_tci(g, h, R0, Px, Py):
+    """
     Performs the Transition Coupling Improvement (TCI) step in the OTC algorithm.
 
-    This function attempts to update the current coupling transition matrix R0 
+    This function attempts to update the current coupling transition matrix R0
     based on the evaluation vectors g and h obtained from the Transition Coupling Evaluation (TCE).
 
     Args:
@@ -63,8 +65,8 @@ def exact_tci(g, h, R0, Px, Py):
 
     Returns:
         R (scipy.sparse.lil_matrix): Improved transition coupling matrix of shape (dx*dy, dx*dy).
-    '''
-    
+    """
+
     # Check if g is constant.
     dx, dy = Px.shape[0], Py.shape[0]
     R = sp.lil_matrix((dx * dy, dx * dy))
@@ -72,15 +74,15 @@ def exact_tci(g, h, R0, Px, Py):
 
     # If g is not constant, improve transition coupling against g.
     if not g_const:
-        R = setup_ot(g, Px, Py, R) 
+        R = setup_ot(g, Px, Py, R)
         if np.max(np.abs(R0.dot(g) - R.dot(g))) <= 1e-7:
             R = R0.copy()
         else:
             return R
 
     # Try to improve with respect to h.
-    R = setup_ot(h, Px, Py, R) 
+    R = setup_ot(h, Px, Py, R)
     if np.max(np.abs(R0.dot(h) - R.dot(h))) <= 1e-4:
         R = R0.copy()
-        
+
     return R

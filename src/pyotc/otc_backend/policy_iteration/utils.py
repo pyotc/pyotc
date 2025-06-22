@@ -1,16 +1,17 @@
 import numpy as np
 from scipy.optimize import linprog
 
+
 def get_best_stat_dist(P, c):
-    """    
+    """
     Given a transition matrix P and a cost vector c,
     this function computes the stationary distribution that minimizes the expected cost
     via linear programming.
-    
+
     Args:
         P (np.ndarray): Transition matrix.
         c (np.ndarray): Cost vector.
-        
+
     Returns:
         stat_dist (np.ndarray): Best stationary distribution.
         exp_cost (float): Corresponding expected cost.
@@ -34,7 +35,7 @@ def get_best_stat_dist(P, c):
 
 # def get_stat_dist(P):
 #     """
-#     Computes the stationary distribution of a Markov chain given its transition matrix 
+#     Computes the stationary distribution of a Markov chain given its transition matrix
 #     using the eigenvalue method.
 
 #     Args:
@@ -43,7 +44,7 @@ def get_best_stat_dist(P, c):
 #     Returns:
 #         stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
 #     """
-    
+
 #     # Calculate the eigenvalues and eigenvectors
 #     eigenvalues, eigenvectors = np.linalg.eig(P.T)
 
@@ -57,7 +58,7 @@ def get_best_stat_dist(P, c):
 #     return stationary_dist
 
 
-def get_stat_dist(P, method='best', c=None):
+def get_stat_dist(P, method="best", c=None):
     """
     Computes the stationary distribution of a Markov chain given its transition matrix P.
 
@@ -68,7 +69,7 @@ def get_stat_dist(P, method='best', c=None):
 
     Args:
         P (np.ndarray): Transition matrix of the Markov chain, shape (n, n).
-        method (str): Method used to compute the stationary distribution. 
+        method (str): Method used to compute the stationary distribution.
                       One of 'eigen', 'iterative', or 'best'. Defaults to 'best'.
         c (np.ndarray, optional): Cost vector of shape (n,) used only when method='best'.
 
@@ -83,18 +84,18 @@ def get_stat_dist(P, method='best', c=None):
         # 'best' method minimizes expected cost under stationary constraints
         if c is None:
             raise ValueError("Cost function 'c' is required when method='best'.")
-            
+
         n = P.shape[0]
         c = np.reshape(c, (n, -1))
-        
+
         # Stationarity constraint: π^T P = π^T  ⇨  (P^T - I)^T π = 0
         # Add additional constraint: sum(π) = 1
-        Aeq = np.concatenate((P.T - np.eye(n), np.ones((1, n))), axis = 0)
-        beq = np.concatenate((np.zeros((n, 1)), 1), axis = None)
-        beq = beq.reshape(-1,1)
-        
+        Aeq = np.concatenate((P.T - np.eye(n), np.ones((1, n))), axis=0)
+        beq = np.concatenate((np.zeros((n, 1)), 1), axis=None)
+        beq = beq.reshape(-1, 1)
+
         bound = [[0, None]] * n
-        
+
         # Solve the linear program: minimize c^T π s.t. Aeq π = beq
         res = linprog(c, A_eq=Aeq, b_eq=beq, bounds=bound)
         pi = res.x
@@ -108,7 +109,7 @@ def get_stat_dist(P, method='best', c=None):
         # Identify the eigenvector associated with eigenvalue closest to 1 and normalize to obtain a valid distribution
         idx = np.argmin(np.abs(eigenvalues - 1))
         pi = np.real(eigenvectors[:, idx])
-        pi /= np.sum(pi)  
+        pi /= np.sum(pi)
         return pi
 
     elif method == "iterative":
@@ -116,19 +117,21 @@ def get_stat_dist(P, method='best', c=None):
         max_iter = 10000
         tol = 1e-10
         n = P.shape[0]
-        
+
         # Start from uniform distribution
-        pi = np.ones(n) / n  
+        pi = np.ones(n) / n
 
         for _ in range(max_iter):
             pi_new = pi @ P
             if np.linalg.norm(pi_new - pi, ord=1) < tol:
                 break
             pi = pi_new
-        
+
         # Normalize the resulting distribution
         pi /= np.sum(pi)
         return pi
-    
+
     else:
-        raise ValueError(f"Invalid method '{method}'. Must be one of 'best', 'eigen', or 'iterative'.")
+        raise ValueError(
+            f"Invalid method '{method}'. Must be one of 'best', 'eigen', or 'iterative'."
+        )
