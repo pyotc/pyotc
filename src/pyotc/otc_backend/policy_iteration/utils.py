@@ -33,31 +33,6 @@ def get_best_stat_dist(P, c):
     return stat_dist, exp_cost
 
 
-# def get_stat_dist(P):
-#     """
-#     Computes the stationary distribution of a Markov chain given its transition matrix
-#     using the eigenvalue method.
-
-#     Args:
-#         P (np.ndarray): Transition matrix of shape (n, n).
-
-#     Returns:
-#         stationary_dist (np.ndarray): Stationary distribution vector (shape: (n,)), normalized to sum to 1.
-#     """
-
-#     # Calculate the eigenvalues and eigenvectors
-#     eigenvalues, eigenvectors = np.linalg.eig(P.T)
-
-#     # Find the index of the eigenvalue closest to 1
-#     idx = np.argmin(np.abs(eigenvalues - 1))
-
-#     # Get the corresponding eigenvector
-#     stationary_dist = np.real(eigenvectors[:, idx])
-#     stationary_dist /= np.sum(stationary_dist)  # Normalize to make it a probability distribution
-
-#     return stationary_dist
-
-
 def get_stat_dist(P, method="best", c=None):
     """
     Computes the stationary distribution of a Markov chain given its transition matrix P.
