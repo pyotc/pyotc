@@ -13,6 +13,7 @@ def weight(x):
     """
     return x / np.sum(x)
 
+
 def adj_to_trans(A):
     """
     Converts an adjacency matrix into a row-stochastic transition matrix.
@@ -61,8 +62,8 @@ def get_01_cost(V1, V2):
     """
     Computes a binary cost matrix between node features of two graphs based on inequality.
 
-    Given two vectors representing features of nodes from two graphs, this function 
-    returns a binary cost matrix where each entry is 1 if the corresponding features differ, 
+    Given two vectors representing features of nodes from two graphs, this function
+    returns a binary cost matrix where each entry is 1 if the corresponding features differ,
     and 0 otherwise.
 
     Args:
@@ -70,7 +71,7 @@ def get_01_cost(V1, V2):
         V2 (np.ndarray): Feature vector for nodes in graph 2, of shape (n2,).
 
     Returns:
-        np.ndarray: Binary cost matrix of shape (n1, n2), where entry (i, j) is 1 
+        np.ndarray: Binary cost matrix of shape (n1, n2), where entry (i, j) is 1
                     if V1[i] != V2[j], else 0.
     """
 
@@ -88,7 +89,7 @@ def get_sq_cost(V1, V2):
     Computes a cost matrix based on squared differences between node features of two graphs.
 
     Given two vectors representing node features from two graphs, this function computes
-    a cost matrix where each entry (i, j) is the squared difference between the i-th feature 
+    a cost matrix where each entry (i, j) is the squared difference between the i-th feature
     in graph 1 and the j-th feature in graph 2.
 
     Args:
@@ -98,7 +99,7 @@ def get_sq_cost(V1, V2):
     Returns:
         np.ndarray: Cost matrix of shape (n1, n2), where entry (i, j) = (V1[i] - V2[j]) ** 2.
     """
-    
+
     n1 = len(V1)
     n2 = len(V2)
     cost_mat = np.zeros((n1, n2))
@@ -106,4 +107,3 @@ def get_sq_cost(V1, V2):
         for j in range(n2):
             cost_mat[i, j] = (V1[i] - V2[j]) ** 2
     return cost_mat
-
