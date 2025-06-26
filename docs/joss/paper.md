@@ -25,14 +25,36 @@ header-includes:
 ---
 
 # Summary
-Recent scholarly works [@oconnor_optimal_2022] have introduced an extension of optimal transport that applies directly to product structued processes.
+Recent scholarly works [@oconnor_optimal_2022] have introduced an extension of optimal transport that applies directly to stationary Markkov Process.
+This allows for one to compute a useful distance between these objects, which can be useful for comparisons of networks/graphs, for example those coming from chemistry, biology, social science, and beyond.
+We provide a performant python implementation of this method [@oconnor_optimal_2022] and interfaces for related network/graph based problems [@netotc].
+Our implementation is open source, tested, and integrates with python data science ecosystem.
 
 # Statement of need
 Optimal transport proven a valuable, practical, and natural tool in data science and machine learning. As a problem in calculus of variations, conventional optimal transportation has many possible generalizations. A natural extension beyond probablity distributions is processes. Recent has provided initial theory and algorithms; we aim to provide a practical implementation of this work which is open for community extension. Secondly, our implementation provides a backend framework that is in parity with capability available for conventional optimal transport --- thereby offering parallelism via cpu and gpu.
 Finally, we provide initial and careful baselines of performance. We expect this tool to be practically
 applied in forthcoming work work on networks in chemistry, neuroscience, and biology.
 
+`pyotc` addresses the following technical needs: providing a python implementation, accelerating computation, expanding size of problem possible in terms of memory.
+There exist two other Matlab codes for optimal transport coupling. 
+These codes have served as inspiration, but retain common Matlab challenges: not open or free (though free alternatives exist) and incomplete ecosystem for data science.
+Python is the de facto language for data science and thus it natural to choose it for implementation.
+Being the de facto language for data science we can plug into the rich existing ecosystem.
+Namely for this specific project we integrate with `POT` (Python Optimal Transport) and network/graph theory tools likes like `networkx`.
+Follow on application could involve integration with standard tools for machine learning such as `scikit-learn`.
+
+In terms of accelerating computation, we provide a comparison for our implementation where we have made various choices for compute or storage.
+Where possible we try to compare with the existing Matlab codes.
+This is comparison is available in Table `\ref`.
+
 # Features
+Our implementation provides the tools necessary to recreate the examples given in [@oconnor_optimal_2022] and [@netotc] using python.
+Our implementation is faster than available codes through use of better underlying optimal transport code coming from both the exact *network simplex* code available in `POT` [@POT].
+We provide sparse storage which allows for scaling to larger problems in terms of stochastic block models.
+
+We provide the basic hello world example here and a number of other examples which can be modified to explore the base method.
+Our implementation is well documented and simple, esssentially python functions, and therefore allows for easy modification.
+
 <!--- 
 Test algorithm notation for pandoc
 -->
