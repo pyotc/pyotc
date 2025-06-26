@@ -15,17 +15,8 @@ import networkx as nx
 
 # Define graphs G1, G2, G3
 edge_awareness_1 = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 9)],
+    "edges": [
         {"source": 1, "target": 2},
         {"source": 2, "target": 3},
         {"source": 3, "target": 4},
@@ -39,17 +30,8 @@ edge_awareness_1 = {
 }
 
 edge_awareness_2_3 = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 9)],
+    "edges": [
         {"source": 1, "target": 2},
         {"source": 2, "target": 3},
         {"source": 3, "target": 4},
@@ -61,9 +43,9 @@ edge_awareness_2_3 = {
     "name": "edge awareness graph 2, 3",
 }
 
-graph_1 = nx.node_link_graph(data=edge_awareness_1)
-graph_2 = nx.node_link_graph(data=edge_awareness_2_3)
-graph_3 = nx.node_link_graph(data=edge_awareness_2_3)
+graph_1 = nx.node_link_graph(data=edge_awareness_1, edges="edges")
+graph_2 = nx.node_link_graph(data=edge_awareness_2_3, edges="edges")
+graph_3 = nx.node_link_graph(data=edge_awareness_2_3, edges="edges")
 
 # Define the coordinates of G_1, G_2, G_3
 # All vertices are located on the unit circle in R^2

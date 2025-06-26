@@ -13,21 +13,8 @@ import networkx as nx
 
 # Define graphs
 left_lollipop_graph = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-        {"id": 9},
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 13)],
+    "edges": [
         {"source": 1, "target": 2},
         {"source": 2, "target": 3},
         {"source": 3, "target": 4},
@@ -45,21 +32,8 @@ left_lollipop_graph = {
 }
 
 right_lollipop_graph = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-        {"id": 9},
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 13)],
+    "edges": [
         {"source": 7, "target": 9},
         {"source": 9, "target": 4},
         {"source": 4, "target": 6},
@@ -76,5 +50,5 @@ right_lollipop_graph = {
     "name": "right lollipop graph",
 }
 
-lollipop_1 = nx.node_link_graph(data=left_lollipop_graph)
-lollipop_2 = nx.node_link_graph(data=right_lollipop_graph)
+lollipop_1 = nx.node_link_graph(data=left_lollipop_graph, edges="edges")
+lollipop_2 = nx.node_link_graph(data=right_lollipop_graph, edges="edges")

@@ -14,25 +14,8 @@ import networkx as nx
 
 # Define graphs G1, G2, G3
 wheel_graph_1 = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-        {"id": 9},
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
-        {"id": 13},
-        {"id": 14},
-        {"id": 15},
-        {"id": 16},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 17)],
+    "edges": [
         {"source": 1, "target": 2},
         {"source": 1, "target": 3},
         {"source": 1, "target": 4},
@@ -68,25 +51,8 @@ wheel_graph_1 = {
 }
 
 wheel_graph_2 = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-        {"id": 9},
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
-        {"id": 13},
-        {"id": 14},
-        {"id": 15},
-        {"id": 16},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 17)],
+    "edges": [
         {"source": 1, "target": 3},
         {"source": 1, "target": 4},
         {"source": 1, "target": 5},
@@ -121,25 +87,8 @@ wheel_graph_2 = {
 }
 
 wheel_graph_3 = {
-    "nodes": [
-        {"id": 1},
-        {"id": 2},
-        {"id": 3},
-        {"id": 4},
-        {"id": 5},
-        {"id": 6},
-        {"id": 7},
-        {"id": 8},
-        {"id": 9},
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
-        {"id": 13},
-        {"id": 14},
-        {"id": 15},
-        {"id": 16},
-    ],
-    "links": [
+    "nodes": [{"id": i} for i in range(1, 17)],
+    "edges": [
         {"source": 1, "target": 2},
         {"source": 1, "target": 3},
         {"source": 1, "target": 4},
@@ -173,6 +122,6 @@ wheel_graph_3 = {
     "name": "wheel graph 3",
 }
 
-wheel_1 = nx.node_link_graph(data=wheel_graph_1)
-wheel_2 = nx.node_link_graph(data=wheel_graph_2)
-wheel_3 = nx.node_link_graph(data=wheel_graph_3)
+wheel_1 = nx.node_link_graph(data=wheel_graph_1, edges="edges")
+wheel_2 = nx.node_link_graph(data=wheel_graph_2, edges="edges")
+wheel_3 = nx.node_link_graph(data=wheel_graph_3, edges="edges")
