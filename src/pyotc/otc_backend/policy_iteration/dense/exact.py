@@ -40,7 +40,7 @@ def exact_otc_lp(Px, Py, c, stat_dist="best"):
     return None, None, None
 
 
-def exact_otc_pot(Px, Py, c, stat_dist="best"):
+def exact_otc(Px, Py, c, stat_dist="best"):
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
