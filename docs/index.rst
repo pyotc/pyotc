@@ -8,6 +8,11 @@ Welcome to pyotc's documentation!
    readme
    installation
    usage
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Developer Guide
+
    modules
    contributing
    authors
