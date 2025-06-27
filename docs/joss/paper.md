@@ -52,8 +52,16 @@ Our implementation provides the tools necessary to recreate the examples given i
 Our implementation is faster than available codes through use of better underlying optimal transport code coming from both the exact *network simplex* code available in `POT` [@POT].
 We provide sparse storage which allows for scaling to larger problems in terms of stochastic block models.
 
-We provide the basic hello world example here and a number of other examples which can be modified to explore the base method.
-Our implementation is well documented and simple, esssentially python functions, and therefore allows for easy modification.
+The `pyotc` code provides two major approaches to the OTC problem. 
+An *exact* solution procedure in which underlying optimal transport problems are solved by finding exact soltions via linear programming.
+Here the specialized *network simplex* algorithm is used from `POT` [@POT] [@cuturi], but we also provide a pure Python alternative.
+This is the core of the *improvement* part of policy iteration.
+In the *evaluation* step of policy iteration one must determine a stationary distribution.
+This can be approached many ways including as spectral problem.
+
+Alternatively to this exact approach, `pytoc` also provides an iterative approach based upon an entropic regularization.
+Here we provide a solvers which exploit large catalog of optimal transport capabilities in `POT` and from scratch impelmentations.
+There performance of these options is cataloged in Table `\ref`
 
 <!--- 
 Test algorithm notation for pandoc
@@ -81,6 +89,9 @@ i = 0 \;
 }
 \caption{Exact OTC Algorithm 1}
 \end{algorithm}
+
+We provide the basic hello world example here and a number of other examples which can be modified to explore the method.
+Our implementation is well documented and simple, esssentially python functions, and therefore allows for easy modification.
 
 # Examples
 <!--- 
@@ -112,6 +123,15 @@ print(f"Optimal Transport Coupling is {exact_otc.R[-1]}")
 ```
 
 # Conclusion
+`pyotc` provides a performant Python code for computing optimal transport couplings for stationary Markov chains and their related graph structures.
+Optimal transportation coupling is a classic example of opportunity to bring a novel computational tool to wider audience through open source software and improve it.
+Here we have shown moving to more open ecosystems such as Python have produced a faster and arguably more capable OTC code.
+
+As OTC is an active research topic, we believe there are significant opportunities to extend the work here.
+In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations.
+One could explore for example variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation).
+Implementation-wise, there are significant opportunities to provide additional interfaces to Python ecosystem, for example interfaces chem or bioinformatics sources.
+`pyotc` also enables additional benchmarking studies.
 
 # Acknowledgments
 
