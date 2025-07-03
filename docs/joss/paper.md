@@ -27,7 +27,7 @@ header-includes:
 # Summary
 Recent scholarly works [@oconnor_optimal_2022] have introduced an extension of optimal transport that applies directly to stationary Markkov Process.
 This allows for one to compute a useful distance between these objects, which can be useful for comparisons of networks/graphs, for example those coming from chemistry, biology, social science, and beyond.
-We provide a performant python implementation of this method [@oconnor_optimal_2022] and interfaces for related network/graph based problems [@netotc].
+We provide a performant python implementation of this method [@oconnor_optimal_2022] and interfaces for related network/graph based problems [@yi_alignment_2024].
 Our implementation is open source, tested, and integrates with python data science ecosystem.
 
 # Statement of need
@@ -40,21 +40,38 @@ There exist two other Matlab codes for optimal transport coupling.
 These codes have served as inspiration, but retain common Matlab challenges: not open or free (though free alternatives exist) and incomplete ecosystem for data science.
 Python is the de facto language for data science and thus it natural to choose it for implementation.
 Being the de facto language for data science we can plug into the rich existing ecosystem.
-Namely for this specific project we integrate with `POT` (Python Optimal Transport) and network/graph theory tools likes like `networkx`.
-Follow on application could involve integration with standard tools for machine learning such as `scikit-learn`.
+Namely for this specific project we integrate with `POT` (Python Optimal Transport) [@flamary_pot_2021] and network/graph theory tools likes like `networkx` [@hagberg_exploring_2008].
+Follow on application could involve integration with standard tools for machine learning such as `scikit-learn` [@pedregosa_scikit-learn_2011].
 
 In terms of accelerating computation, we provide a comparison for our implementation where we have made various choices for compute or storage.
 Where possible we try to compare with the existing Matlab codes.
 This is comparison is available in Table `\ref`.
 
+We emphasize that `pyotic` code provide the option for exact solution and entropic approximation.
+We believe that the inclusion of exact proceducre is important for both validation of the code by checking consistency between exact and approximate algorithms and for algorithmic development.
+Existing consistency results are based are based on a stability estimate, but we do not have rate of convergence information.
+In practice, the entropic regularization hyperparameter change convergence behavior and can be tuned.
+Selection of regularization is an active area of research in approximate optimal transport and as special case of Schroedinger Bridge problem [@peyre_computational_2021] [@nutz_introduction_2022].
+
+## Comparison with other available codes and lineage
+The original Matlab code for OTC was written by Kevin O'Connor and use for the work [@oconnor_optimal_2022] the code is available on github [@connor_oconnor-kevinotc_2022]. 
+This Matlab code with extended and used for network alignment in [@yi_alignment_2024].
+The `pyotc` started from these parents.
+
+Additional, related codes have been developed, but focus primarily on the entropic case.
+These works are those of Calo et al [@calo_bisimulation_2024] which provides a variation on the Sinkhorn iteration recorded in [@@oconnor_optimal_2022].
+Provided code is available on github [@calogithub].
+This code primarily primarily focuses on the entropic OTC algorithm.
+Another code that should be mentioned is differentiable extension of entropic OTC described in [@brugere_distances_2024] and implemented [@brugere_github]
+
 # Features
-Our implementation provides the tools necessary to recreate the examples given in [@oconnor_optimal_2022] and [@netotc] using python.
-Our implementation is faster than available codes through use of better underlying optimal transport code coming from both the exact *network simplex* code available in `POT` [@POT].
+Our implementation provides the tools necessary to recreate the examples given in [@oconnor_optimal_2022] and [@yi_alignment_2024] using python.
+Our implementation is faster than available codes through use of better underlying optimal transport code coming from both the exact *network simplex* code available in `POT` [@flamary_pot_2021].
 We provide sparse storage which allows for scaling to larger problems in terms of stochastic block models.
 
 The `pyotc` code provides two major approaches to the OTC problem. 
 An *exact* solution procedure in which underlying optimal transport problems are solved by finding exact soltions via linear programming.
-Here the specialized *network simplex* algorithm is used from `POT` [@POT] [@cuturi], but we also provide a pure Python alternative.
+Here the specialized *network simplex* algorithm is used from `POT` [@flamary_pot_2021] [@peyre_computational_2021], but we also provide a pure Python alternative.
 This is the core of the *improvement* part of policy iteration.
 In the *evaluation* step of policy iteration one must determine a stationary distribution.
 This can be approached many ways including as spectral problem.
@@ -130,7 +147,7 @@ Here we have shown moving to more open ecosystems such as Python have produced a
 As OTC is an active research topic, we believe there are significant opportunities to extend the work here.
 In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations.
 One could explore for example variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation).
-Implementation-wise, there are significant opportunities to provide additional interfaces to Python ecosystem, for example interfaces chem or bioinformatics sources.
+Implementation-wise, there are significant opportunities to provide additional interfaces to Python ecosystem, for example interfaces chem or bio informatics sources (for example RDKit [@landrum_rdkitrdkit_2025])
 `pyotc` also enables additional benchmarking studies.
 
 # Acknowledgments
