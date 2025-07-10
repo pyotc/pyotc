@@ -111,32 +111,56 @@ We provide the basic hello world example here and a number of other examples whi
 Our implementation is well documented and simple, esssentially python functions, and therefore allows for easy modification.
 
 # Examples
-<!--- 
-Below is a notional interface; this is still in process for our development.
--->
+Herein we provide a `hello world` style example in pure python, more details on this example are available notebooks and in the documentation.
 ```python
-from pyotc.exact import ExactOTC
-import numpy as np
+"""
+pyotc hello world for exact OTC
+"""
+from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc
+from pyotc.otc_backend.policy_iteration.dense.entropic import entropic_otc
+from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
+from pyotc.examples.stochastic_block_model import stochastic_block_model
 
-P = np.array([[.5, .5], [.5, .5]])
-Q = np.array([[0, 1], [1, 0]])
+# Generate two stochastic block model graphs with 4 blocks, each containing 5 nodes
+m = 5
+A1 = stochastic_block_model(
+    (m, m, m, m),
+    np.array(
+        [
+            [0.9, 0.1, 0.1, 0.1],
+            [0.1, 0.9, 0.1, 0.1],
+            [0.1, 0.1, 0.9, 0.1],
+            [0.1, 0.1, 0.1, 0.9],
+        ]
+    ),
+)
 
-exact_otc = ExactOTC(P=P, Q=Q)
-# takes one step of evaluation and improvement
-exact_otc.step()
+A2 = stochastic_block_model(
+    (m, m, m, m),
+    np.array(
+        [
+            [0.9, 0.1, 0.1, 0.1],
+            [0.1, 0.9, 0.1, 0.1],
+            [0.1, 0.1, 0.9, 0.1],
+            [0.1, 0.1, 0.1, 0.9],
+        ]
+    ),
+)
 
-# psuedo code above becomes
-exact_otc.reset()
-converged = false
-tau = 0.0001
-while not converged:
-  # pyotc provides interface to step
-  exact_otc.step()
-  # user defines stopping criteria
-  d = numpy.linalg.norm(exact_otc.R[-1] - exact_otc.R[-2])
-  converged = d < converged
+# convert adjacency to transition matrices
+P1 = adj_to_trans(A1)
+P2 = adj_to_trans(A2)
 
-print(f"Optimal Transport Coupling is {exact_otc.R[-1]}")
+# Obtain degree based costs: cost matrix of shape (n1, n2) with squared degree differences.
+c = get_degree_cost(A1, A2)
+
+# Solve the optimal transition coupling problem exactly
+exp_cost, R, stat_dist = exact_otc(P1, P2, c, stat_dist="best")
+print("\nExact OTC cost between SBM1 and SBM2:", exp_cost)
+
+# Solve the optimal transition coupling problem via entropic approximation
+exp_cost, R, stat_dist = entropic_otc(P1, P2, c, stat_dist="best")
+print("\n Entropic approximate OTC cost between SBM1 and SBM2:", exp_cost)
 ```
 
 # Conclusion
