@@ -2,7 +2,7 @@ import numpy as np
 import ot
 
 
-def entropic_tci(h, P0, Px, Py, xi, sink_iter, solver_fn):
+def entropic_tci(h, P0, Px, Py, xi, solver_fn):
     """
     Performs entropic Transition Coupling Improvement (TCI) using log-domain Sinkhorn algorithm.
 
@@ -16,7 +16,6 @@ def entropic_tci(h, P0, Px, Py, xi, sink_iter, solver_fn):
         Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
         xi (float): Scaling factor for entropic cost adjustment.
         solver_fn (callable): A function solves the optimization and provides a transport plan. Specified in 'entropic_otc'.
-        sink_iter (int): Number of iterations for 'logsinkhorn' method. Maximum number of Sinkhorn iterations for other methods from POT library.
         
     Returns:
         np.ndarray: Updated transition coupling matrix of shape (dx*dy, dx*dy).

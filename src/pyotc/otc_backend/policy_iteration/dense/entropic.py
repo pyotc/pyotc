@@ -12,7 +12,7 @@ Methods:
     - logsinkhorn: A self-implemented log-scaled Sinkhorn solver.
     - ot_sinkhorn: Sinkhorn solver from POT library.
     (reference: https://pythonot.github.io/gen_modules/ot.bregman.html#ot.bregman.sinkhorn)
-    - ot_log_sinkhorn: Sinkhorn solver from POT library in log scale.
+    - ot_logsinkhorn: Sinkhorn solver from POT library in log scale.
     (reference: https://pythonot.github.io/gen_modules/ot.bregman.html#ot.bregman.sinkhorn_log)
     - ot_greenkhorn: Sinkhorn solver of greedy version from POT library.
     (reference: https://pythonot.github.io/gen_modules/ot.bregman.html#ot.bregman.greenkhorn)
@@ -41,7 +41,7 @@ def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, sink_iter=100, method='logsink
         L (int): Number of iterations for computing the cost vector g in approx_tce.
         T (int): Number of iterations for computing the bias vector h in approx_tce.
         xi (float): Scaling factor for entropic cost adjustment in entropic_tci.
-        sink_iter (int): Number of Sinkhorn iterations in entropic_tci.
+        sink_iter (int): Number of iterations for 'logsinkhorn' method. Maximum number of Sinkhorn iterations for other methods from POT library. Used in the entropic TCI step.
         get_sd (bool): If True, compute best stationary distribution using linear programming.
         method (str): Method for the Sinkhorn algorithm. Must choose from ['logsinkhorn', 'ot_sinkhorn', 'ot_log_sinkhorn', 'ot_greenkhorn']. Default is 'logsinkhorn'. See 'Methods' above for details.
 
