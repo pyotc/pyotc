@@ -24,6 +24,8 @@ dev = [
     "ruff>=0.8.4",
     "nox>=2024.10.9",
     "pytest-benchmark>=5.1.0",
+    "sphinx>=8.1.3",
+    "myst-parser>=4.0.1",
 ]
 
 [build-system]
