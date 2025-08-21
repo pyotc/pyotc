@@ -27,4 +27,4 @@ def format_check(session):
 def tests(session):
     session.install(".")
     session.install("pytest", "pytest-cov")
-    session.run("pytest")
+    session.run("pytest --cov --cov-branch --cov-report=xml")
