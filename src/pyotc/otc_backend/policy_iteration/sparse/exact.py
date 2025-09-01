@@ -7,7 +7,7 @@ from .exact_tci import exact_tci
 from ..utils import get_stat_dist
 
 
-def exact_otc(Px, Py, c, stat_dist='best', max_iter=100):
+def exact_otc(Px, Py, c, stat_dist="best", max_iter=100):
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
@@ -56,18 +56,26 @@ def exact_otc(Px, Py, c, stat_dist='best', max_iter=100):
         # Check if the transition coupling matrix has converged
         if (R != R_old).nnz == 0:
             if stat_dist is None:
-                print(f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested.")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested."
+                )
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, None
             else:
-                print(f"Convergence reached in {iter + 1} iterations. Computing stationary distribution...")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. Computing stationary distribution..."
+                )
                 stat_dist = get_stat_dist(R, method=stat_dist, c=c)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, stat_dist
 
     # Return None if convergence is not achieved

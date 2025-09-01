@@ -16,7 +16,7 @@ def entropic_tci(h, P0, Px, Py, xi, solver_fn):
         Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
         xi (float): Scaling factor for entropic cost adjustment.
         solver_fn (callable): A function solves the optimization and provides a transport plan. Specified in 'entropic_otc'.
-        
+
     Returns:
         np.ndarray: Updated transition coupling matrix of shape (dx*dy, dx*dy).
     """

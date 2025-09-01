@@ -27,7 +27,19 @@ from .entropic_tci import entropic_tci
 from pyotc.otc_backend.optimal_transport.logsinkhorn import logsinkhorn
 
 
-def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, method='logsinkhorn', sink_iter=100, reg_num=None, get_sd=False , silent=True):
+def entropic_otc(
+    Px,
+    Py,
+    c,
+    L=100,
+    T=100,
+    xi=0.1,
+    method="logsinkhorn",
+    sink_iter=100,
+    reg_num=None,
+    get_sd=False,
+    silent=True,
+):
     """
     Solves the Entropic Optimal Transition Coupling (OTC) problem between two Markov chains
     using approximate policy iteration and entropic regularization.
@@ -66,23 +78,26 @@ def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, method='logsinkhorn', sink_ite
     g = g_old - 10 * tol
     P = np.kron(Px, Py)
 
+    if method == "logsinkhorn":
 
-    if method == 'logsinkhorn':
         def solver_fn(A, a, b):
             return logsinkhorn(A, a, b, sink_iter)
-    elif method == 'ot_sinkhorn':
+    elif method == "ot_sinkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_sinkhorn'")
+
         def solver_fn(A, a, b):
             return ot.sinkhorn(a, b, A, reg=reg_num, numItermax=sink_iter)
-    elif method == 'ot_logsinkhorn':
+    elif method == "ot_logsinkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_logsinkhorn'")
+
         def solver_fn(A, a, b):
             return ot.bregman.sinkhorn_log(a, b, A, reg=reg_num, numItermax=sink_iter)
-    elif method == 'ot_greenkhorn':
+    elif method == "ot_greenkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_greenkhorn'")
+
         def solver_fn(A, a, b):
             return ot.bregman.greenkhorn(a, b, A, reg=reg_num, numItermax=sink_iter)
     else:
@@ -90,7 +105,6 @@ def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, method='logsinkhorn', sink_ite
 
     iter_ctr = 0
     while g_old[0] - g[0] > tol:
-
         iter_ctr += 1
         P_old = P
         g_old = g
@@ -111,11 +125,13 @@ def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, method='logsinkhorn', sink_ite
         if not silent:
             iter_time = time.time() - start_iter
             elapsed = time.time() - start_time
-            g0   = float(np.ravel(g)[0])
-            g0_old  = float(np.ravel(g_old)[0])
+            g0 = float(np.ravel(g)[0])
+            g0_old = float(np.ravel(g_old)[0])
             diff = g0_old - g0
-            ratio = diff / g0 if g0 != 0 else float('inf')
-            print(f"[Iter {iter_ctr} taking {iter_time:.2f}s] Δg={diff:.3e}, g[0]={g0:.6f}, Δg/g[0]={ratio:.3e}, total elapsed={elapsed:.2f}s")
+            ratio = diff / g0 if g0 != 0 else float("inf")
+            print(
+                f"[Iter {iter_ctr} taking {iter_time:.2f}s] Δg={diff:.3e}, g[0]={g0:.6f}, Δg/g[0]={ratio:.3e}, total elapsed={elapsed:.2f}s"
+            )
 
     # In case of numerical instability, make non-negative and normalize.
     P = np.maximum(P, 0)
@@ -124,16 +140,22 @@ def entropic_otc(Px, Py, c, L=100, T=100, xi=0.1, method='logsinkhorn', sink_ite
 
     if get_sd:
         if not silent:
-            print(f"Convergence reached in {iter_ctr} iterations. Computing stationary distribution...")        
+            print(
+                f"Convergence reached in {iter_ctr} iterations. Computing stationary distribution..."
+            )
         stat_dist, exp_cost = get_best_stat_dist(P, c)
         stat_dist = np.reshape(stat_dist, (dx, dy))
     else:
         if not silent:
-            print(f"Convergence reached in {iter_ctr} iterations. No stationary distribution computation requested.")
+            print(
+                f"Convergence reached in {iter_ctr} iterations. No stationary distribution computation requested."
+            )
         stat_dist = None
         exp_cost = g[0].item()
 
     if not silent:
-        print(f"[entropic_otc] Finished. Total time elapsed: {time.time() - start_time:.3f} seconds.")
+        print(
+            f"[entropic_otc] Finished. Total time elapsed: {time.time() - start_time:.3f} seconds."
+        )
 
     return exp_cost, P, stat_dist
