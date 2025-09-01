@@ -1,4 +1,4 @@
-name: nox with uv
+name: ruff and pytest with nox on uv
 
 on:
   push:
