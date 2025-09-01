@@ -1,14 +1,12 @@
 """`noxfile` for pyotc.
 
-Provides parametrized linting, formating, and testing using ruff and pytest
+Provides linting, formating, and testing using ruff and pytest
 """
 
 import nox
 from nox import session
 
 nox.options.default_venv_backend = "uv|virtualenv"
-
-py_versions = ["3.12", "3.11", "3.10"]
 
 
 @session
@@ -23,7 +21,7 @@ def format_check(session):
     session.run("ruff", "format", "--check")
 
 
-@session(python=py_versions)
+@session
 def tests(session):
     session.install(".")
     session.install("pytest", "pytest-cov")
