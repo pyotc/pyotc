@@ -8,7 +8,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at [https://github.com/jhineman/pyotc/issues](https://github.com/jhineman/pyotc/issues).
+Report bugs at [https://github.com/pyotc/pyotc/issues](https://github.com/pyotc/pyotc/issues).
 
 If you are reporting a bug, please include:
 
@@ -32,7 +32,7 @@ See improvements listed in the [issues](https://github.com/jhineman/pyotc/issues
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at [https://github.com/jhineman/pyotc/issues](https://github.com/jhineman/pyotc/issues).
+The best way to send feedback is to file an issue at [https://github.com/pyotc/pyotc/issues](https://github.com/pytoc/pyotc/issues).
 
 If you are proposing a feature:
 
@@ -80,7 +80,7 @@ Before you submit a pull request, check that it meets these guidelines:
 0. Run `nox` in the root directory. Other [nox cli](https://nox.thea.codes/en/stable/usage.html#command-line-usage) options are avaiable.
 1. The pull request should include tests for new functionality.
 2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
-3. We use github actions ([TODO#19](https://github.com/jhineman/pyotc/issues/19)) for our CI which runs on nox.
+3. We use github actions ([TODO#19](https://github.com/pyotc/pyotc/issues/19)) for our CI which runs on nox.
 
 ## `uv` workflow
 
@@ -96,14 +96,17 @@ If you're adding a [development dependency](https://docs.astral.sh/uv/concepts/p
 uv add --dev pytest
 ```
 
-### Running nox via `uv`
+### Running nox via `uv` as tool
 ```bash
 # in project root
-uv run nox
+uv tool run nox
 ```
+*Note that this uses `nox` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
+
 ### Running ruff format via `uv`
 ```bash
 # in project root
-uv run ruff format
+uv tool run ruff format
 ```
-
+*Note that this uses `ruff` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
+*Ruff in particular on your system, vs as tool, may be divergent.*
