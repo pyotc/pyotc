@@ -102,9 +102,9 @@ edge_awareness_c = [c21, c23]
 
 def test_edge_awareness_exact_otc():
     # python optimal transport algo
-    exp_cost21_dense, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0])    
-    exp_cost23_dense, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1])
+    exp_cost21, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0])    
+    exp_cost23, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1])
     
     # check consistency
-    assert np.allclose(exp_cost21_dense, 0.5714285714285714)
-    assert np.allclose(exp_cost23_dense, 0.4464098659648351)
+    assert np.allclose(exp_cost21, 0.5714285714285714)
+    assert np.allclose(exp_cost23, 0.4464098659648351)
