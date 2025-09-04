@@ -52,14 +52,14 @@ def exact_tce(R_sparse, c):
     #     try:
     #         current_solution = sp.linalg.spsolve(A, rhs, permc_spec=spec)
     #         if not np.any(np.abs(current_solution) > 1e15):
-    #         print("spsolve successful with spec:", spec)
+    #             print("spsolve successful with spec:", spec)
     #             solution = current_solution
     #             break
     #         else:
     #             print(f"Solution with {spec} contains large values, trying next spec.")
     #     except ValueError as e:
     #         print(f"spsolve with {spec} encountered an error: trying next spec.")
-    #   if solution is None:
+    # if solution is None:
     #     raise RuntimeError("Failed to find a stable solution with any of the provided permc_specs for sp.linalg.spsolve solver.")
 
     # Solve the linear system using an iterative solver (lsmr)
