@@ -19,12 +19,18 @@ def exact_tce(R_sparse, c):
     an iterative solver (scipy.sparse.linalg.lsmr) is employed to efficiently handle large-scale sparse systems.
 
     Notes:
-        Solving Ax = b using a direct solver (sp.linalg.spsolve) on large networks resulted in:
+        1. When A in Ax = b is close to singular, we have observed few cases that both SciPy functions (scipy.sparse.linalg.spsolve, scipy.sparse.linalg.lsmr)
+        can produce results that differ from NumPy's solver, leading to different results with dense implementation and non-convergence. 
+        This is an issue with SciPy solvers and remains an unresolved issue. The best approach in such cases is to fall back to the dense implementation.
+
+        2. Solving Ax = b using a direct solver (scipy.sparse.linalg.spsolve) on large networks resulted in:
         "Not enough memory to perform factorization."
         This is likely due to excessive fill-in during LU factorization of the large sparse matrix.
         To address this, we switch to an iterative solver (scipy.sparse.linalg.lsmr),
         which is more memory-efficient and better suited for large-scale sparse systems.
 
+        3. To leave open the possibility of switching from 'lsmr' to 'spsolve', the corresponding 'spsolve' code has been retained as a commented-out block.
+   
     Args:
         R_sparse (scipy.sparse.csr_matrix): Sparse transition matrix of shape (dx*dy, dx*dy).
         c (np.ndarray): Cost vector of shape (dx, dy).
