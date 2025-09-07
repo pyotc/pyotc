@@ -6,7 +6,8 @@ import time
 import pytest
 
 from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc_lp
-from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc
+from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc as exact_otc_dense
+from pyotc.otc_backend.policy_iteration.sparse.exact import exact_otc as exact_otc_sparse
 from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
 from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
@@ -44,14 +45,21 @@ def test_sbm_exact_otc(transition, cost):
     end = time.time()
     print(f"`exact_otc` (scipy) run time: {end - start}")
 
-    # python optimal transport algo
+    # python optimal transport algo (numpy)
     start = time.time()
-    exp_cost2, _, _ = exact_otc(transition["P1"], transition["P2"], cost)
+    exp_cost2, _, _ = exact_otc_dense(transition["P1"], transition["P2"], cost)
+    end = time.time()
+    print(f"`exact_otc` (pot) run time: {end - start}")
+    
+    # python optimal transport algo (scipy.sparse)
+    start = time.time()
+    exp_cost3, _, _ = exact_otc_sparse(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc` (pot) run time: {end - start}")
 
     # check consistency
     assert np.allclose(exp_cost1, exp_cost2)
+    assert np.allclose(exp_cost1, exp_cost3)
 
 
 # 2. Test exact OTC on wheel graph
@@ -69,16 +77,17 @@ wheel_c = [
 
 def test_wheel_exact_otc():
     # python optimal transport algo
-    start = time.time()
-    exp_cost12, _, _ = exact_otc(wheel_P[0], wheel_P[1], wheel_c[0])
-    exp_cost13, _, _ = exact_otc(wheel_P[0], wheel_P[2], wheel_c[1])
-    end = time.time()
-    print(f"`exact_otc` (pot) run time: {end - start}")
+    exp_cost12_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[1], wheel_c[0])
+    exp_cost12_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[1], wheel_c[0])
+    
+    exp_cost13_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[2], wheel_c[1])
+    exp_cost13_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[2], wheel_c[1])
 
     # check consistency
-    print(exp_cost12, exp_cost13)
-    assert np.allclose(exp_cost12, 2.6551724137931036)
-    assert np.allclose(exp_cost13, 2.551724137931033)
+    assert np.allclose(exp_cost12_dense, 2.6551724137931036)
+    assert np.allclose(exp_cost12_dense, exp_cost12_sparse)
+    assert np.allclose(exp_cost13_dense, 2.551724137931033)
+    assert np.allclose(exp_cost13_dense, exp_cost13_sparse)
 
 
 # 3. Test exact OTC on edge awareness example
@@ -93,17 +102,9 @@ edge_awareness_c = [c21, c23]
 
 def test_edge_awareness_exact_otc():
     # python optimal transport algo
-    start = time.time()
-    exp_cost21, _, _ = exact_otc(
-        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0]
-    )
-    exp_cost23, _, _ = exact_otc(
-        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1]
-    )
-    end = time.time()
-    print(f"`exact_otc` (pot) run time: {end - start}")
-
+    exp_cost21, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0])    
+    exp_cost23, _, _ = exact_otc_dense(edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1])
+    
     # check consistency
-    print(exp_cost21, exp_cost23)
     assert np.allclose(exp_cost21, 0.5714285714285714)
     assert np.allclose(exp_cost23, 0.4464098659648351)
