@@ -7,7 +7,7 @@ from .exact_tci_pot import exact_tci as exact_tci_pot
 from ..utils import get_stat_dist
 
 
-def exact_otc_lp(Px, Py, c, stat_dist='best'):
+def exact_otc_lp(Px, Py, c, stat_dist="best"):
     start = time.time()
     print("Starting exact_otc_dense...")
 
@@ -28,10 +28,14 @@ def exact_otc_lp(Px, Py, c, stat_dist='best'):
         # Check for convergence.
         if np.all(P == P_old):
             if stat_dist is None:
-                print("Convergence reached. No stationary distribution computation requested.")
+                print(
+                    "Convergence reached. No stationary distribution computation requested."
+                )
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), P, None
             else:
                 print("Convergence reached. Computing stationary distribution...")
@@ -39,13 +43,15 @@ def exact_otc_lp(Px, Py, c, stat_dist='best'):
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), P, stat_dist
-            
+
     return None, None, None
 
 
-def exact_otc(Px, Py, c, stat_dist='best'):
+def exact_otc(Px, Py, c, stat_dist="best"):
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
@@ -94,18 +100,26 @@ def exact_otc(Px, Py, c, stat_dist='best'):
         # Check if the transition coupling matrix has converged
         if np.all(R == R_old):
             if stat_dist is None:
-                print(f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested.")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested."
+                )
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, None
             else:
-                print(f"Convergence reached in {iter + 1} iterations. Computing stationary distribution...")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. Computing stationary distribution..."
+                )
                 stat_dist = get_stat_dist(R, method=stat_dist, c=c)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, stat_dist
 
         iter += 1

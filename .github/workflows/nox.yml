@@ -33,8 +33,8 @@ jobs:
       - name: Install the project
         run: uv sync --all-extras --dev
 
-      - name: Run nox
-        run: python -m nox --session tests-${{ matrix.python-version }}
+      - name: Run nox sessions (lint format test)
+        run: python -m nox
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

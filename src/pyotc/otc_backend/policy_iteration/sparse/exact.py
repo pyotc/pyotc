@@ -7,7 +7,7 @@ from .exact_tci import exact_tci
 from ..utils import get_stat_dist
 
 
-def exact_otc(Px, Py, c, stat_dist='best', max_iter=100):
+def exact_otc(Px, Py, c, stat_dist="best", max_iter=100):
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
@@ -19,13 +19,13 @@ def exact_otc(Px, Py, c, stat_dist='best', max_iter=100):
     For a detailed discussion of the connection between the OTC problem and Markov Decision Processes (MDPs), see Section 4 of the paper.
     Additional background on policy iteration methods for solving average-cost MDP problems can be found in Chapters 8 and 9 of
     "Markov Decision Processes: Discrete Stochastic Dynamic Programming" by Martin L. Puterman.
-    
+
     Note:
         In the TCE step (implemented in exact_tce), we solve a block linear system using functions from scipy.sparse.linalg.
         However, when A in Ax = b is nearly singular, we have observed a few cases where both SciPy solvers (scipy.sparse.linalg.spsolve, scipy.sparse.linalg.lsmr)
-        can produce results that differ from NumPy's solver (np.linalg.solve). This leads to discrepancies with the dense implementation and non-convergence. 
+        can produce results that differ from NumPy's solver (np.linalg.solve). This leads to discrepancies with the dense implementation and non-convergence.
         This is an issue with SciPy's sparse solvers and remains unresolved. The best approach in such cases is to use the dense implementation.
-        
+
     Args:
         Px (np.ndarray): Transition matrix of the source Markov chain of shape (dx, dx).
         Py (np.ndarray): Transition matrix of the target Markov chain of shape (dy, dy).
@@ -62,18 +62,26 @@ def exact_otc(Px, Py, c, stat_dist='best', max_iter=100):
         # Check if the transition coupling matrix has converged
         if (R != R_old).nnz == 0:
             if stat_dist is None:
-                print(f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested.")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. No stationary distribution computation requested."
+                )
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, None
             else:
-                print(f"Convergence reached in {iter + 1} iterations. Computing stationary distribution...")
+                print(
+                    f"Convergence reached in {iter + 1} iterations. Computing stationary distribution..."
+                )
                 stat_dist = get_stat_dist(R, method=stat_dist, c=c)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
                 exp_cost = g[0].item()
                 end = time.time()
-                print(f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds.")
+                print(
+                    f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
+                )
                 return float(exp_cost), R, stat_dist
 
     # Return None if convergence is not achieved
