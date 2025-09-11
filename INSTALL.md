@@ -5,17 +5,17 @@ We expect pyotc to be pip-installable across all platforms.
 ### From pypi
 
 ```pip install pyotc```
-[TODO#26](https://github.com/jhineman/pyotc/issues/26)
+[TODO#26](https://github.com/pyotc/pyotc/issues/26)
 
 ### From github
 
-```pip install https://github.com/jhineman/pyotc.git```
+```pip install https://github.com/pyotc/pyotc.git```
 
 ## Install for development
 We test in venvs provided by [uv](https://docs.astral.sh/uv/) via [nox](https://nox.thea.codes/en/stable/usage.html#changing-the-sessions-default-backend). It's helpful, but not strictly necessary to do the same.
 
 ```bash
-git clone https://github.com/jhineman/pyotc.git
+git clone https://github.com/pyotc/pyotc.git
 cd pyotc
 pip install -e .
 ```
@@ -26,7 +26,7 @@ pip install -e .
 Then
 
 ```bash
-git clone https://github.com/jhineman/pyotc.git
+git clone https://github.com/pyotc/pyotc.git
 cd pyotc
 uv sync
 ```
