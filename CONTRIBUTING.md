@@ -24,7 +24,7 @@ Look through the GitHub issues for bugs. Anything tagged with "bug" and "help wa
 
 Look through the GitHub issues for features. Anything tagged with "enhancement" and "help wanted" is open to whoever wants to implement it.
 
-See improvements listed in the [issues](https://github.com/jhineman/pyotc/issues).
+See improvements listed in the [issues](https://github.com/pyotc/pyotc/issues).
 
 ### Write Documentation
 
@@ -77,14 +77,15 @@ Ready to contribute? Here's how to set up `pyotc` for local development.
 
 Before you submit a pull request, check that it meets these guidelines:
 
-0. Run `nox` in the root directory. Other [nox cli](https://nox.thea.codes/en/stable/usage.html#command-line-usage) options are avaiable.
-1. The pull request should include tests for new functionality.
-2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
-3. We use github actions ([TODO#19](https://github.com/pyotc/pyotc/issues/19)) for our CI which runs on nox.
+0. Run `nox` in the root directory. Other [nox cli](https://nox.thea.codes/en/stable/usage.html#command-line-usage) options are avaiable. We use this same workflow in github actions. This should install, lint, format, and test your code.
+1. Include new tests for new functionality.
+2. Include new documentation for new functionality.
+3. Include updates to the [changelog](./CHANGELOG.md).
+4. Prepare to [help other review your changes](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/helping-others-review-your-changes).
 
 ## `uv` workflow
 
-### Adding dependencies with uv
+### Adding dependencies with `uv`
 If you're adding true dependency, say for example `pytorch`, this is done simply with
 ```bash
 uv add pytorch
@@ -110,3 +111,7 @@ uv tool run ruff format
 ```
 *Note that this uses `ruff` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
 *Ruff in particular on your system, vs as tool, may be divergent.*
+
+
+### Tagged releases
+We adhere to the following release process described in the template available in [RELEASE.md](RELEASE.md).

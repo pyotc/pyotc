@@ -15,3 +15,9 @@ With a `uv` setup one can simply
 uv run pytest
 ```
 Otherwise, in `pip` installed context with deps met, `pytest` should behave as expected.
+
+## Contributing
+Guidelines for contribution to `pyotc` are provided in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## Changelog
+A summary of changes and guide to versioning are recoreded in [CHANGELOG.md](./CHANGELOG.md).
