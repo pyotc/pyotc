@@ -29,8 +29,13 @@ Then
 git clone https://github.com/pyotc/pyotc.git
 cd pyotc
 uv sync
+uv pip install -e .
 ```
 
+To verify your installation, run
+```bash
+uv run pytest
+```
 
 
 
