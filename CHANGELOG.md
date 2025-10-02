@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+* [RELEASE.md](./RELEASE.md)
 * Install with `uv`
 * `pytest` testing
 * `nox` for linting (`ruff`), formating (`ruff`), and testing (`pytest`)

@@ -111,3 +111,7 @@ uv tool run ruff format
 ```
 *Note that this uses `ruff` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
 *Ruff in particular on your system, vs as tool, may be divergent.*
+
+
+### Tagged releases
+We adhere to the following release process described in the template available in [RELEASE.md](RELEASE.md).
