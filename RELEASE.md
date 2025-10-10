@@ -23,12 +23,19 @@ Before cutting a release, ensure:
 - [ ] Version numbers are consitent across `pyproject.toml`, `CHANGELOG.md`, and elsewhere.
 
 ### Hint on the Checklist
-1. Version can be checked and update with recent releases of uv with `uv version`. Read more with `uv version --help`
+1. Version can be checked and updated with recent releases of `uv` with `uv version`. Read more with `uv version --help`
 
 ## Doing the release
 Once `main` meets the checks above create a new tagged release using the [releases dialog](https://github.com/pyotc/pyotc/releases/new).
 
 ## Building wheels and publishing them on pypi
-We again use `uv` to do this. The details of how are in the uv documentation on [building and publishing a package](https://docs.astral.sh/uv/guides/package/#building-and-publishing-a-package).
+We use `uv` to do this. The details of how are in the uv documentation on [building and publishing a package](https://docs.astral.sh/uv/guides/package/#building-and-publishing-a-package).
 
-### 
+### Testing a published release on pypi
+The test index `testpypi` is configured in the [pyproject.toml](./pyproject.toml) and can be used for testing with:
+```bash
+uv publish --index testpypi
+```
+
+### Automated deployment
+The automation of this deployment is done via [github actions](https://github.com/pypa/gh-action-pypi-publish).
