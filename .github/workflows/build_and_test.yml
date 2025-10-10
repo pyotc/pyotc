@@ -1,4 +1,4 @@
-name: ruff and pytest with nox on uv
+name: build and test
 
 on:
   push:
@@ -57,11 +57,11 @@ jobs:
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: uv-wheels-${{ matrix.python-version }}
+          name: uv-wheel
           path: ./dist/*.whl
 
       - name: Upload sdist artifact
         uses: actions/upload-artifact@v4
         with:
-          name: uv-sdist-${{ matrix.python-version }}
+          name: uv-sdist
           path: ./dist/*.tar.gz 
