@@ -1,20 +1,16 @@
 name: Publish to PyPI
 
 on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
   release:
     types:
       - published
 
 jobs:
   upload_pypi:
-    needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: 
+        name: pypi
+        url: https://pypi.org/project/pyotc/
     permissions:
       id-token: write
     if: github.event_name == 'release' && github.event.action == 'published'
@@ -23,8 +19,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v5
         with:
-          # unpacks all CIBW artifacts into dist/
-          pattern: cibw-*
+          pattern: uv-*
           path: dist
           merge-multiple: true
 

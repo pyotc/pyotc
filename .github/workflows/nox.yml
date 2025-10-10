@@ -40,3 +40,18 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Build wheel with uv
+        run: uv build --wheel
+      
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: uv-wheels-${{ matrix.python-version }}
+          path: ./dist/*.whl
+
+      - name: Upload source distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: uv-sdist-${{ matrix.python-version }}
+          path: ./dist/*.tar.gz 
