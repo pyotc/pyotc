@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-10-10
+* Fix verion in `pyproject.toml`
+
 ## [0.2.0] - 2025-10-02
 
 ### Added
