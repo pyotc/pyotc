@@ -1,10 +1,7 @@
-name: build and test
+name: lint and test
 
 on:
   push:
-    #branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   uv-nox:
@@ -40,28 +37,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  uv-build:
-    name: uv-build
-    needs: [uv-nox] 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Run uv build
-        run: uv build
-      
-      - name: Upload wheel artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: uv-wheel
-          path: ./dist/*.whl
-
-      - name: Upload sdist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: uv-sdist
-          path: ./dist/*.tar.gz 
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
