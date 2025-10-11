@@ -10,11 +10,8 @@ name: build and publish
 
 on:
   release:
-    types: [published]
+    types: [published, prereleased]
   workflow_dispatch:
-  push:
-    branches:
-      - '77-fix-pypi-upload'
 
 permissions:
   contents: read
