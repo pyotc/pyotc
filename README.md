@@ -63,7 +63,7 @@ A summary of changes and guide to versioning are recoreded in [CHANGELOG.md](./C
 
 ## Citing this Repository
 If you wish to cite our work, please use the following BibTeX code:
-```
+```bibtex
 @article{yi2025alignment,
   title={Alignment and comparison of directed networks via transition couplings of random walks},
   author={Yi, Bongsoo and O'Connor, Kevin and McGoff, Kevin and Nobel, Andrew B},
