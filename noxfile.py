@@ -26,4 +26,3 @@ def tests(session):
     session.install("-e", ".")
     session.install("pytest", "pytest-cov")
     session.run("pytest", "--cov=pyotc", "--cov-report=term", "--cov-report=xml")
-
