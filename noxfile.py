@@ -23,6 +23,7 @@ def format_check(session):
 
 @session
 def tests(session):
-    session.install(".")
+    session.install("-e", ".")
     session.install("pytest", "pytest-cov")
-    session.run("pytest")
+    session.run("pytest", "--cov=pyotc", "--cov-report=term", "--cov-report=xml")
+
