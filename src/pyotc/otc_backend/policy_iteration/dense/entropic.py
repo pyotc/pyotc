@@ -79,21 +79,25 @@ def entropic_otc(
     P = np.kron(Px, Py)
 
     if method == "logsinkhorn":
+
         def solver_fn(A, a, b):
             return logsinkhorn(A, a, b, sink_iter)
     elif method == "ot_sinkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_sinkhorn'")
+
         def solver_fn(A, a, b):
             return ot.sinkhorn(a, b, A, reg=reg_num, numItermax=sink_iter)
     elif method == "ot_logsinkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_logsinkhorn'")
+
         def solver_fn(A, a, b):
             return ot.bregman.sinkhorn_log(a, b, A, reg=reg_num, numItermax=sink_iter)
     elif method == "ot_greenkhorn":
         if reg_num is None:
             raise ValueError("reg_num must be specified for 'ot_greenkhorn'")
+
         def solver_fn(A, a, b):
             return ot.bregman.greenkhorn(a, b, A, reg=reg_num, numItermax=sink_iter)
     else:
