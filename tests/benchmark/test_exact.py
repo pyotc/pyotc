@@ -41,27 +41,20 @@ test_data = zip(trans, costs)
 
 @pytest.mark.parametrize("transition, cost", test_data)
 def test_sbm_exact_otc(transition, cost):
-    # scipy linprog algo
-    start = time.time()
-    exp_cost1, _, _ = exact_otc_lp(transition["P1"], transition["P2"], cost)
-    end = time.time()
-    print(f"`exact_otc` (scipy) run time: {end - start}")
-
     # python optimal transport algo (numpy)
     start = time.time()
-    exp_cost2, _, _ = exact_otc_dense(transition["P1"], transition["P2"], cost)
+    exp_cost1, _, _ = exact_otc_dense(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc` (pot) run time: {end - start}")
 
     # python optimal transport algo (scipy.sparse)
     start = time.time()
-    exp_cost3, _, _ = exact_otc_sparse(transition["P1"], transition["P2"], cost)
+    exp_cost2, _, _ = exact_otc_sparse(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc` (pot) run time: {end - start}")
 
     # check consistency
     assert np.allclose(exp_cost1, exp_cost2)
-    assert np.allclose(exp_cost1, exp_cost3)
 
 
 # 2. Test exact OTC on wheel graph
@@ -79,16 +72,16 @@ wheel_c = [
 
 def test_wheel_exact_otc():
     # python optimal transport algo
-    exp_cost12_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[1], wheel_c[0])
-    exp_cost12_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[1], wheel_c[0])
+    exp_cost12_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[1], wheel_c[0], stat_dist=None)
+    exp_cost12_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[1], wheel_c[0], stat_dist=None)
 
-    exp_cost13_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[2], wheel_c[1])
-    exp_cost13_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[2], wheel_c[1])
-
+    exp_cost13_dense, _, _ = exact_otc_dense(wheel_P[0], wheel_P[2], wheel_c[1], stat_dist=None)
+    exp_cost13_sparse, _, _ = exact_otc_sparse(wheel_P[0], wheel_P[2], wheel_c[1], stat_dist=None)
+    
     # check consistency
     assert np.allclose(exp_cost12_dense, 2.6551724137931036)
     assert np.allclose(exp_cost12_dense, exp_cost12_sparse)
-    assert np.allclose(exp_cost13_dense, 2.551724137931033)
+    assert np.allclose(exp_cost13_dense, 2.5517241379310316)
     assert np.allclose(exp_cost13_dense, exp_cost13_sparse)
 
 
@@ -105,12 +98,21 @@ edge_awareness_c = [c21, c23]
 def test_edge_awareness_exact_otc():
     # python optimal transport algo
     exp_cost21, _, _ = exact_otc_dense(
-        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0]
+        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0], stat_dist="eigen"
+    )
+    exp_cost21_lp, _ , _ = exact_otc_lp(
+        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0], stat_dist="best"
     )
     exp_cost23, _, _ = exact_otc_dense(
-        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1]
+        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1], stat_dist="iterative"
     )
-
+    exp_cost23_lp, _, _ = exact_otc_lp(
+        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1], stat_dist=None
+    )
+    
     # check consistency
-    assert np.allclose(exp_cost21, 0.5714285714285714)
-    assert np.allclose(exp_cost23, 0.4464098659648351)
+    assert np.allclose(exp_cost21, 0.5714285714285724)
+    assert np.allclose(exp_cost21, exp_cost21_lp)
+    assert np.allclose(exp_cost23, 0.4464098659648501)
+    assert np.allclose(exp_cost23, exp_cost23_lp)
+    
