@@ -23,7 +23,7 @@ def exact_otc(
             P1, P2, c, stat_dist=stat_dist, max_iter=max_iter
         )
     else:
-        raise ValueError(f"Unknown backend: {backend}")
+        raise ValueError("Unknown backend: {backend}. Choose from {'dense', 'sparse'}.")
 
 
 def entropic_otc(
