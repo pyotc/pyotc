@@ -19,9 +19,7 @@ def exact_otc(
     elif backend == "sparse":
         if max_iter is None:
             return _exact_otc_sparse(P1, P2, c, stat_dist=stat_dist)
-        return _exact_otc_sparse(
-            P1, P2, c, stat_dist=stat_dist, max_iter=max_iter
-        )
+        return _exact_otc_sparse(P1, P2, c, stat_dist=stat_dist, max_iter=max_iter)
     else:
         raise ValueError("Unknown backend: {backend}. Choose from {'dense', 'sparse'}.")
 
@@ -40,7 +38,6 @@ def entropic_otc(
     get_sd=False,
     silent=True,
 ):
-
     return _entropic_otc(
         Px,
         Py,
