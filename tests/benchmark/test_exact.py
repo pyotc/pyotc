@@ -54,7 +54,7 @@ def test_sbm_exact_otc(transition, cost):
     start = time.time()
     # exp_cost2, _, _ = exact_otc_sparse(transition["P1"], transition["P2"], cost)
     exp_cost2, _, _ = exact_otc(
-        transition["P1"], transition["P2"], cost, backend="sparse"
+        transition["P1"], transition["P2"], cost, backend="sparse", max_iter=100
     )
     end = time.time()
     print(f"`exact_otc` (pot) run time: {end - start}")
@@ -137,3 +137,13 @@ def test_edge_awareness_exact_otc():
     assert np.allclose(exp_cost21, exp_cost21_lp)
     assert np.allclose(exp_cost23, 0.4464098659648501)
     assert np.allclose(exp_cost23, exp_cost23_lp)
+
+
+def test_exact_otc_invalid_backend():
+    with pytest.raises(ValueError):
+        exact_otc(
+            edge_awareness_P[1],
+            edge_awareness_P[2],
+            edge_awareness_c[1],
+            backend="invalid_backend",
+        )
