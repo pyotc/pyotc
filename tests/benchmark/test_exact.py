@@ -5,13 +5,8 @@ import networkx as nx
 import time
 import pytest
 
-from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc_lp
-
-# from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc as exact_otc_dense
-# from pyotc.otc_backend.policy_iteration.sparse.exact import (
-#     exact_otc as exact_otc_sparse,
-# )
 from pyotc import exact_otc
+from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc_lp
 from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
 from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
@@ -45,14 +40,12 @@ test_data = zip(trans, costs)
 def test_sbm_exact_otc(transition, cost):
     # python optimal transport algo (numpy)
     start = time.time()
-    # exp_cost1, _, _ = exact_otc_dense(transition["P1"], transition["P2"], cost)
     exp_cost1, _, _ = exact_otc(transition["P1"], transition["P2"], cost)
     end = time.time()
     print(f"`exact_otc` (pot) run time: {end - start}")
 
     # python optimal transport algo (scipy.sparse)
     start = time.time()
-    # exp_cost2, _, _ = exact_otc_sparse(transition["P1"], transition["P2"], cost)
     exp_cost2, _, _ = exact_otc(
         transition["P1"], transition["P2"], cost, backend="sparse", max_iter=100
     )
@@ -77,7 +70,6 @@ wheel_c = [
 
 
 def test_wheel_exact_otc():
-    # python optimal transport algo
     exp_cost12_dense, _, _ = exact_otc(
         wheel_P[0], wheel_P[1], wheel_c[0], stat_dist=None, backend="dense"
     )
@@ -110,7 +102,6 @@ edge_awareness_c = [c21, c23]
 
 
 def test_edge_awareness_exact_otc():
-    # python optimal transport algo
     exp_cost21, _, _ = exact_otc(
         edge_awareness_P[1],
         edge_awareness_P[0],

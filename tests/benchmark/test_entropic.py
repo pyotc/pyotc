@@ -5,7 +5,6 @@ import networkx as nx
 import time
 import pytest
 
-# from pyotc.otc_backend.policy_iteration.dense.entropic import entropic_otc
 from pyotc import entropic_otc
 from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
