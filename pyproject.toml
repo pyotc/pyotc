@@ -45,3 +45,9 @@ name = "testpypi"
 url = "https://test.pypi.org/simple/"
 publish-url = "https://test.pypi.org/legacy/"
 explicit = true
+
+[tool.coverage.run]
+omit = [
+  "src/pyotc/otc_backend/optimal_transport/native_refactor.py",
+  "src/pyotc/otc_backend/graph/utils.py",
+]

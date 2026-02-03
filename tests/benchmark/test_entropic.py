@@ -67,7 +67,7 @@ def test_wheel_exact_otc():
     # entropic otc
     start = time.time()
     exp_cost12, _, _ = entropic_otc(
-        P1, P2, c12, get_sd=True, L=25, T=50, xi=0.1, sink_iter=10
+        P1, P2, c12, get_sd=True, L=25, T=50, xi=0.1, sink_iter=10, silent=False
     )
     exp_cost13, _, _ = entropic_otc(
         P1, P3, c13, get_sd=True, L=25, T=50, xi=0.1, sink_iter=10
