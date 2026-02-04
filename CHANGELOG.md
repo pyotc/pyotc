@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-02-03
+* Implement public api
+* Fix and improve codecov test coverage
+* Update instructions for install
+
 ## [0.2.2] - 2025-10-10
 * Add github actions build wheels and upload them to pypi.
 
