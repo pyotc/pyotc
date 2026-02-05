@@ -90,7 +90,7 @@ We provide a basic hello world example here. Our implementation is well document
 Below is a notional interface; this is still in process for our development.
 -->
 ```python
-from pyotc.otc_backend.policy_iteration.dense.exact import exact_otc
+from pyotc import exact_otc
 import numpy as np
 
 P = np.array([[.5, .5], [.5, .5]])
