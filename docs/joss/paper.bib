@@ -38,36 +38,22 @@
 	file = {Preprint PDF:/Users/jhineman/Zotero/storage/XMXGYVZ5/Cole et al. - 2025 - Alignment of Continuous Brain Connectivity.pdf:application/pdf},
 }
 
-@misc{calo_bisimulation_2024,
-	title = {Bisimulation Metrics are Optimal Transport Distances, and Can be Computed Efficiently},
-	url = {http://arxiv.org/abs/2406.04056},
-	doi = {10.48550/arXiv.2406.04056},
-	abstract = {We propose a new framework for formulating optimal transport distances between Markov chains. Previously known formulations studied couplings between the entire joint distribution induced by the chains, and derived solutions via a reduction to dynamic programming ({DP}) in an appropriately defined Markov decision process. This formulation has, however, not led to particularly efficient algorithms so far, since computing the associated {DP} operators requires fully solving a static optimal transport problem, and these operators need to be applied numerous times during the overall optimization process. In this work, we develop an alternative perspective by considering couplings between a flattened version of the joint distributions that we call discounted occupancy couplings, and show that calculating optimal transport distances in the full space of joint distributions can be equivalently formulated as solving a linear program ({LP}) in this reduced space. This {LP} formulation allows us to port several algorithmic ideas from other areas of optimal transport theory. In particular, our formulation makes it possible to introduce an appropriate notion of entropy regularization into the optimization problem, which in turn enables us to directly calculate optimal transport distances via a Sinkhorn-like method we call Sinkhorn Value Iteration ({SVI}). We show both theoretically and empirically that this method converges quickly to an optimal coupling, essentially at the same computational cost of running vanilla Sinkhorn in each pair of states. Along the way, we point out that our optimal transport distance exactly matches the common notion of bisimulation metrics between Markov chains, and thus our results also apply to computing such metrics, and in fact our algorithm turns out to be significantly more efficient than the best known methods developed so far for this purpose.},
-	number = {{arXiv}:2406.04056},
-	publisher = {{arXiv}},
-	author = {Calo, Sergio and Jonsson, Anders and Neu, Gergely and Schwartz, Ludovic and Segovia-Aguas, Javier},
-	urldate = {2025-07-03},
-	date = {2024-06-11},
-	eprinttype = {arxiv},
-	eprint = {2406.04056 [cs]},
-	keywords = {Computer Science - Machine Learning, Mathematics - Optimization and Control, Statistics - Machine Learning},
-	file = {Preprint PDF:/Users/jhineman/Zotero/storage/FR3V8AW4/Calo et al. - 2024 - Bisimulation Metrics are Optimal Transport Distanc.pdf:application/pdf;Snapshot:/Users/jhineman/Zotero/storage/ZJAIXZFC/2406.html:text/html},
+@article{calo_bisimulation_2024,
+  title={Bisimulation metrics are optimal transport distances, and can be computed efficiently},
+  author={Calo, Sergio and Jonsson, Anders and Neu, Gergely and Schwartz, Ludovic and Segovia-Aguas, Javier},
+  journal={Advances in Neural Information Processing Systems},
+  volume={37},
+  pages={134345--134386},
+  year={2024}
 }
 
-@misc{brugere_distances_2024,
-	title = {Distances for Markov Chains, and Their Differentiation},
-	url = {http://arxiv.org/abs/2302.08621},
-	doi = {10.48550/arXiv.2302.08621},
-	abstract = {(Directed) graphs with node attributes are a common type of data in various applications and there is a vast literature on developing metrics and efficient algorithms for comparing them. Recently, in the graph learning and optimization communities, a range of new approaches have been developed for comparing graphs with node attributes, leveraging ideas such as the Optimal Transport ({OT}) and the Weisfeiler-Lehman ({WL}) graph isomorphism test. Two state-of-the-art representatives are the {OTC} distance proposed in (O'Connor et al., 2022) and the {WL} distance in (Chen et al., 2022). Interestingly, while these two distances are developed based on different ideas, we observe that they both view graphs as Markov chains, and are deeply connected. Indeed, in this paper, we propose a unified framework to generate distances for Markov chains (thus including (directed) graphs with node attributes), which we call the Optimal Transport Markov ({OTM}) distances, that encompass both the {OTC} and the {WL} distances. We further introduce a special one-parameter family of distances within our {OTM} framework, called the discounted {WL} distance. We show that the discounted {WL} distance has nice theoretical properties and can address several limitations of the existing {OTC} and {WL} distances. Furthermore, contrary to the {OTC} and the {WL} distances, our new discounted {WL} distance can be differentiated after a entropy-regularization similar to the Sinkhorn distance, making it suitable to use in learning frameworks, e.g., as the reconstruction loss in a graph generative model.},
-	number = {{arXiv}:2302.08621},
-	publisher = {{arXiv}},
-	author = {Brugère, Tristan and Wan, Zhengchao and Wang, Yusu},
-	urldate = {2025-07-03},
-	date = {2024-02-16},
-	eprinttype = {arxiv},
-	eprint = {2302.08621 [cs]},
-	keywords = {Computer Science - Machine Learning},
-	file = {Preprint PDF:/Users/jhineman/Zotero/storage/LILX829J/Brugère et al. - 2024 - Distances for Markov Chains, and Their Differentia.pdf:application/pdf},
+@inproceedings{brugere_distances_2024,
+  title={Distances for Markov chains, and their differentiation},
+  author={Brug{\`e}re, Tristan and Wan, Zhengchao and Wang, Yusu},
+  booktitle={International conference on algorithmic learning theory},
+  pages={282--336},
+  year={2024},
+  organization={PMLR}
 }
 
 @misc{peyre_computational_2020,
@@ -154,9 +140,39 @@
 	note = {original-date: 2021-05-11T23:31:29Z},
 }
 
+@software{brugere_github,
+	title = {YusuLab/ot_markov_distances},
+	url = {https://github.com/YusuLab/ot_markov_distances},
+	author = {Brugère, Tristan},
+	urldate = {2026-02-07},
+	date = {2024-01-07},
+}
+
+@software{calogithub,
+	title = {SergioCalo/SVI},
+	url = {https://github.com/SergioCalo/SVI},
+	author = {Calo, Sergio},
+	urldate = {2026-02-07},
+	date = {2024-06-06},
+}
+
 @misc{krekel_pytest_2004,
 	title = {pytest 8.3},
 	url = {https://github.com/pytest-dev/pytest},
 	author = {Krekel, Holger and Oliveira, Bruno and Pfannschmidt, Ronny and Bruynooghe, Floris and Laugher, Brianna and Bruhin, Florian},
 	date = {2004},
+}
+
+@article{hoang_optimal_2025,
+  title={Optimal graph joining with applications to isomorphism detection and identification},
+  author={Hoang, Phuong N and McGoff, Kevin and Nobel, Andrew B and Xiang, Yang and Yi, Bongsoo},
+  journal={arXiv preprint arXiv:2511.14862},
+  year={2025}
+}
+
+@article{nutz_introduction_2022,
+  title={Introduction to entropic optimal transport},
+  author={Nutz, Marcel},
+  journal={Lecture notes, Columbia University},
+  year={2021}
 }

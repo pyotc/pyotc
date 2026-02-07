@@ -14,11 +14,11 @@ authors:
 affiliations:
  - name: Department of Statistics and Operations Research, University of North Carolina at Chapel Hill, Chapel Hill, NC, USA
    index: 1
- - name: Boston University, Boston, MA, USA
+ - name: Department of Mathematics and Statistics, Boston University, Boston, MA, USA
    index: 2
  - name: Applied Research Associates, Raleigh, NC, USA
    index: 3
-date: 8 Aug 2025
+date: 7 Feb 2026
 bibliography: paper.bib
 header-includes:
   - \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
@@ -30,40 +30,37 @@ Recent scholarly work [@oconnor_optimal_2022] has introduced an extension of opt
 # Statement of need
 Optimal transport has proven to be a valuable, practical, and natural tool in data science and machine learning. As a problem in the calculus of variations, conventional optimal transport admits many possible generalizations. One natural extension beyond probability distributions is to processes, particularly pairs of stationary finite-state Markov chains.
 
-Recent work [@oconnor_optimal_2022] has developed initial theory and algorithms for this setting, with a focus on computing optimal transition couplings. Transition couplings form a constrained family of transport plans that not only match the marginal distributions but also capture the dynamics of the Markov chains. Their practical importance has grown further through applications in network alignment and comparison [@yi_alignment_2024], which demonstrate how these couplings can serve as a principled basis for comparing complex directed networks. 
+Recent work [@oconnor_optimal_2022] has developed initial theory and algorithms for this setting, with a focus on computing optimal transition couplings. Transition couplings form a constrained family of transport plans that not only match the marginal distributions but also capture the dynamics of the Markov chains. Their practical importance has grown further through applications in network alignment and comparison [@yi_alignment_2024; @hoang_optimal_2025], which demonstrate how these couplings can serve as a principled basis for comparing complex directed networks. 
 
-We aim to provide a practical, open-source Python implementation of these methods. Our tool is designed for community extension and includes careful performance baselines. We anticipate this tool will be widely applied in future work on networks in fields like chemistry, neuroscience, and and biology.
+We aim to provide a practical, open-source Python implementation of these methods. Our tool is designed for community extension and anticipate this tool will be widely applied in future work on networks in fields like chemistry, neuroscience, and and biology.
 
 `pyotc` addresses several technical needs: providing a Python implementation, accelerating computation, and increasing the maximum problem size that can be handled in memory. Two other implementations for optimal transition coupling exist in MATLAB, which have served as inspiration. However, these share common limitations of MATLAB: they are not open or free (though free alternatives exist) and lack a comprehensive ecosystem for data science.
 
 Python is the de facto language for data science, but our choice of Python is motivated not only by its popularity and rich ecosystem, but also by the availability of highly efficient optimal transport solvers such as `POT` (Python Optimal Transport) [@flamary_pot_2021]. Leveraging `POT` allows `pyotc` to build on a robust and optimized backend for core OT computations. We also integrate with network/graph theory tools such as `networkx` [@hagberg_exploring_2008], and future applications could involve integration with standard machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
 
-To evaluate computational performance, we compare our implementation using different computation and storage configurations, including against the existing MATLAB codes where possible. The results of these comparisons are summarized in Table `\ref`.
-
-We emphasize that the `pyotc` code provides options for both exact solutions and entropic approximations. The exact procedure is important for several reasons: (i) validating the implementation by checking consistency between exact and approximate algorithms, (ii) enabling further algorithmic development, and (iii) benefiting from our optimized Python implementation, which allows exact computations to run efficiently in practice. Existing consistency results are based on stability estimates, but no rate of convergence results are currently available. In practice, the entropic regularization hyperparameter changes convergence behavior and can be tuned accordingly. The selection of regularization is an active area of research in approximate optimal transport and, as a special case, in the Schrödinger Bridge problem [@peyre_computational_2021] [@nutz_introduction_2022].
+We emphasize that the `pyotc` code provides options for both exact solutions and entropic approximations. The exact procedure is important for several reasons: (i) validating the implementation by checking consistency between exact and approximate algorithms, (ii) enabling further algorithmic development, and (iii) benefiting from our optimized Python implementation, which allows exact computations to run efficiently in practice. Existing consistency results are based on stability estimates, but no rate of convergence results are currently available. In practice, the entropic regularization hyperparameter changes convergence behavior and can be tuned accordingly. The selection of regularization is an active area of research in approximate optimal transport and, as a special case, in the Schrödinger Bridge problem [@peyre_computational_2020; @nutz_introduction_2022].
 
 ## Comparison with other available codes and lineage
-The original MATLAB code for OTC was written by Kevin O'Connor and used for the work in [@oconnor_optimal_2022]; the code is available on GitHub [@connor_oconnor-kevinotc_2022]. This MATLAB implementation was later extended and applied to network alignment in [@yi_alignment_2024]. The development of `pyotc` was initiated from these predecessors.
+The original MATLAB code for OTC was written by @oconnor_oconnor-kevinotc_2022 and used for the work in [@oconnor_optimal_2022]; the code is available on GitHub [@oconnor_oconnor-kevinotc_2022]. This MATLAB implementation was later extended [@yi_austinyinetotc_2023] and applied to network alignment in [@yi_alignment_2024]. The development of `pyotc` was initiated from these predecessors.
 
-Additional related codes have been developed, primarily focusing on the entropic case. Notably, Calo et al. [@calo_bisimulation_2024] provide a variation of the Sinkhorn iteration described in [@oconnor_optimal_2022], with an accompanying implementation available on GitHub [@calogithub]. Another related effort is the differentiable extension of entropic OTC described in [@brugere_distances_2024] and implemented in [@brugere_github].
+Additional related codes have been developed, primarily focusing on the entropic case. Notably, @calo_bisimulation_2024 provide a variation of the Sinkhorn iteration described in [@oconnor_optimal_2022], with an accompanying implementation available on GitHub [@calogithub]. Another related effort is the differentiable extension of entropic OTC described in [@brugere_distances_2024] and implemented in [@brugere_github].
 
 # Features
 Our implementation includes the tools needed to reproduce the examples from [@oconnor_optimal_2022] and [@yi_alignment_2024] in Python. It achieves faster performance than existing codes by leveraging improved optimal transport backends, including the exact network simplex implementation in `POT` [@flamary_pot_2021]. In addition, it offers an option to use sparse data structures, enabling the method to handle larger graphs efficiently.
 
-The `pyotc` code provides two major approaches to the OTC problem. The *exact* solution procedure solves the underlying optimal transport problems via linear programming. Here the specialized *network simplex* algorithm is used from `POT` [@flamary_pot_2021] [@peyre_computational_2021], but we also provide a pure Python alternative. This is the core of the *improvement* step of policy iteration. In the *evaluation* step, we solve a block linear system involving the transition matrix $R$ and the cost vector $c$. Once policy iteration has fully converged, the stationary distribution of the resulting optimal transition coupling can then be computed. This can be approached in many ways, including as a spectral problem. For an interpretation and detailed discussion of the stationary distribution, see [@yi_alignment_2024].
+The `pyotc` code provides two major approaches to the OTC problem. The *exact* solution procedure solves the underlying optimal transport problems via linear programming. Here the specialized *network simplex* algorithm is used from `POT` [@flamary_pot_2021; @peyre_computational_2020], but we also provide a pure Python alternative. This is the core of the *improvement* step of policy iteration. In the *evaluation* step, we solve a block linear system involving the transition matrix $R$ and the cost vector $c$. Once policy iteration has fully converged, the stationary distribution of the resulting optimal transition coupling can then be computed. This can be approached in many ways, including as a spectral problem. For an interpretation and detailed discussion of the stationary distribution, see [@yi_alignment_2024]. Alternatively to this exact approach, `pyotc` also provides an iterative method based on entropic regularization. We provide solvers that leverage the extensive optimal transport capabilities in `POT` as well as custom implementations developed from scratch.
 
-Alternatively to this exact approach, `pyotc` also provides an iterative method based on entropic regularization. Here we provide solvers that leverage the extensive optimal transport capabilities in `POT` as well as custom implementations developed from scratch. The performance of these options is summarized in Table `\ref`.
+Algorithm 1 summarizes the exact OTC solution procedure introduced by @oconnor_optimal_2022.
 
 <!--- 
 Test algorithm notation for pandoc
 -->
-Algorithm 1 from [@oconnor_optimal_2022]
 \begin{algorithm}[H]
 \DontPrintSemicolon
 \LinesNotNumbered 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
 \Input{$R_0 = P \otimes Q$, $\tau$}
-\Output{$R$ an optmial transition coupling}
+\Output{$R$ an optimal transition coupling}
 \BlankLine
 converged = False \;
 R += [R] \;
@@ -78,7 +75,7 @@ i = 0 \;
     d = $\|$R[i+1] - R[i]$\|$ \;
     converged = d < $\tau$ \;
 }
-\caption{Exact OTC Algorithm 1}
+\caption{Exact OTC}
 \end{algorithm}
 
 
@@ -110,6 +107,5 @@ One could explore for example variations on the policy improvement and policy ev
 Implementation-wise, there are significant opportunities to provide additional interfaces to Python ecosystem, for example interfaces chem or bio informatics sources (for example RDKit [@landrum_rdkitrdkit_2025])
 `pyotc` also enables additional benchmarking studies.
 
-# Acknowledgments
 
 # References
