@@ -35,9 +35,11 @@ def exact_otc(Px, Py, c, stat_dist="best", max_iter=100):
         max_iter (int, optional): Maximum number of iterations for the convergence process. Defaults to 100.
 
     Returns:
-        exp_cost (float): Expected transport cost under the optimal transition coupling.
-        R (scipy.sparse.csr_matrix): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
-        stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
+        Tuple containing [float, scipy.sparse.csr_matrix, np.ndarray]:
+
+        - exp_cost (float): Expected transport cost under the optimal transition coupling.
+        - R (scipy.sparse.csr_matrix): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
+        - stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
 
         If convergence is not reached within max_iter iterations, returns (None, None, None).
     """

@@ -13,8 +13,10 @@ def approx_tce(P, c, L, T):
         T (int): Maximum number of iterations for computing the bias vector h.
 
     Returns:
-        g (np.ndarray): Approximated average cost (gain) vector of shape (dx*dy,).
-        h (np.ndarray): Approximated bias vector of shape (dx*dy,).
+        Tuple containing [np.ndarray, np.ndarray]:
+
+        - g (np.ndarray): Approximated average cost (gain) vector of shape (dx*dy,).
+        - h (np.ndarray): Approximated bias vector of shape (dx*dy,).
     """
 
     d = P.shape[0]

@@ -1,5 +1,8 @@
 """Main entry point for otc funcitonality"""
 
+from typing import Tuple, Optional
+import numpy as np
+
 from .otc_backend.policy_iteration.dense.exact import exact_otc as _exact_otc_dense
 from .otc_backend.policy_iteration.sparse.exact import exact_otc as _exact_otc_sparse
 from .otc_backend.policy_iteration.dense.entropic import entropic_otc as _entropic_otc
@@ -13,7 +16,7 @@ def exact_otc(
     stat_dist="best",
     backend="dense",
     max_iter=None,
-):
+) -> Tuple[float, np.ndarray, np.ndarray]:
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
@@ -36,9 +39,11 @@ def exact_otc(
         max_iter (int, optional): Maximum number of iterations for the sparse backend. Only applicable when backend is "sparse".
 
     Returns:
-        exp_cost (float): Expected transport cost under the optimal transition coupling.
-        R (np.ndarray or scipy.sparse.csr_matrix): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
-        stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
+        Tuple containing [float, np.ndarray, np.ndarray]:
+
+        - exp_cost (float): Expected transport cost under the optimal transition coupling.
+        - R (np.ndarray or scipy.sparse.csr_matrix): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
+        - stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
 
         Returns (None, None, None) if the algorithm fails to converge.
     """
@@ -65,7 +70,7 @@ def entropic_otc(
     reg_num=None,
     get_sd=False,
     silent=True,
-):
+) -> Tuple[float, np.ndarray, Optional[np.ndarray]]:
     """
     Solves the Entropic Optimal Transition Coupling (OTC) problem between two Markov chains
     using approximate policy iteration and entropic regularization.
@@ -87,10 +92,11 @@ def entropic_otc(
         silent (bool): If False, print convergence info during iterations and running time
 
     Returns:
-        exp_cost (float): Expected transport cost under the optimal transition coupling.
-        P (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
-        stat_dist (Optional[np.ndarray]): Stationary distribution of the optimal transition coupling of shape (dx, dy),
-                                            or None if get_sd is False.
+        Tuple containing [float, np.ndarray, Optional[np.ndarray]]:
+
+        - exp_cost (float): Expected transport cost under the optimal transition coupling.
+        - P (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
+        - stat_dist (np.ndarray or None): Stationary distribution of the optimal transition coupling of shape (dx, dy). Returns None if `get_sd` is False.
     """
     return _entropic_otc(
         Px,
