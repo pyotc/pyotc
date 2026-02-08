@@ -61,7 +61,7 @@ Ready to contribute? Here's how to set up `pyotc` for local development.
 
    Now you can make your changes locally.
 
-5. When you're done making changes use [nox](nox) to lint, format, and test.
+5. When you're done making changes use [nox](https://nox.thea.codes/en/stable/index.html) to lint, format, and test.
 
 6. Commit your changes and push your branch to GitHub:
 
@@ -102,14 +102,14 @@ uv add --dev pytest
 # in project root
 uv tool run nox
 ```
-*Note that this uses `nox` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
+*Note that this uses `nox` in isolation and should mimic what is done in [github actions](.github/workflows/lint_and_test.yml)*
 
 ### Running ruff format via `uv`
 ```bash
 # in project root
 uv tool run ruff format
 ```
-*Note that this uses `ruff` in isolation and should mimic what is done in [github actions](.github/workflows/nox.yml)*
+*Note that this uses `ruff` in isolation and should mimic what is done in [github actions](.github/workflows/lint_and_test.yml)*
 *Ruff in particular on your system, vs as tool, may be divergent.*
 
 
