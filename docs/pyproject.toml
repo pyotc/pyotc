@@ -1,0 +1,54 @@
+[project]
+name = "pyotc"
+version = "0.3.0"
+authors = [
+    {name="Jay Hineman"},
+    {name="Yuning Pan"},
+    {name="Bongsoo Yi"}
+]
+description = "Perform optimal transition coupling (OTC) in python."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT license"}
+dependencies = [
+    "matplotlib>=3.10.0",
+    "networkx>=3.4.2",
+    "numpy>=2.2.1",
+    "pot>=0.9.5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "ruff>=0.8.4",
+    "nox>=2024.10.9",
+    "pytest-benchmark>=5.1.0",
+    "sphinx>=8.1.3",
+    "myst-parser>=4.0.1",
+    "sphinx-rtd-theme>=3.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib", "-v",
+]
+pythonpath = [
+  ".", "src",
+]
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[tool.coverage.run]
+omit = [
+  "src/pyotc/otc_backend/optimal_transport/native_refactor.py",
+  "src/pyotc/otc_backend/graph/utils.py",
+]

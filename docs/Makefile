@@ -10,8 +10,14 @@ BUILDDIR      = _build
 
 # Custom pre-processing: sync INSTALL.md before building HTML
 html:
-	@echo "Syncing INSTALL.md to docs/INSTALL.md..."
-	cp ../INSTALL.md INSTALL.md
+	@echo "Syncing CONTRIBUTING.md to docs/CONTRIBUTING.md..."
+	cp ../CONTRIBUTING.md CONTRIBUTING.md
+	@echo "Syncing CHANGELOG.md to docs/CHANGELOG.md..."
+	cp ../CHANGELOG.md CHANGELOG.md
+	@echo "Syncing RELEASE.md to docs/RELEASE.md..."
+	cp ../RELEASE.md RELEASE.md
+	@echo "Syncing pyproject.toml to docs/pyproject.toml..."
+	cp ../pyproject.toml pyproject.toml
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 
