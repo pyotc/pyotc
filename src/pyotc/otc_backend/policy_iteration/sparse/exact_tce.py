@@ -36,8 +36,9 @@ def exact_tce(R_sparse, c):
         c (np.ndarray): Cost vector of shape (dx, dy).
 
     Returns:
-        g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
-        h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
+        Tuple containing [np.ndarray, np.ndarray]:
+        - g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
+        - h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
     """
     n = R_sparse.shape[0]
     c = c.reshape(n)

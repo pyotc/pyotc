@@ -22,8 +22,10 @@ def exact_tce(R, c):
         c (np.ndarray): Cost vector of shape (dx*dy, dx*dy).
 
     Returns:
-        g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
-        h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
+        Tuple containing [np.ndarray, np.ndarray]:
+        
+        - g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
+        - h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
 
     Notes:
         - If the matrix A is singular or ill-conditioned, the solution uses `np.linalg.pinv`,
