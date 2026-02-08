@@ -73,7 +73,7 @@ def exact_otc(Px, Py, c, stat_dist="best"):
 
     Returns:
         Tuple containing [float, np.ndarray, np.ndarray]:
-        
+
         - exp_cost (float): Expected transport cost under the optimal transition coupling.
         - R (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
         - stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).

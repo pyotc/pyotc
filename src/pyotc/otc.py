@@ -16,7 +16,7 @@ def exact_otc(
     stat_dist="best",
     backend="dense",
     max_iter=None,
-):
+) -> Tuple[float, np.ndarray, np.ndarray]:
     """
     Computes the optimal transport coupling (OTC) between two stationary Markov chains represented by transition matrices Px and Py,
     as described in Algorithm 1 of the paper: "Optimal Transport for Stationary Markov Chains via Policy Iteration"
@@ -40,7 +40,7 @@ def exact_otc(
 
     Returns:
         Tuple containing [float, np.ndarray, np.ndarray]:
-        
+
         - exp_cost (float): Expected transport cost under the optimal transition coupling.
         - R (np.ndarray or scipy.sparse.csr_matrix): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
         - stat_dist (np.ndarray): Stationary distribution of the optimal transition coupling of shape (dx, dy).
@@ -93,7 +93,7 @@ def entropic_otc(
 
     Returns:
         Tuple containing [float, np.ndarray, Optional[np.ndarray]]:
-        
+
         - exp_cost (float): Expected transport cost under the optimal transition coupling.
         - P (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
         - stat_dist (np.ndarray or None): Stationary distribution of the optimal transition coupling of shape (dx, dy). Returns None if `get_sd` is False.
@@ -111,4 +111,3 @@ def entropic_otc(
         get_sd=get_sd,
         silent=silent,
     )
-    

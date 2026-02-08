@@ -62,7 +62,7 @@ def entropic_otc(
 
     Returns:
         Tuple containing [float, np.ndarray, Optional[np.ndarray]]:
-        
+
         - exp_cost (float): Expected transport cost under the optimal transition coupling.
         - P (np.ndarray): Optimal transition coupling matrix of shape (dx*dy, dx*dy).
         - stat_dist (Optional[np.ndarray]): Stationary distribution of the optimal transition coupling of shape (dx, dy), or None if get_sd is False.

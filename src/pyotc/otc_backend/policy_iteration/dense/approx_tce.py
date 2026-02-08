@@ -14,7 +14,7 @@ def approx_tce(P, c, L, T):
 
     Returns:
         Tuple containing [np.ndarray, np.ndarray]:
-        
+
         - g (np.ndarray): Approximated average cost (gain) vector of shape (dx*dy,).
         - h (np.ndarray): Approximated bias vector of shape (dx*dy,).
     """

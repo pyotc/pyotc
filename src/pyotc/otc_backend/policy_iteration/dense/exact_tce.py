@@ -23,7 +23,7 @@ def exact_tce(R, c):
 
     Returns:
         Tuple containing [np.ndarray, np.ndarray]:
-        
+
         - g (np.ndarray): Average cost (gain) vector of shape (dx*dy,).
         - h (np.ndarray): Total extra cost (bias) vector of shape (dx*dy,).
 
