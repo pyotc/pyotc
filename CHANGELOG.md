@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-02-13
+* Update Sphinx documentation theme
+* Update docstring and notebook to use public api
+
 ## [0.3.0] - 2026-02-03
 * Implement public api
 * Fix and improve codecov test coverage
