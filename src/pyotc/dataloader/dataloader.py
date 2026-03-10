@@ -86,10 +86,6 @@ def _is_irreducible_transition_matrix(P: np.ndarray, atol: float = 1e-12) -> boo
 
     Returns:
         bool: True if irreducible; False otherwise.
-
-    Notes:
-        - This does NOT check aperiodicity.
-        - If any row has no outgoing edges under the threshold, we treat it as invalid.
     """
     n = P.shape[0]
     if n == 0:
@@ -300,15 +296,13 @@ def _validate_parallel_lists(
     P_list: Sequence[Any],
     X_list: Sequence[Any],
     y_list: Optional[Sequence[Any]],
-    y_required: bool,
 ) -> None:
     """
     Validate that parallel lists (P, X, y) are length-aligned.
 
     Rules:
       - len(P_list) must equal len(X_list)
-      - if y_required=True, then y_list must be provided and len(y_list) must match
-      - if y_required=False and y_list is provided, its length must still match
+      - if y_list is provided, len(y_list) must match len(P_list)
 
     Since alignment cannot be verified programmatically, we print a strong warning
     reminding the user to keep ordering consistent.
@@ -318,38 +312,75 @@ def _validate_parallel_lists(
         P_list (Sequence[Any]): List of transition matrices.
         X_list (Sequence[Any]): List of node feature matrices.
         y_list (Optional[Sequence[Any]]): List of labels or None.
-        y_required (bool): Whether labels are required for the split.
 
     Raises:
-        ValueError: If lengths mismatch or required y_list is missing.
+        ValueError: If lengths mismatch.
     """
     if len(P_list) != len(X_list):
         raise ValueError(
             f"[{where}] length mismatch: len(P_{where})={len(P_list)} vs len(X_{where})={len(X_list)}."
         )
 
-    if y_required:
-        if y_list is None:
-            raise ValueError(f"[{where}] y is required (supervised) but y_{where} is None.")
-        if len(y_list) != len(P_list):
-            raise ValueError(
-                f"[{where}] length mismatch: len(y_{where})={len(y_list)} vs len(P_{where})={len(P_list)}."
-            )
-    else:
-        if y_list is not None and len(y_list) != len(P_list):
-            raise ValueError(
-                f"[{where}] length mismatch: len(y_{where})={len(y_list)} vs len(P_{where})={len(P_list)}."
-            )
+    if y_list is not None and len(y_list) != len(P_list):
+        raise ValueError(
+            f"[{where}] length mismatch: len(y_{where})={len(y_list)} vs len(P_{where})={len(P_list)}."
+        )
 
     print(
         f"[Warning/{where}] Please make sure P, X"
-        + (", y" if y_list is not None or y_required else "")
+        + (", y" if y_list is not None else "")
         + f" are sorted/aligned in the SAME order for the {where} split."
     )
 
 
+def _validate_y_types(
+    *,
+    y_train: Optional[Sequence[Any]],
+    y_test: Optional[Sequence[Any]],
+) -> None:
+    """
+    Validate label (y) type consistency within train/test and across train/test.
+
+    Allowed y:
+      - categorical labels (e.g., int/str)
+      - numerical labels (e.g., float)
+
+    Rules:
+      - If y_train is provided, all entries must share the same Python type.
+      - If y_test is provided, all entries must share the same Python type.
+      - If both are provided, the train type must match the test type.
+
+    Also prints a warning if y_test is provided but y_train is not.
+
+    Args:
+        y_train (Optional[Sequence[Any]]): Train labels or None.
+        y_test (Optional[Sequence[Any]]): Test labels or None.
+
+    Raises:
+        TypeError: If types are inconsistent within a split or across splits.
+    """
+    if y_test is not None and y_train is None:
+        print("[Warning/label] y_test is provided but y_train is not provided.")
+
+    def _split_type(y: Sequence[Any], split: str) -> Optional[type]:
+        if len(y) == 0:
+            return None
+        t0 = type(y[0])
+        if not all(isinstance(v, t0) for v in y):
+            raise TypeError(f"[label check] Not all {split} labels share the same type.")
+        return t0
+
+    t_train = _split_type(y_train, "train") if y_train is not None else None
+    t_test = _split_type(y_test, "test") if y_test is not None else None
+
+    if t_train is not None and t_test is not None and t_train != t_test:
+        raise TypeError(
+            f"[label check] Train and test label types differ: {t_train} (train) vs {t_test} (test)."
+        )
+
+
 # ============================================================
-# Data Structures
+# Attributed network data structure
 # ============================================================
 
 @dataclass(frozen=True)
@@ -360,7 +391,7 @@ class AttributedNetwork:
     Attributes:
         P (np.ndarray): Transition matrix of shape (n, n).
         X (np.ndarray): Node feature matrix of shape (n, p).
-        y (Any): Optional network-level label. Required for train if supervised=True.
+        y (Any): Optional network-level label. May be categorical or numerical.
     """
     P: np.ndarray
     X: np.ndarray
@@ -381,7 +412,7 @@ class AttributedNetworkDataset:
       - __getitem__: index access
       - __iter__ : iteration over samples
 
-    Optionally enforces labels are present for all samples if require_y=True.
+    Labels y are optional; this class does not enforce the presence of y.
     """
 
     def __init__(
@@ -389,19 +420,12 @@ class AttributedNetworkDataset:
         samples: Sequence[AttributedNetwork],
         *,
         name: str,
-        require_y: bool = False,
     ) -> None:
         self.name = name
-        self.require_y = require_y
         self._samples = list(samples)
 
         if len(self._samples) == 0:
             raise ValueError(f"[{self.name}] dataset is empty.")
-
-        if self.require_y:
-            missing = [i for i, s in enumerate(self._samples) if s.y is None]
-            if missing:
-                raise ValueError(f"[{self.name}] require_y=True but y missing at indices: {missing}")
 
     def __len__(self) -> int:
         return len(self._samples)
@@ -414,12 +438,12 @@ class AttributedNetworkDataset:
 
 
 # ============================================================
-# DataLoader Structure
+# DataLoader
 # ============================================================
 
 class AttributedNetworkDataLoader:
     """
-    DataLoader for attributed network data (transition matrices + node features).
+    DataLoader for attributed network data (transition matrices + node features + network label(optional)).
 
     Validation performed on load:
 
@@ -436,13 +460,13 @@ class AttributedNetworkDataLoader:
     3) Train/test consistency (optional but default True):
        - train and test have the same feature type per dimension
 
-    4) Label rules:
-       - supervised=True requires y for every train graph
-       - test labels are optional
-       - if y exists for both train and test, we enforce that:
-           * train labels are all the same Python type
-           * test labels are all the same Python type
-           * train label type matches test label type
+    4) Label rules (y is fully optional):
+       - y_train may be None
+       - y_test may be None
+       - if y_train is provided, enforce type consistency within train
+       - if y_test is provided, enforce type consistency within test
+       - if both are provided, enforce the same label type across train and test
+       - prints a warning if y_test is provided but y_train is not
 
     Cost matrix computation:
 
@@ -463,15 +487,12 @@ class AttributedNetworkDataLoader:
         p: int,
         train_data: Sequence[Dict[str, Any]],
         test_data: Optional[Sequence[Dict[str, Any]]] = None,
-        supervised: bool = True,
         transition_atol: float = 1e-8,
         irreducible_atol: float = 1e-12,
         enforce_train_test_feature_consistency: bool = True,
     ) -> None:
         """
         Construct a DataLoader from list-of-dicts input.
-
-        Most users should prefer from_lists(...) which accepts parallel lists.
 
         Args:
             p (int): Feature dimension (number of columns in X).
@@ -480,7 +501,6 @@ class AttributedNetworkDataLoader:
                 - "X": node feature matrix (n, p)
                 - optional "y": label
             test_data (Optional[Sequence[Dict[str, Any]]]): Same format as train_data.
-            supervised (bool): If True, require y for all training samples.
             transition_atol (float): Tolerance for row-stochastic check.
             irreducible_atol (float): Threshold for irreducibility graph edges.
             enforce_train_test_feature_consistency (bool): Enforce train/test kind match.
@@ -492,7 +512,6 @@ class AttributedNetworkDataLoader:
             raise ValueError(f"p must be a positive integer, got {p!r}.")
 
         self.p = p
-        self.supervised = supervised
         self.transition_atol = transition_atol
         self.irreducible_atol = irreducible_atol
         self.enforce_train_test_feature_consistency = enforce_train_test_feature_consistency
@@ -503,11 +522,11 @@ class AttributedNetworkDataLoader:
         #   self.costs[mode][d][(i,j)] = ndarray
         self.costs: Dict[str, Dict[int, Dict[Tuple[int, int], np.ndarray]]] = {}
 
-        self.train = self._build_dataset(train_data, where="train", require_y=self.supervised)
+        self.train = self._build_dataset(train_data, where="train")
 
         self.test: Optional[AttributedNetworkDataset] = None
         if test_data is not None:
-            self.test = self._build_dataset(test_data, where="test", require_y=False)
+            self.test = self._build_dataset(test_data, where="test")
 
             if self.enforce_train_test_feature_consistency:
                 _check_train_test_feature_kinds_match(
@@ -526,7 +545,6 @@ class AttributedNetworkDataLoader:
         P_test: Optional[Sequence[ArrayLike]] = None,
         X_test: Optional[Sequence[ArrayLike]] = None,
         y_test: Optional[Sequence[Any]] = None,
-        supervised: bool = True,
         transition_atol: float = 1e-8,
         irreducible_atol: float = 1e-12,
         enforce_train_test_feature_consistency: bool = True,
@@ -535,19 +553,18 @@ class AttributedNetworkDataLoader:
         Convenience constructor from parallel lists of (P, X, y).
 
         This avoids having to manually build list-of-dicts. It performs:
-          - length checks across P/X/y lists
+          - length checks across P/X/y lists (y optional)
           - a printed warning about alignment/order
-          - optional train/test label type consistency checks
+          - label type consistency checks within/across train/test (if y provided)
 
         Args:
             p (int): Feature dimension (number of columns in X).
             P_train (Sequence[ArrayLike]): Training transition matrices.
             X_train (Sequence[ArrayLike]): Training node feature matrices.
-            y_train (Optional[Sequence[Any]]): Training labels (required if supervised=True).
+            y_train (Optional[Sequence[Any]]): Training labels (optional).
             P_test (Optional[Sequence[ArrayLike]]): Test transition matrices.
             X_test (Optional[Sequence[ArrayLike]]): Test node feature matrices.
             y_test (Optional[Sequence[Any]]): Test labels (optional).
-            supervised (bool): If True, require y_train and enforce label checks.
             transition_atol (float): Tolerance for row-stochastic check.
             irreducible_atol (float): Threshold for irreducibility graph edges.
             enforce_train_test_feature_consistency (bool): Enforce train/test kind match.
@@ -557,15 +574,9 @@ class AttributedNetworkDataLoader:
 
         Raises:
             ValueError: If list lengths mismatch or required lists are missing.
-            TypeError: If train/test label types are inconsistent (when both provided).
+            TypeError: If label types are inconsistent within/across splits.
         """
-        _validate_parallel_lists(
-            where="train",
-            P_list=P_train,
-            X_list=X_train,
-            y_list=y_train,
-            y_required=supervised,
-        )
+        _validate_parallel_lists(where="train", P_list=P_train, X_list=X_train, y_list=y_train)
 
         train_data = []
         for i in range(len(P_train)):
@@ -582,13 +593,7 @@ class AttributedNetworkDataLoader:
                     f"Got len(P_test)={_len_or_none(P_test)} and len(X_test)={_len_or_none(X_test)}."
                 )
 
-            _validate_parallel_lists(
-                where="test",
-                P_list=P_test,
-                X_list=X_test,
-                y_list=y_test,
-                y_required=False,
-            )
+            _validate_parallel_lists(where="test", P_list=P_test, X_list=X_test, y_list=y_test)
 
             test_data = []
             for i in range(len(P_test)):
@@ -597,28 +602,13 @@ class AttributedNetworkDataLoader:
                     item["y"] = y_test[i]
                 test_data.append(item)
 
-        # Label type consistency check (train vs test) if test labels are provided.
-        if supervised and y_train is not None and y_test is not None:
-            if len(y_train) > 0 and len(y_test) > 0:
-                train_type = type(y_train[0])
-                test_type = type(y_test[0])
-
-                if train_type != test_type:
-                    raise TypeError(
-                        f"[label check] Train and test label types differ: "
-                        f"{train_type} (train) vs {test_type} (test)."
-                    )
-
-                if not all(isinstance(y, train_type) for y in y_train):
-                    raise TypeError("[label check] Not all train labels share the same type.")
-                if not all(isinstance(y, test_type) for y in y_test):
-                    raise TypeError("[label check] Not all test labels share the same type.")
+        # Label type consistency checks (within train/test and across train/test).
+        _validate_y_types(y_train=y_train, y_test=y_test)
 
         return cls(
             p=p,
             train_data=train_data,
             test_data=test_data,
-            supervised=supervised,
             transition_atol=transition_atol,
             irreducible_atol=irreducible_atol,
             enforce_train_test_feature_consistency=enforce_train_test_feature_consistency,
@@ -736,7 +726,6 @@ class AttributedNetworkDataLoader:
         data: Sequence[Dict[str, Any]],
         *,
         where: str,
-        require_y: bool,
     ) -> AttributedNetworkDataset:
         """
         Build and validate a dataset split from list-of-dicts.
@@ -744,7 +733,6 @@ class AttributedNetworkDataLoader:
         Args:
             data (Sequence[Dict[str, Any]]): Each dict must include "P" and "X".
             where (str): Split label ("train" or "test").
-            require_y (bool): If True, require y for every sample.
 
         Returns:
             AttributedNetworkDataset: Validated dataset.
@@ -790,16 +778,13 @@ class AttributedNetworkDataLoader:
                     f"[{where}] P[{i}] is not irreducible (support graph is not strongly connected)."
                 )
 
-            if require_y and y is None:
-                raise ValueError(f"[{where}] y is required (supervised) but missing at index {i}.")
-
             samples.append(AttributedNetwork(P=P, X=X, y=y))
             X_list.append(X)
 
         kinds = _check_feature_kinds_consistent(X_list, self.p, where=where)
         self._feature_kinds[where] = kinds
 
-        return AttributedNetworkDataset(samples, name=where, require_y=require_y)
+        return AttributedNetworkDataset(samples, name=where)
 
     # ----------------------------
     # Internal: cost computation
