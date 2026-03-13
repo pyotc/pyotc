@@ -20,8 +20,6 @@ affiliations:
    index: 3
 date: 7 Feb 2026
 bibliography: paper.bib
-header-includes:
-  - \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 ---
 
 # Summary
