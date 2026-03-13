@@ -52,33 +52,15 @@ The `pyotc` code provides two major approaches to the OTC problem. The *exact* s
 
 Algorithm 1 summarizes the exact OTC solution procedure introduced by @oconnor_optimal_2022.
 
-<!--- 
-Test algorithm notation for pandoc
--->
-\begin{algorithm}[H]
-\DontPrintSemicolon
-\LinesNotNumbered 
-\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{$R_0 = P \otimes Q$, $\tau$}
-\Output{$R$ an optimal transition coupling}
-\BlankLine
-converged = False \;
-R += [R] \;
-i = 0 \;
-\tcc{iterate until converged}
-\While{not converged}{
-    \tcc{Evaluate transition coupling/policy}
-    g, h = evaluate(R) \;
-    \tcc{Improve transition coupling/policy}
-    R += [improve(g, h)] \;
-    \tcc{Check convergence}
-    d = $\|$R[i+1] - R[i]$\|$ \;
-    converged = d < $\tau$ \;
-}
-\caption{Exact OTC}
-\end{algorithm}
+## Algorithm 1: Exact OTC
 
-
+1. Initialize $R_0 = P \otimes Q$, Convergence tolerance $\tau$
+2. Set `converged = False`, $i=0$, $R=[R_0]$
+3. **While** not `converged`:
+    1. **Evaluate transition coupling**: $g, h = \text{evaluate}(R)$
+    2. **Improve transition coupling**: $R = [R, \;\text{improve}(g, h)]$
+    3. **Check convergence**: $d = \|R[i+1] - R[i]|$, $\text{converged} = d < \tau$
+4. **Output**: $R$ (an optimal transition coupling)
 
 # Examples
 We provide a basic hello world example here. Our implementation is well documented and simple, consisting essentially of Python functions, which makes it easy to modify.
