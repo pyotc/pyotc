@@ -50,6 +50,7 @@ def get_stat_dist(P, method="best", c=None):
 
     Returns:
         pi (np.ndarray): Stationary distribution vector of shape (n,), summing to 1.
+        exp_cost (float or None): Expected cost under the stationary distribution if method='best', else None.
 
     Raises:
         ValueError: If method is 'best' but cost vector `c` is not provided,
@@ -74,7 +75,8 @@ def get_stat_dist(P, method="best", c=None):
         # Solve the linear program: minimize c^T π s.t. Aeq π = beq
         res = linprog(c, A_eq=Aeq, b_eq=beq, bounds=bound)
         pi = res.x
-        return pi
+        exp_cost = res.fun
+        return pi, exp_cost
 
     elif method == "eigen":
         # Computes the stationary distribution using eigenvalue decomposition
@@ -85,7 +87,7 @@ def get_stat_dist(P, method="best", c=None):
         idx = np.argmin(np.abs(eigenvalues - 1))
         pi = np.real(eigenvectors[:, idx])
         pi /= np.sum(pi)
-        return pi
+        return pi, None
 
     elif method == "iterative":
         # Computes the stationary distribution using power iteration
@@ -104,7 +106,7 @@ def get_stat_dist(P, method="best", c=None):
 
         # Normalize the resulting distribution
         pi /= np.sum(pi)
-        return pi
+        return pi, None
 
     else:
         raise ValueError(
