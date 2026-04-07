@@ -13,7 +13,7 @@ from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
 from pyotc.examples.edge_awareness import graph_1, graph_2, graph_3, c21, c23
 
 # 1. Test exact OTC on stochastic block model
-np.random.seed(1009)
+np.random.seed(100)
 prob_mat = np.array(
     [
         [0.9, 0.1, 0.1, 0.1],
