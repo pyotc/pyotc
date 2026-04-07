@@ -2,7 +2,7 @@
 
 __author__ = """Jay Hineman"""
 __email__ = "jay.hineman@gmail.com"
-__version__ = "0.3.0"
+__version__ = "0.3.3"
 
 # Public API re-exports
 from .otc import entropic_otc, exact_otc
