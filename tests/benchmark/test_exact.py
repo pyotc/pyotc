@@ -134,3 +134,13 @@ def test_exact_otc_invalid_backend():
             edge_awareness_c[1],
             backend="invalid_backend",
         )
+
+
+def test_exact_otc_missing_cost():
+    with pytest.raises(ValueError):
+        exact_otc(
+            edge_awareness_P[1],
+            edge_awareness_P[2],
+            None,
+            backend="dense",
+        )
