@@ -33,7 +33,7 @@ def get_best_stat_dist(P, c):
     return stat_dist, exp_cost
 
 
-def get_stat_dist(P, method="best", c=None):
+def get_stat_dist(P, c, method="best"):
     """
     Computes the stationary distribution of a Markov chain given its transition matrix P.
 
@@ -44,23 +44,16 @@ def get_stat_dist(P, method="best", c=None):
 
     Args:
         P (np.ndarray): Transition matrix of the Markov chain, shape (n, n).
+        c (np.ndarray): Cost vector of shape (n,).
         method (str): Method used to compute the stationary distribution.
                       One of 'eigen', 'iterative', or 'best'. Defaults to 'best'.
-        c (np.ndarray, optional): Cost vector of shape (n,) used only when method='best'.
 
     Returns:
         pi (np.ndarray): Stationary distribution vector of shape (n,), summing to 1.
-        exp_cost (float or None): Expected cost under the stationary distribution if method='best', else None.
-
-    Raises:
-        ValueError: If method is 'best' but cost vector `c` is not provided,
-                    or if an invalid method name is given.
+        exp_cost (float): Expected cost under the stationary distribution.
     """
     if method == "best":
         # 'best' method minimizes expected cost under stationary constraints
-        if c is None:
-            raise ValueError("Cost function 'c' is required when method='best'.")
-
         n = P.shape[0]
         c = np.reshape(c, (n, -1))
 
