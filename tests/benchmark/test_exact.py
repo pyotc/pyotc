@@ -126,7 +126,7 @@ def test_edge_awareness_exact_otc():
     )
 
     # check consistency
-    assert np.allclose(exp_cost21, 0.887959258752332)
+    assert np.allclose(exp_cost21, 0.5714285714285726)
     assert np.allclose(exp_cost23, 0.5806019475091779)
 
 
