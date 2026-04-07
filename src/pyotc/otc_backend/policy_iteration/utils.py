@@ -89,7 +89,7 @@ def get_stat_dist(P, method="best", c=None):
         pi /= np.sum(pi)
         c = np.reshape(c, (P.shape[0], -1))
         exp_cost = pi @ c
-        return pi, exp_cost
+        return pi, exp_cost.item()
 
     elif method == "iterative":
         # Computes the stationary distribution using power iteration
@@ -110,7 +110,7 @@ def get_stat_dist(P, method="best", c=None):
         pi /= np.sum(pi)
         c = np.reshape(c, (P.shape[0], -1))
         exp_cost = pi @ c
-        return pi, exp_cost
+        return pi, exp_cost.item()
 
     else:
         raise ValueError(
