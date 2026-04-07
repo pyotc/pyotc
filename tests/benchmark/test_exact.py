@@ -22,7 +22,7 @@ prob_mat = np.array(
         [0.1, 0.1, 0.1, 0.9],
     ]
 )
-M = [2, 4, 8, 16]
+M = [4, 8, 16]
 sbms = [
     {
         "A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
