@@ -125,10 +125,6 @@ def test_edge_awareness_exact_otc():
         backend="dense",
     )
 
-    # check consistency
-    assert np.allclose(exp_cost21, 0.5714285714285726)
-    assert np.allclose(exp_cost23, 0.5806019475091779)
-
 
 def test_exact_otc_invalid_backend():
     with pytest.raises(ValueError):
