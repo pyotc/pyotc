@@ -87,7 +87,7 @@ def get_stat_dist(P, method="best", c=None):
         idx = np.argmin(np.abs(eigenvalues - 1))
         pi = np.real(eigenvectors[:, idx])
         pi /= np.sum(pi)
-        c = np.reshape(c, (n, -1))
+        c = np.reshape(c, (P.shape[0], -1))
         exp_cost = pi @ c
         return pi, exp_cost
 
@@ -108,7 +108,7 @@ def get_stat_dist(P, method="best", c=None):
 
         # Normalize the resulting distribution
         pi /= np.sum(pi)
-        c = np.reshape(c, (n, -1))
+        c = np.reshape(c, (P.shape[0], -1))
         exp_cost = pi @ c
         return pi, exp_cost
 
