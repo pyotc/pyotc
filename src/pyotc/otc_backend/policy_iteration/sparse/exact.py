@@ -77,15 +77,14 @@ def exact_otc(Px, Py, c, stat_dist="best", max_iter=100):
                 print(
                     f"Convergence reached in {iter + 1} iterations. Computing stationary distribution..."
                 )
-                stat_dist = get_stat_dist(R, method=stat_dist, c=c)
+                stat_dist, exp_cost = get_stat_dist(R, method=stat_dist, c=c)
                 stat_dist = np.reshape(stat_dist, (dx, dy))
-                exp_cost = g[0].item()
                 end = time.time()
                 print(
                     f"[exact_otc] Finished. Total time elapsed: {end - start:.3f} seconds."
                 )
                 return float(exp_cost), R, stat_dist
-
+                return float(exp_cost), R, stat_dist
     # Return None if convergence is not achieved
     print(f"Convergence not achieved after {iter} iterations. Returning None.")
     return None, None, None

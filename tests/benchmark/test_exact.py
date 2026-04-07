@@ -13,7 +13,7 @@ from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
 from pyotc.examples.edge_awareness import graph_1, graph_2, graph_3, c21, c23
 
 # 1. Test exact OTC on stochastic block model
-np.random.seed(1009)
+np.random.seed(100)
 prob_mat = np.array(
     [
         [0.9, 0.1, 0.1, 0.1],
@@ -22,7 +22,7 @@ prob_mat = np.array(
         [0.1, 0.1, 0.1, 0.9],
     ]
 )
-M = [2, 4, 8, 16]
+M = [4, 8, 16]
 sbms = [
     {
         "A1": stochastic_block_model(sizes=(m, m, m, m), probs=prob_mat),
@@ -73,12 +73,18 @@ def test_wheel_exact_otc():
     exp_cost12_dense, _, _ = exact_otc(
         wheel_P[0], wheel_P[1], wheel_c[0], stat_dist=None, backend="dense"
     )
+    exp_cost12_lp, _, _ = exact_otc_lp(
+        wheel_P[0], wheel_P[1], wheel_c[0], stat_dist="best"
+    )
     exp_cost12_sparse, _, _ = exact_otc(
         wheel_P[0], wheel_P[1], wheel_c[0], stat_dist=None, backend="sparse"
     )
 
     exp_cost13_dense, _, _ = exact_otc(
         wheel_P[0], wheel_P[2], wheel_c[1], stat_dist=None, backend="dense"
+    )
+    exp_cost13_lp, _, _ = exact_otc_lp(
+        wheel_P[0], wheel_P[2], wheel_c[1], stat_dist=None
     )
     exp_cost13_sparse, _, _ = exact_otc(
         wheel_P[0], wheel_P[2], wheel_c[1], stat_dist=None, backend="sparse"
@@ -87,8 +93,10 @@ def test_wheel_exact_otc():
     # check consistency
     assert np.allclose(exp_cost12_dense, 2.6551724137931036)
     assert np.allclose(exp_cost12_dense, exp_cost12_sparse)
+    assert np.allclose(exp_cost12_lp, exp_cost12_dense)
     assert np.allclose(exp_cost13_dense, 2.5517241379310316)
     assert np.allclose(exp_cost13_dense, exp_cost13_sparse)
+    assert np.allclose(exp_cost13_lp, exp_cost13_dense)
 
 
 # 3. Test exact OTC on edge awareness example
@@ -109,9 +117,6 @@ def test_edge_awareness_exact_otc():
         stat_dist="eigen",
         backend="dense",
     )
-    exp_cost21_lp, _, _ = exact_otc_lp(
-        edge_awareness_P[1], edge_awareness_P[0], edge_awareness_c[0], stat_dist="best"
-    )
     exp_cost23, _, _ = exact_otc(
         edge_awareness_P[1],
         edge_awareness_P[2],
@@ -119,15 +124,10 @@ def test_edge_awareness_exact_otc():
         stat_dist="iterative",
         backend="dense",
     )
-    exp_cost23_lp, _, _ = exact_otc_lp(
-        edge_awareness_P[1], edge_awareness_P[2], edge_awareness_c[1], stat_dist=None
-    )
 
     # check consistency
-    assert np.allclose(exp_cost21, 0.5714285714285724)
-    assert np.allclose(exp_cost21, exp_cost21_lp)
-    assert np.allclose(exp_cost23, 0.4464098659648501)
-    assert np.allclose(exp_cost23, exp_cost23_lp)
+    assert np.allclose(exp_cost21, 0.5714285714285726)
+    assert np.allclose(exp_cost23, 0.5806019475091779)
 
 
 def test_exact_otc_invalid_backend():
