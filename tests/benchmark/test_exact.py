@@ -139,8 +139,4 @@ def test_exact_otc_invalid_backend():
 
 def test_get_stat_dist_missing_cost():
     with pytest.raises(ValueError):
-        get_stat_dist(
-            edge_awareness_P[1],
-            method="best",
-            c=None
-        )
+        get_stat_dist(edge_awareness_P[1], method="best", c=None)
