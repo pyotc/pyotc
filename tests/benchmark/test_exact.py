@@ -11,6 +11,7 @@ from pyotc.otc_backend.graph.utils import adj_to_trans, get_degree_cost
 from pyotc.examples.stochastic_block_model import stochastic_block_model
 from pyotc.examples.wheel import wheel_1, wheel_2, wheel_3
 from pyotc.examples.edge_awareness import graph_1, graph_2, graph_3, c21, c23
+from pyotc.otc_backend.policy_iteration.utils import get_stat_dist
 
 # 1. Test exact OTC on stochastic block model
 np.random.seed(100)
@@ -134,3 +135,8 @@ def test_exact_otc_invalid_backend():
             edge_awareness_c[1],
             backend="invalid_backend",
         )
+
+
+def test_get_stat_dist_missing_cost():
+    with pytest.raises(ValueError):
+        get_stat_dist(edge_awareness_P[1], method="best", c=None)
