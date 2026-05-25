@@ -18,7 +18,7 @@ affiliations:
    index: 2
  - name: Applied Research Associates, Raleigh, NC, USA
    index: 3
-date: 7 Feb 2026
+date: 25 May 2026
 bibliography: paper.bib
 ---
 
@@ -42,6 +42,15 @@ The architecture closely mirrors the theoretical algorithm introduced in @oconno
 `pyotc` supports both exact and entropically regularized solution methods. The exact approach is useful for validating implementations and enabling further algorithmic development, while entropic regularization provides a scalable approximation that can handle larger problems more efficiently. The choice of the entropic regularization parameter affects convergence behavior and remains an active research topic in approximate optimal transport and related formulations such as the Schrödinger Bridge problem [@peyre_computational_2020; @nutz_introduction_2022].
 
 To support practical applications in network analysis, the implementation also provides optional sparse matrix representations that reduce memory usage and allow larger transition graphs to be handled efficiently. Integration with Python libraries such as `networkx` [@hagberg_exploring_2008] enables workflows involving graph construction, analysis, and comparison. Future applications may also involve integration with machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
+
+## Performance Comparison
+
+To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from @oconnor_oconnor-kevinotc_2022. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. Results show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM.
+
+|    Number of Nodes   |  20  |   32  |   40  |   60   |    80   |   100    |
+|:--------:|:----:|:-----:|:-----:|:------:|:-------:|:-------|
+| MATLAB (s) | 5.51 | 26.88 | 61.27 | 308.20 | 1246.13 | 3890.41  |
+|    PyOTC (s)   | 0.60 |  3.21 |  9.60 |  54.73 |  322.44 | 1340.12 |
 
 # Statement of Need
 
