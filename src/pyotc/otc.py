@@ -1,4 +1,4 @@
-"""Main entry point for otc funcitonality"""
+"""Main entry point for otc functionality"""
 
 from typing import Tuple, Optional
 import numpy as np
