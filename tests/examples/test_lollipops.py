@@ -1,7 +1,14 @@
 from pyotc.examples.lollipops import lollipop_1, lollipop_2
 import pytest
 import networkx as nx
-from pyotc.examples.lollipops import lollipop_1, lollipop_2, left_lollipop_graph, right_lollipop_graph
+from pyotc.examples.lollipops import (
+    lollipop_1,
+    lollipop_2,
+    left_lollipop_graph,
+    right_lollipop_graph,
+)
+
+
 class TestLollipopGraphs:
     """Test lollipop graph definitions and properties."""
 
