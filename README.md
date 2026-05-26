@@ -1,7 +1,7 @@
 # pyotc
 [![codecov](https://codecov.io/github/pyotc/pyotc/graph/badge.svg?token=52QPNW0AP7)](https://codecov.io/github/pyotc/pyotc)
 
-A python implementations of optimal transport coupling algorithms.
+A python implementation of optimal transport coupling algorithms.
 
 ## Documentation
 Find sphinx documentation [here](https://pyotc.github.io/pyotc/).
@@ -21,7 +21,7 @@ pip install pyotc
 ### 2. Install from github
 
 ```bash
-pip install https://github.com/pyotc/pyotc.git
+pip install git+https://github.com/pyotc/pyotc.git
 ```
 
 ### 3. Install for Development

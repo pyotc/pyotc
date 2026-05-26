@@ -32,7 +32,7 @@ See improvements listed in the [issues](https://github.com/pyotc/pyotc/issues).
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at [https://github.com/pyotc/pyotc/issues](https://github.com/pytoc/pyotc/issues).
+The best way to send feedback is to file an issue at [https://github.com/pyotc/pyotc/issues](https://github.com/pyotc/pyotc/issues).
 
 If you are proposing a feature:
 

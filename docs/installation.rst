@@ -32,20 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/jhineman/pyotc
+    $ git clone https://github.com/pyotc/pyotc.git
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/jhineman/pyotc/tarball/master
+    $ curl -OJL https://github.com/pyotc/pyotc/tarball/master
 
-Once you have a copy of the source, you can install it with:
-
-.. code-block:: console
-
-    $ python setup.py install
-
-
-.. _Github repo: https://github.com/jhineman/pyotc
-.. _tarball: https://github.com/jhineman/pyotc/tarball/master
+.. _Github repo: https://github.com/pyotc/pyotc
+.. _tarball: https://github.com/pyotc/pyotc/tarball/master
