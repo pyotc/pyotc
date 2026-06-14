@@ -45,7 +45,7 @@ To support practical applications in network analysis, the implementation also p
 
 ## Performance Comparison
 
-To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from [@oconnor_oconnor-kevinotc_2022]. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. Results show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM.
+To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from [@oconnor_oconnor-kevinotc_2022]. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. Results show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
 
 |    Number of Nodes   |  20  |   32  |   40  |   60   |    80   |   100    |
 |:--------:|:----:|:-----:|:-----:|:------:|:-------:|:-------|
