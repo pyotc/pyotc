@@ -51,7 +51,7 @@ Ready to contribute? Here's how to set up `pyotc` for local development.
     git clone git@github.com:your_name_here/pyotc.git
     ```
 
-3. Install your local copy into a virtualenv. See the [install directions](INSTALL.md)
+3. Install your local copy into a virtualenv. See the [install directions](docs/INSTALL.md)
 
 4. Create a branch for local development:
 

@@ -93,10 +93,6 @@ Algorithm 1 summarizes the exact OTC solution procedure introduced by @oconnor_o
 
 # Examples
 We provide a basic hello world example here. Our implementation is well documented and simple, consisting essentially of Python functions, which makes it easy to modify.
-
-<!--- 
-Below is a notional interface; this is still in process for our development.
--->
 ```python
 from pyotc import exact_otc
 import numpy as np
