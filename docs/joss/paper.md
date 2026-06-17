@@ -41,7 +41,7 @@ The architecture closely mirrors the theoretical algorithm introduced in @oconno
 
 `pyotc` supports both exact and entropically regularized solution methods. The exact approach is useful for validating implementations and enabling further algorithmic development, while entropic regularization provides a scalable approximation that can handle larger problems more efficiently. The choice of the entropic regularization parameter affects convergence behavior and remains an active research topic in approximate optimal transport and related formulations such as the Schrödinger Bridge problem [@peyre_computational_2020; @nutz_introduction_2021].
 
-To support practical applications in network analysis, the implementation also provides optional sparse matrix representations that reduce memory usage and allow larger transition graphs to be handled efficiently. Integration with Python libraries such as `networkx` [@hagberg_exploring_2008] enables workflows involving graph construction, analysis, and comparison. Future applications may also involve integration with machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
+To support practical applications in network analysis, the implementation also provides optional sparse matrix representations that reduce memory usage and allow larger transition graphs to be handled efficiently. Integration with Python libraries such as `NetworkX` [@hagberg_exploring_2008] enables workflows involving graph construction, analysis, and comparison. Future applications may also involve integration with machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
 
 ## Performance Comparison
 
@@ -84,11 +84,11 @@ Algorithm 1 summarizes the exact OTC solution procedure introduced by @oconnor_o
 ## Algorithm 1: Exact OTC
 
 1. Initialize $R_0 = P \otimes Q$, Convergence tolerance $\tau$
-2. Set `converged = False`, $i=0$, $R=[R_0]$
+2. Set `converged = False`, $R=R_0$
 3. **While** not `converged`:
     1. **Evaluate transition coupling**: $g, h = \text{evaluate}(R)$
-    2. **Improve transition coupling**: $R = [R, \;\text{improve}(g, h)]$
-    3. **Check convergence**: $d = \|R[i+1] - R[i]\|$, $\text{converged} = d < \tau$
+    2. **Improve transition coupling**: $R_0 = R$, $R = \text{improve}(g, h)$
+    3. **Check convergence**: $d = \|R - R_0\|$, $\text{converged} = d < \tau$
 4. **Output**: $R$ (an optimal transition coupling)
 
 # Examples
