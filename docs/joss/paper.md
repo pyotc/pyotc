@@ -84,11 +84,11 @@ Algorithm 1 summarizes the exact OTC solution procedure introduced by @oconnor_o
 ## Algorithm 1: Exact OTC
 
 1. Initialize $R_0 = P \otimes Q$, Convergence tolerance $\tau$
-2. Set `converged = False`, $i=0$, $R=[R_0]$
+2. Set `converged = False`, $R=R_0$
 3. **While** not `converged`:
     1. **Evaluate transition coupling**: $g, h = \text{evaluate}(R)$
-    2. **Improve transition coupling**: $R = [R, \;\text{improve}(g, h)]$
-    3. **Check convergence**: $d = \|R[i+1] - R[i]\|$, $\text{converged} = d < \tau$
+    2. **Improve transition coupling**: $R_0 = R$, $R = \text{improve}(g, h)$
+    3. **Check convergence**: $d = \|R - R_0\|$, $\text{converged} = d < \tau$
 4. **Output**: $R$ (an optimal transition coupling)
 
 # Examples
