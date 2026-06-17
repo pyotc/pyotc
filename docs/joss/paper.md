@@ -41,7 +41,7 @@ The architecture closely mirrors the theoretical algorithm introduced in @oconno
 
 `pyotc` supports both exact and entropically regularized solution methods. The exact approach is useful for validating implementations and enabling further algorithmic development, while entropic regularization provides a scalable approximation that can handle larger problems more efficiently. The choice of the entropic regularization parameter affects convergence behavior and remains an active research topic in approximate optimal transport and related formulations such as the Schrödinger Bridge problem [@peyre_computational_2020; @nutz_introduction_2021].
 
-To support practical applications in network analysis, the implementation also provides optional sparse matrix representations that reduce memory usage and allow larger transition graphs to be handled efficiently. Integration with Python libraries such as `networkx` [@hagberg_exploring_2008] enables workflows involving graph construction, analysis, and comparison. Future applications may also involve integration with machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
+To support practical applications in network analysis, the implementation also provides optional sparse matrix representations that reduce memory usage and allow larger transition graphs to be handled efficiently. Integration with Python libraries such as `NetworkX` [@hagberg_exploring_2008] enables workflows involving graph construction, analysis, and comparison. Future applications may also involve integration with machine learning libraries such as `scikit-learn` [@pedregosa_scikit-learn_2011].
 
 ## Performance Comparison
 
