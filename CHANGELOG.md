@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+
+## [0.4.0] - 2026-06-22
+* Fix `get_stat_dist` to always require the cost vector `c`
+* Revise JOSS draft for final submission:
+  * Add benchmark matrix and MATLAB details
+  * Fix bibliography errors and a broken link in `CONTRIBUTING.md`
+  * Remove outdated comments from `paper.md`
+  * Fix typos and add authors' ORCID IDs
+
+## [0.3.3] - 2026-04-07
+* Fix minor test error after release
+
+## [0.3.2] - 2026-04-07
+* Update draft to match the new JOSS format
+* Align OTC return value with corresponding stationary distributions
 
 ## [0.3.1] - 2026-02-13
 * Update Sphinx documentation theme
