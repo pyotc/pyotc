@@ -15,11 +15,11 @@ authors:
     orcid: 0009-0004-1924-474X
     affiliation: 3
 affiliations:
- - name: Department of Statistics and Operations Research, University of North Carolina at Chapel Hill, Chapel Hill, NC, USA
+ - name: Department of Statistics and Operations Research, University of North Carolina at Chapel Hill, Chapel Hill, NC, United States of America
    index: 1
- - name: Department of Mathematics and Statistics, Boston University, Boston, MA, USA
+ - name: Department of Mathematics and Statistics, Boston University, Boston, MA, United States of America
    index: 2
- - name: Applied Research Associates, Raleigh, NC, USA
+ - name: Applied Research Associates, Raleigh, NC, United States of America
    index: 3
 date: 22 Jun 2026
 bibliography: paper.bib
