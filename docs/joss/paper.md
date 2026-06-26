@@ -52,12 +52,13 @@ To demonstrate the performance improvements of `pyotc` over existing MATLAB impl
 
 The empirical results, summarized in Table 1, show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
 
+: Execution time comparison (in seconds) between the MATLAB implementation and `pyotc` across different network sizes.
+
 |    Number of Nodes   |  20  |   32  |   40  |   60   |    80   |   100    |
 |:--------:|:----:|:-----:|:-----:|:------:|:-------:|:-------|
 | MATLAB (s) | 5.51 | 26.88 | 61.27 | 308.20 | 1246.13 | 3890.41  |
 |    PyOTC (s)   | 0.60 |  3.21 |  9.60 |  54.73 |  322.44 | 1340.12 |
 
-Table 1: Execution time comparison (in seconds) between the MATLAB implementation and `pyotc` across different network sizes.
 
 # Statement of Need
 
