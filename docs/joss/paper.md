@@ -50,14 +50,14 @@ To support practical applications in network analysis, the implementation also p
 
 To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from @oconnor_oconnor-kevinotc_2022. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. 
 
-The empirical results, summarized in [@tbl:benchmarks], show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
+The empirical results, summarized in Table 1, show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
 
 |    Number of Nodes   |  20  |   32  |   40  |   60   |    80   |   100    |
 |:--------:|:----:|:-----:|:-----:|:------:|:-------:|:-------|
 | MATLAB (s) | 5.51 | 26.88 | 61.27 | 308.20 | 1246.13 | 3890.41  |
 |    PyOTC (s)   | 0.60 |  3.21 |  9.60 |  54.73 |  322.44 | 1340.12 |
 
-Table: Execution time comparison (in seconds) between the MATLAB implementation and `pyotc` across different network sizes. {#tbl:benchmarks}
+Table 1: Execution time comparison (in seconds) between the MATLAB implementation and `pyotc` across different network sizes.
 
 # Statement of Need
 
@@ -115,7 +115,7 @@ print("\nExact OTC cost between P and Q:", exp_cost)
 # Conclusion
 `pyotc` provides a performant Python implementation for computing optimal transition couplings for stationary Markov chains and their associated graph structures. Optimal transition coupling is a clear opportunity to bring a novel computational tool to a wider audience through open-source software. By moving to an open ecosystem such as Python, we have produced an OTC code that is faster and, arguably, more capable than existing implementations.
 
-As OTC is an active research topic, we believe there are significant opportunities to extend the work here. In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations. For example, one could explore variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation). Implementation-wise, there are significant opportunities to provide additional interfaces to the Python ecosystem, including cheminformatics and bioinformatics resources such as RDKit [@landrum_rdkitrdkit_2025]. PyOTC also enables additional benchmarking studies.
+As OTC is an active research topic, we believe there are significant opportunities to extend the work here. In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations. For example, one could explore variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation). Implementation-wise, there are significant opportunities to provide additional interfaces to the Python ecosystem, including cheminformatics and bioinformatics resources such as RDKit [@landrum_rdkitrdkit_2025]. `pyotc` also enables additional benchmarking studies.
 
 # AI Usage Disclosure
 
