@@ -34,7 +34,7 @@ Optimal transport (OT) has become a widely used computational framework across m
 
 Two implementations of OTC currently exist in MATLAB [@oconnor_oconnor-kevinotc_2022; @yi_austinyinetotc_2023]. While these implementations supported the original research developments, they share limitations typical of the MATLAB ecosystem: they are not always freely accessible and lack integration with the broader Python-based scientific computing ecosystem. This makes it difficult to incorporate OTC methods into modern data science workflows.
 
-`pyotc` addresses this gap by providing the first open-source Python implementation of optimal transition coupling. The package builds on existing optimal transport infrastructure such as `POT` [@flamary_pot_2021], while implementing the additional algorithmic structure required for OTC. This allows researchers to apply OTC methods within the broader Python scientific computing ecosystem.
+`pyotc` addresses this gap by providing the first open-source Python implementation of the exact OTC formulation. The package builds on existing optimal transport infrastructure such as `POT` [@flamary_pot_2021], while implementing the additional algorithmic structure required for OTC. This allows researchers to apply OTC methods within the broader Python scientific computing ecosystem.
 
 # Software Design
 
@@ -48,12 +48,16 @@ To support practical applications in network analysis, the implementation also p
 
 ## Performance Comparison
 
-To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from [@oconnor_oconnor-kevinotc_2022]. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. Results show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
+To demonstrate the performance improvements of `pyotc` over existing MATLAB implementations, we benchmark our Python implementation against the original MATLAB code from @oconnor_oconnor-kevinotc_2022. The benchmark evaluates the execution time on two randomly generated stochastic block models (SBMs), each consisting of 4 blocks with an intra-block connection probability of 0.9 and an inter-block connection probability of 0.1. 
+
+The empirical results, summarized in [@tbl:benchmarks], show that `pyotc` achieves substantial speedups while yielding identical results to the MATLAB implementation. All benchmarks were executed on a machine equipped with a 2.3 GHz quad-core Intel Core i7 processor and 16 GB of RAM. The MATLAB benchmarks were executed using MATLAB R2025b, with the JIT compiler pre-warmed prior to measurement to ensure accurate timing results.
 
 |    Number of Nodes   |  20  |   32  |   40  |   60   |    80   |   100    |
 |:--------:|:----:|:-----:|:-----:|:------:|:-------:|:-------|
 | MATLAB (s) | 5.51 | 26.88 | 61.27 | 308.20 | 1246.13 | 3890.41  |
 |    PyOTC (s)   | 0.60 |  3.21 |  9.60 |  54.73 |  322.44 | 1340.12 |
+
+Table: Execution time comparison (in seconds) between the MATLAB implementation and `pyotc` across different network sizes. {#tbl:benchmarks}
 
 # Statement of Need
 
@@ -72,7 +76,7 @@ Additional related codes have been developed, primarily focusing on the entropic
 
 The `pyotc` package serves a broad audience of researchers working with network-structured data across various domains—including computational chemistry, structural biology, neuroimaging, and social sciences-where comparing, aligning, and measuring distances between graphs or Markov chains is a fundamental task. While the core optimal transition coupling (OTC) methodology was initially introduced in [@oconnor_optimal_2022] and applied to network alignment [@yi_alignment_2024], `pyotc` lowers the barrier to entry by providing a robust, Python-native framework that integrates seamlessly with modern scientific pipelines.
 
-The package has already demonstrated direct research impact, bridging the gap between theoretical frameworks and empirical applications. The structural properties and algorithms provided in `pyotc` have been directly utilized, extended, or cited by several recent studies in graph matching, Markov chain analysis, and network alignment [e.g., [@hoang_optimal_2025; @xiang_graph_2026; @calo_bisimulation_2024; @brugere_distances_2024; @parrot_2025]]. 
+The package has already demonstrated direct research impact, bridging the gap between theoretical frameworks and empirical applications. The structural properties and algorithms provided in `pyotc` have been directly utilized, extended, or cited by several recent studies in graph matching, Markov chain analysis, and network alignment, e.g., @hoang_optimal_2025, @xiang_graph_2026, @calo_bisimulation_2024, @brugere_distances_2024, @parrot_2025. 
 
 Beyond literature-based impact, `pyotc` has garnered significant interest from the broader scientific community. The repository has received explicit inquiries and requests for code sharing from external research groups, particularly those specializing in network science and neuroimaging analysis, who seek to apply OTC to empirical brain connectivity data. By transitioning the ecosystem from legacy, closed-loop MATLAB implementations to an open-source, `POT`-backed Python library, `pyotc` enables domain scientists to easily plug network datasets into modern workflows (such as `NetworkX` or `scikit-learn`), facilitating interdisciplinary applications and accelerating the adoption of optimal transport methods in practical network analysis.
 
@@ -109,10 +113,9 @@ print("\nExact OTC cost between P and Q:", exp_cost)
 ```
 
 # Conclusion
-`pyotc` provides a performant Python implementation for computing optimal transition couplings for stationary Markov chains and their associated graph structures. Optimal transition coupling is a classic example of opportunity to bring a novel computational tool to wider audience through open source software and improve it. By moving to an open ecosystem such as Python, we have produced an OTC code that is faster and, arguably, more capable than existing implementations.
+`pyotc` provides a performant Python implementation for computing optimal transition couplings for stationary Markov chains and their associated graph structures. Optimal transition coupling is a clear opportunity to bring a novel computational tool to a wider audience through open-source software. By moving to an open ecosystem such as Python, we have produced an OTC code that is faster and, arguably, more capable than existing implementations.
 
-As OTC is an active research topic, we believe there are significant opportunities to extend the work here. In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations. One could explore for example variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation). Implementation-wise, there are significant opportunities to provide additional interfaces to Python ecosystem, for example interfaces chem or bio informatics sources (for example RDKit [@landrum_rdkitrdkit_2025]) `pyotc` also enables additional benchmarking studies.
-
+As OTC is an active research topic, we believe there are significant opportunities to extend the work here. In this direction, we hope that this code will facilitate further explorations in both novel algorithms and more general implementations. For example, one could explore variations on the policy improvement and policy evaluation algorithms in terms of the stationary distribution (essentially a resolvent calculation). Implementation-wise, there are significant opportunities to provide additional interfaces to the Python ecosystem, including cheminformatics and bioinformatics resources such as RDKit [@landrum_rdkitrdkit_2025]. PyOTC also enables additional benchmarking studies.
 
 # AI Usage Disclosure
 
